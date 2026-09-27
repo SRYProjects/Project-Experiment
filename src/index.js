@@ -33,21 +33,31 @@ function containsProhibitedMarkupOrLink(text) {
   );
 }
 
+/* -------------------------
+   AUTHENTICATION
+------------------------- */
+
 async function getAuthenticatedUser(request, env) {
-  const authHeader = request.headers.get("Authorization");
+  const authHeader =
+    request.headers.get("Authorization");
 
   if (!authHeader?.startsWith("Bearer ")) {
     return null;
   }
 
-  const token = authHeader.slice(7);
+  const token =
+    authHeader.slice(7);
 
-  const response = await fetch(`${env.SUPABASE_URL}/auth/v1/user`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      apikey: env.SUPABASE_SECRET_KEY
-    }
-  });
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/auth/v1/user`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          apikey: env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
 
   if (!response.ok) {
     return null;
@@ -56,75 +66,129 @@ async function getAuthenticatedUser(request, env) {
   return response.json();
 }
 
-async function verifyTurnstile(token, request, env) {
-  if (!token || typeof token !== "string" || token.length > 2048) {
+/* -------------------------
+   TURNSTILE
+------------------------- */
+
+async function verifyTurnstile(
+  token,
+  request,
+  env
+) {
+  if (
+    typeof token !== "string" ||
+    token.length === 0 ||
+    token.length > 2048
+  ) {
     return false;
   }
 
-  const remoteIp = request.headers.get("CF-Connecting-IP");
+  const remoteIp =
+    request.headers.get("CF-Connecting-IP") || "";
 
-  const response = await fetch(
-    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-    {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({
-        secret: env.TURNSTILE_SECRET_KEY,
-        response: token,
-        remoteip: remoteIp || undefined
-      })
+  try {
+    const response =
+      await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+          method: "POST",
+
+          headers: {
+            "content-type":
+              "application/x-www-form-urlencoded"
+          },
+
+          body: new URLSearchParams({
+            secret:
+              env.TURNSTILE_SECRET_KEY,
+
+            response:
+              token,
+
+            remoteip:
+              remoteIp
+          })
+        }
+      );
+
+    if (!response.ok) {
+      return false;
     }
-  );
 
-  if (!response.ok) {
+    const result =
+      await response.json();
+
+    return (
+      result.success === true &&
+      result.hostname === EXPECTED_HOSTNAME &&
+      result.action === TURNSTILE_ACTION
+    );
+  } catch (error) {
+    console.error(
+      "Turnstile verification failed:",
+      error
+    );
+
     return false;
   }
-
-  const result = await response.json();
-
-  return (
-    result.success === true &&
-    result.hostname === EXPECTED_HOSTNAME &&
-    result.action === TURNSTILE_ACTION
-  );
 }
+
+/* -------------------------
+   MODERATION
+------------------------- */
 
 async function moderateAction(text, env) {
   try {
-    const result = await env.AI.run(
-      "@cf/meta/llama-guard-3-8b",
-      {
-        messages: [
-          {
-            role: "user",
-            content: text
-          }
-        ],
-        max_tokens: 32,
-        temperature: 0
-      }
-    );
+    const result =
+      await env.AI.run(
+        "@cf/meta/llama-guard-3-8b",
+        {
+          messages: [
+            {
+              role: "user",
+              content: text
+            }
+          ],
+
+          max_tokens: 32,
+          temperature: 0
+        }
+      );
 
     const output =
       typeof result?.response === "string"
-        ? result.response.trim().toLowerCase()
+        ? result.response
+            .trim()
+            .toLowerCase()
         : "";
+
+    /*
+      Only an explicit SAFE result
+      may publish automatically.
+
+      Unsafe, unclear, malformed,
+      or unexpected AI results
+      require human review.
+    */
 
     if (output.startsWith("safe")) {
       return "published";
     }
 
-    // Unsafe or ambiguous material goes to human review.
     return "pending";
   } catch (error) {
-    console.error("Moderation failure:", error);
+    console.error(
+      "Moderation failed:",
+      error
+    );
 
-    // Never publish automatically if moderation fails.
     return "pending";
   }
 }
+
+/* -------------------------
+   DATABASE
+------------------------- */
 
 async function insertAction(
   userId,
@@ -133,48 +197,105 @@ async function insertAction(
   status,
   env
 ) {
-  const response = await fetch(
-    `${env.SUPABASE_URL}/rest/v1/meaningful_actions`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
-        apikey: env.SUPABASE_SECRET_KEY,
-        "content-type": "application/json",
-        Prefer: "return=representation"
-      },
-      body: JSON.stringify({
-        user_id: userId,
-        category,
-        action_text: actionText,
-        moderation_status: status,
-        is_demo: false
-      })
-    }
-  );
+  const row = {
+    user_id: userId,
+    category,
+    action_text: actionText,
+    moderation_status: status,
+    is_demo: false
+  };
+
+  /*
+    Our existing database trigger sets
+    moderated_at when status changes.
+
+    Because this endpoint may INSERT a row
+    directly as published, set moderated_at
+    explicitly for automatically published
+    submissions.
+  */
+
+  if (status === "published") {
+    row.moderated_at =
+      new Date().toISOString();
+  }
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/meaningful_actions`,
+      {
+        method: "POST",
+
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+
+          apikey:
+            env.SUPABASE_SECRET_KEY,
+
+          "content-type":
+            "application/json",
+
+          Prefer:
+            "return=representation"
+        },
+
+        body:
+          JSON.stringify(row)
+      }
+    );
 
   if (!response.ok) {
-    const detail = await response.text();
-    console.error("Supabase insert failed:", detail);
-    throw new Error("Database insert failed");
+    const detail =
+      await response.text();
+
+    console.error(
+      "Supabase action insert failed:",
+      detail
+    );
+
+    throw new Error(
+      "Database insert failed"
+    );
   }
 
   return response.json();
 }
 
+/* -------------------------
+   ACTION SUBMISSION
+------------------------- */
+
 async function submitAction(request, env) {
-  const user = await getAuthenticatedUser(request, env);
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
 
   if (!user) {
-    return json({ error: "Authentication required." }, 401);
+    return json(
+      {
+        error:
+          "Authentication required."
+      },
+      401
+    );
   }
 
   let body;
 
   try {
-    body = await request.json();
+    body =
+      await request.json();
   } catch {
-    return json({ error: "Invalid request." }, 400);
+    return json(
+      {
+        error:
+          "Invalid request."
+      },
+      400
+    );
   }
 
   const category =
@@ -188,10 +309,19 @@ async function submitAction(request, env) {
       : "";
 
   if (!CATEGORIES.has(category)) {
-    return json({ error: "Choose a valid category." }, 400);
+    return json(
+      {
+        error:
+          "Choose a valid category."
+      },
+      400
+    );
   }
 
-  if (!actionText || actionText.length > 140) {
+  if (
+    !actionText ||
+    actionText.length > 140
+  ) {
     return json(
       {
         error:
@@ -201,7 +331,11 @@ async function submitAction(request, env) {
     );
   }
 
-  if (containsProhibitedMarkupOrLink(actionText)) {
+  if (
+    containsProhibitedMarkupOrLink(
+      actionText
+    )
+  ) {
     return json(
       {
         error:
@@ -211,13 +345,14 @@ async function submitAction(request, env) {
     );
   }
 
-  const humanVerified = await verifyTurnstile(
-    body.turnstileToken,
-    request,
-    env
-  );
+  const verified =
+    await verifyTurnstile(
+      body.turnstileToken,
+      request,
+      env
+    );
 
-  if (!humanVerified) {
+  if (!verified) {
     return json(
       {
         error:
@@ -227,42 +362,69 @@ async function submitAction(request, env) {
     );
   }
 
-  const status = await moderateAction(actionText, env);
+  const status =
+    await moderateAction(
+      actionText,
+      env
+    );
 
-  const rows = await insertAction(
-    user.id,
-    category,
-    actionText,
-    status,
-    env
-  );
+  const rows =
+    await insertAction(
+      user.id,
+      category,
+      actionText,
+      status,
+      env
+    );
 
   return json({
     success: true,
     status,
-    action: rows?.[0] ?? null
+    action:
+      rows?.[0] ?? null
   });
 }
 
+/* -------------------------
+   WORKER
+------------------------- */
+
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
+    const url =
+      new URL(request.url);
 
     try {
       if (
         url.pathname === "/api/actions" &&
         request.method === "POST"
       ) {
-        return await submitAction(request, env);
+        return await submitAction(
+          request,
+          env
+        );
       }
 
-      if (url.pathname.startsWith("/api/")) {
-        return json({ error: "Not found." }, 404);
+      if (
+        url.pathname.startsWith("/api/")
+      ) {
+        return json(
+          {
+            error:
+              "Not found."
+          },
+          404
+        );
       }
 
-      return env.ASSETS.fetch(request);
+      return env.ASSETS.fetch(
+        request
+      );
     } catch (error) {
-      console.error("Worker error:", error);
+      console.error(
+        "Worker error:",
+        error
+      );
 
       return json(
         {
