@@ -61,14 +61,17 @@
         <strong id="totalActions">—</strong>
         <span>Meaningful Actions</span>
       </div>
+
       <div>
         <strong id="todayActions">—</strong>
         <span>Actions Today</span>
       </div>
+
       <div>
         <strong id="participants">—</strong>
         <span>Participants</span>
       </div>
+
       <div>
         <strong>Day 1</strong>
         <span>Project Experiment</span>
@@ -79,13 +82,16 @@
       <div class="section-heading">
         <p class="eyebrow">THE EXPERIMENT IN ACTION</p>
         <h2>Meaningful Actions</h2>
+
         <p>
           Things people deliberately chose to do because they considered them meaningful.
         </p>
       </div>
 
       <div id="actionsFeed" class="feed" aria-live="polite">
-        <p class="empty-state">The public experiment is preparing to begin.</p>
+        <p class="empty-state">
+          The public experiment is preparing to begin.
+        </p>
       </div>
     </section>
 
@@ -93,13 +99,16 @@
       <div class="section-heading">
         <p class="eyebrow">WHAT PEOPLE ARE FINDING</p>
         <h2>Discoveries</h2>
+
         <p>
           What have people discovered by deliberately doing meaningful things?
         </p>
       </div>
 
       <div id="discoveriesFeed" class="feed" aria-live="polite">
-        <p class="empty-state">Discoveries will appear here as the experiment develops.</p>
+        <p class="empty-state">
+          Discoveries will appear here as the experiment develops.
+        </p>
       </div>
     </section>
 
@@ -110,22 +119,30 @@
       <div class="project-grid">
         <article>
           <h3>The Book</h3>
-          <p>The ideas that established the foundation for the project.</p>
+          <p>
+            The ideas that established the foundation for the project.
+          </p>
         </article>
 
         <article>
           <h3>The Experiment</h3>
-          <p>A public test of what happens when people deliberately act on what matters.</p>
+          <p>
+            A public test of what happens when people deliberately act on what matters.
+          </p>
         </article>
 
         <article>
           <h3>The Application</h3>
-          <p>A deeper application being developed to help people examine how they actually live.</p>
+          <p>
+            A deeper application being developed to help people examine how they actually live.
+          </p>
         </article>
 
         <article>
           <h3>The Community</h3>
-          <p>A growing public record of meaningful actions and discoveries.</p>
+          <p>
+            A growing public record of meaningful actions and discoveries.
+          </p>
         </article>
       </div>
     </section>
@@ -152,6 +169,7 @@
     <form id="actionForm">
       <label>
         Category
+
         <select id="actionCategory" required>
           <option value="">Choose a category</option>
           <option>Family</option>
@@ -163,12 +181,14 @@
           <option>Service</option>
           <option>Faith</option>
           <option>Responsibility</option>
+          <option>Sacrifice</option>
           <option>Other</option>
         </select>
       </label>
 
       <label>
         What did you do?
+
         <textarea
           id="actionText"
           maxlength="140"
@@ -205,7 +225,14 @@
   </dialog>
 
   <dialog id="authDialog">
-    <button id="closeDialog" class="close-button" aria-label="Close">×</button>
+    <button
+      id="closeDialog"
+      class="close-button"
+      aria-label="Close"
+      type="button"
+    >
+      ×
+    </button>
 
     <div id="authForm">
       <p class="eyebrow">PARTICIPATE</p>
@@ -218,6 +245,7 @@
       <form id="joinForm">
         <label>
           Public username
+
           <input
             id="username"
             name="username"
@@ -232,6 +260,7 @@
 
         <label>
           Email
+
           <input
             id="email"
             name="email"
@@ -241,12 +270,19 @@
           >
         </label>
 
-        <button class="primary-button" type="submit">
+        <button
+          class="primary-button"
+          type="submit"
+        >
           Send Secure Sign-In Link
         </button>
       </form>
 
-      <button id="existingUserButton" class="text-button" type="button">
+      <button
+        id="existingUserButton"
+        class="text-button"
+        type="button"
+      >
         Already participating? Sign in
       </button>
     </div>
@@ -258,6 +294,7 @@
       <form id="signInForm">
         <label>
           Email
+
           <input
             id="existingEmail"
             type="email"
@@ -266,22 +303,35 @@
           >
         </label>
 
-        <button class="primary-button" type="submit">
+        <button
+          class="primary-button"
+          type="submit"
+        >
           Send Secure Sign-In Link
         </button>
       </form>
 
-      <button id="newUserButton" class="text-button" type="button">
+      <button
+        id="newUserButton"
+        class="text-button"
+        type="button"
+      >
         New participant? Join the experiment
       </button>
     </div>
 
-    <div id="authMessage" class="message hidden" role="status"></div>
+    <div
+      id="authMessage"
+      class="message hidden"
+      role="status"
+    ></div>
   </dialog>
 
   <footer>
     <span>Project Meaningful</span>
-    <span>Project activity uses Eastern Time (America/New_York).</span>
+    <span>
+      Project activity uses Eastern Time (America/New_York).
+    </span>
   </footer>
 
   <script type="module" src="/app.js"></script>
