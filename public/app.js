@@ -66,6 +66,15 @@ const recordButton =
 const signOutButton =
   document.querySelector("#signOutButton");
 
+const actionEntryState =
+  document.querySelector("#actionEntryState");
+
+const actionPublishedState =
+  document.querySelector("#actionPublishedState");
+
+const actionPendingState =
+  document.querySelector("#actionPendingState");
+
 const actionForm =
   document.querySelector("#actionForm");
 
@@ -84,6 +93,18 @@ const actionMessage =
 const submitActionButton =
   document.querySelector("#submitActionButton");
 
+const viewPublishedActionButton =
+  document.querySelector("#viewPublishedActionButton");
+
+const shareAnotherActionButton =
+  document.querySelector("#shareAnotherActionButton");
+
+const shareAnotherPendingActionButton =
+  document.querySelector("#shareAnotherPendingActionButton");
+
+const closePendingActionButton =
+  document.querySelector("#closePendingActionButton");
+
 /* -------------------------
    MESSAGES
 ------------------------- */
@@ -98,18 +119,64 @@ function clearAuthMessage() {
   authMessage.classList.add("hidden");
 }
 
-function showActionMessage(message, type = "") {
+function showActionMessage(message) {
   actionMessage.textContent = message;
   actionMessage.className = "message";
-
-  if (type) {
-    actionMessage.classList.add(type);
-  }
 }
 
 function clearActionMessage() {
   actionMessage.textContent = "";
   actionMessage.className = "message hidden";
+}
+
+/* -------------------------
+   ACTION DIALOG STATES
+------------------------- */
+
+function showActionEntryState() {
+  actionEntryState.classList.remove("hidden");
+  actionPublishedState.classList.add("hidden");
+  actionPendingState.classList.add("hidden");
+}
+
+function showActionPublishedState() {
+  actionEntryState.classList.add("hidden");
+  actionPublishedState.classList.remove("hidden");
+  actionPendingState.classList.add("hidden");
+}
+
+function showActionPendingState() {
+  actionEntryState.classList.add("hidden");
+  actionPublishedState.classList.add("hidden");
+  actionPendingState.classList.remove("hidden");
+}
+
+function resetActionForm() {
+  actionForm.reset();
+
+  actionCharacterCount.textContent = "0";
+
+  clearActionMessage();
+
+  if (window.turnstile) {
+    try {
+      window.turnstile.reset();
+    } catch (error) {
+      console.warn(
+        "Turnstile reset unavailable:",
+        error
+      );
+    }
+  }
+}
+
+function prepareNewAction() {
+  resetActionForm();
+  showActionEntryState();
+
+  window.setTimeout(() => {
+    actionCategory.focus();
+  }, 0);
 }
 
 /* -------------------------
@@ -130,7 +197,7 @@ function setAuthenticatedUI(authenticated) {
 
 function openParticipation() {
   if (currentSession?.user) {
-    clearActionMessage();
+    prepareNewAction();
     actionDialog.showModal();
     return;
   }
@@ -148,9 +215,12 @@ participateButton.addEventListener(
   openParticipation
 );
 
-closeDialog.addEventListener("click", () => {
-  authDialog.close();
-});
+closeDialog.addEventListener(
+  "click",
+  () => {
+    authDialog.close();
+  }
+);
 
 closeActionDialog.addEventListener(
   "click",
@@ -159,10 +229,32 @@ closeActionDialog.addEventListener(
   }
 );
 
+/*
+  Native <dialog> already supports Escape.
+
+  This adds closing when the user clicks
+  directly on the shaded backdrop.
+*/
+
+function enableBackdropClose(dialog) {
+  dialog.addEventListener(
+    "click",
+    (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    }
+  );
+}
+
+enableBackdropClose(authDialog);
+enableBackdropClose(actionDialog);
+
 existingUserButton.addEventListener(
   "click",
   () => {
     clearAuthMessage();
+
     authForm.classList.add("hidden");
     existingForm.classList.remove("hidden");
   }
@@ -172,6 +264,7 @@ newUserButton.addEventListener(
   "click",
   () => {
     clearAuthMessage();
+
     existingForm.classList.add("hidden");
     authForm.classList.remove("hidden");
   }
@@ -185,6 +278,7 @@ joinForm.addEventListener(
   "submit",
   async (event) => {
     event.preventDefault();
+
     clearAuthMessage();
 
     const username =
@@ -203,6 +297,7 @@ joinForm.addEventListener(
       showAuthMessage(
         "Username must be 3–30 characters using only letters, numbers, or underscores."
       );
+
       return;
     }
 
@@ -214,9 +309,11 @@ joinForm.addEventListener(
     const { error } =
       await supabase.auth.signInWithOtp({
         email,
+
         options: {
           emailRedirectTo:
             "https://projectmeaningful.app",
+
           data: {
             requested_username: username
           }
@@ -249,6 +346,7 @@ signInForm.addEventListener(
   "submit",
   async (event) => {
     event.preventDefault();
+
     clearAuthMessage();
 
     const email =
@@ -257,28 +355,21 @@ signInForm.addEventListener(
         .value
         .trim();
 
-    const { error } =
-      await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo:
-            "https://projectmeaningful.app",
-          shouldCreateUser: false
-        }
-      });
+    await supabase.auth.signInWithOtp({
+      email,
+
+      options: {
+        emailRedirectTo:
+          "https://projectmeaningful.app",
+
+        shouldCreateUser: false
+      }
+    });
 
     /*
-      Deliberately use the same response whether
-      the account exists or not.
+      Same response regardless of whether
+      the email belongs to an account.
     */
-
-    if (error) {
-      showAuthMessage(
-        "If that email belongs to an account, a secure sign-in link will be sent."
-      );
-
-      return;
-    }
 
     showAuthMessage(
       "If that email belongs to an account, a secure sign-in link will be sent."
@@ -425,6 +516,41 @@ actionText.addEventListener(
 );
 
 /* -------------------------
+   POST-SUBMISSION ACTIONS
+------------------------- */
+
+shareAnotherActionButton.addEventListener(
+  "click",
+  prepareNewAction
+);
+
+shareAnotherPendingActionButton.addEventListener(
+  "click",
+  prepareNewAction
+);
+
+closePendingActionButton.addEventListener(
+  "click",
+  () => {
+    actionDialog.close();
+  }
+);
+
+viewPublishedActionButton.addEventListener(
+  "click",
+  () => {
+    actionDialog.close();
+
+    document
+      .querySelector("#actions")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+  }
+);
+
+/* -------------------------
    SUBMIT MEANINGFUL ACTION
 ------------------------- */
 
@@ -437,7 +563,9 @@ actionForm.addEventListener(
 
     if (!currentSession?.access_token) {
       actionDialog.close();
+
       authDialog.showModal();
+
       return;
     }
 
@@ -477,6 +605,7 @@ actionForm.addEventListener(
     }
 
     submitActionButton.disabled = true;
+
     submitActionButton.textContent =
       "Sharing...";
 
@@ -486,6 +615,7 @@ actionForm.addEventListener(
           "/api/actions",
           {
             method: "POST",
+
             headers: {
               "content-type":
                 "application/json",
@@ -518,6 +648,11 @@ actionForm.addEventListener(
         return;
       }
 
+      /*
+        Clear the completed form immediately.
+        The confirmation state then replaces it.
+      */
+
       actionForm.reset();
 
       actionCharacterCount.textContent =
@@ -528,17 +663,11 @@ actionForm.addEventListener(
       }
 
       if (result.status === "published") {
-        showActionMessage(
-          "Your Meaningful Action has been published.",
-          "success"
-        );
+        showActionPublishedState();
 
         await loadProjectStats();
       } else {
-        showActionMessage(
-          "Your Meaningful Action was received and is pending review.",
-          "pending"
-        );
+        showActionPendingState();
       }
     } catch (error) {
       console.error(
