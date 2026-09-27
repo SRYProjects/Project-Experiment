@@ -1,8 +1,26 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "project-meaningful",
+  "main": "./src/index.js",
   "compatibility_date": "2026-09-27",
+
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+
+  "ai": {
+    "binding": "AI"
+  },
+
+  "vars": {
+    "SUPABASE_URL": "https://edfvxbfzvzfeqcutpzhk.supabase.co"
+  },
+
+  "secrets": {
+    "required": [
+      "SUPABASE_SECRET_KEY"
+    ]
   }
 }
