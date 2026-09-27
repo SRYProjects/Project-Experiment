@@ -11,6 +11,9 @@ const CATEGORIES = new Set([
   "Other"
 ]);
 
+const EXPECTED_HOSTNAME = "projectmeaningful.app";
+const TURNSTILE_ACTION = "meaningful_action";
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -53,6 +56,41 @@ async function getAuthenticatedUser(request, env) {
   return response.json();
 }
 
+async function verifyTurnstile(token, request, env) {
+  if (!token || typeof token !== "string" || token.length > 2048) {
+    return false;
+  }
+
+  const remoteIp = request.headers.get("CF-Connecting-IP");
+
+  const response = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        secret: env.TURNSTILE_SECRET_KEY,
+        response: token,
+        remoteip: remoteIp || undefined
+      })
+    }
+  );
+
+  if (!response.ok) {
+    return false;
+  }
+
+  const result = await response.json();
+
+  return (
+    result.success === true &&
+    result.hostname === EXPECTED_HOSTNAME &&
+    result.action === TURNSTILE_ACTION
+  );
+}
+
 async function moderateAction(text, env) {
   try {
     const result = await env.AI.run(
@@ -78,20 +116,23 @@ async function moderateAction(text, env) {
       return "published";
     }
 
-    if (output.startsWith("unsafe")) {
-      return "rejected";
-    }
-
+    // Unsafe or ambiguous material goes to human review.
     return "pending";
   } catch (error) {
     console.error("Moderation failure:", error);
 
-    // Fail safely: ambiguous technical failures require review.
+    // Never publish automatically if moderation fails.
     return "pending";
   }
 }
 
-async function insertAction(userId, category, actionText, status, env) {
+async function insertAction(
+  userId,
+  category,
+  actionText,
+  status,
+  env
+) {
   const response = await fetch(
     `${env.SUPABASE_URL}/rest/v1/meaningful_actions`,
     {
@@ -137,10 +178,14 @@ async function submitAction(request, env) {
   }
 
   const category =
-    typeof body.category === "string" ? body.category.trim() : "";
+    typeof body.category === "string"
+      ? body.category.trim()
+      : "";
 
   const actionText =
-    typeof body.actionText === "string" ? body.actionText.trim() : "";
+    typeof body.actionText === "string"
+      ? body.actionText.trim()
+      : "";
 
   if (!CATEGORIES.has(category)) {
     return json({ error: "Choose a valid category." }, 400);
@@ -148,15 +193,37 @@ async function submitAction(request, env) {
 
   if (!actionText || actionText.length > 140) {
     return json(
-      { error: "Meaningful Actions must contain 1–140 characters." },
+      {
+        error:
+          "Meaningful Actions must contain 1–140 characters."
+      },
       400
     );
   }
 
   if (containsProhibitedMarkupOrLink(actionText)) {
     return json(
-      { error: "Links and markup are not permitted in Meaningful Actions." },
+      {
+        error:
+          "Links and markup are not permitted in Meaningful Actions."
+      },
       400
+    );
+  }
+
+  const humanVerified = await verifyTurnstile(
+    body.turnstileToken,
+    request,
+    env
+  );
+
+  if (!humanVerified) {
+    return json(
+      {
+        error:
+          "Verification failed or expired. Please try again."
+      },
+      403
     );
   }
 
@@ -198,7 +265,10 @@ export default {
       console.error("Worker error:", error);
 
       return json(
-        { error: "Something went wrong. Please try again." },
+        {
+          error:
+            "Something went wrong. Please try again."
+        },
         500
       );
     }
