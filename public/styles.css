@@ -122,6 +122,14 @@ h1 {
   opacity: .65;
 }
 
+.secondary-button {
+  padding: 15px 21px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-weight: 700;
+}
+
 .secondary-link {
   display: inline-block;
   margin-left: 20px;
@@ -274,6 +282,13 @@ dialog::backdrop {
   color: var(--muted);
 }
 
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
 form {
   display: grid;
   gap: 18px;
@@ -395,5 +410,13 @@ footer {
 
   dialog {
     padding: 32px 22px;
+  }
+
+  .dialog-actions {
+    flex-direction: column;
+  }
+
+  .dialog-actions button {
+    width: 100%;
   }
 }
