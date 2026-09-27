@@ -8,6 +8,7 @@ const CATEGORIES = new Set([
   "Service",
   "Faith",
   "Responsibility",
+  "Sacrifice",
   "Other"
 ]);
 
@@ -162,15 +163,6 @@ async function moderateAction(text, env) {
             .toLowerCase()
         : "";
 
-    /*
-      Only an explicit SAFE result
-      may publish automatically.
-
-      Unsafe, unclear, malformed,
-      or unexpected AI results
-      require human review.
-    */
-
     if (output.startsWith("safe")) {
       return "published";
     }
@@ -204,16 +196,6 @@ async function insertAction(
     moderation_status: status,
     is_demo: false
   };
-
-  /*
-    Our existing database trigger sets
-    moderated_at when status changes.
-
-    Because this endpoint may INSERT a row
-    directly as published, set moderated_at
-    explicitly for automatically published
-    submissions.
-  */
 
   if (status === "published") {
     row.moderated_at =
