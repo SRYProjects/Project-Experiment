@@ -158,70 +158,128 @@
       ×
     </button>
 
-    <p class="eyebrow">YOUR MEANINGFUL ACTION</p>
+    <div id="actionEntryState">
+      <p class="eyebrow">YOUR MEANINGFUL ACTION</p>
 
-    <h2>What did you deliberately do because it mattered?</h2>
+      <h2>What did you deliberately do because it mattered?</h2>
 
-    <p class="dialog-copy">
-      Record one specific action. Keep it simple and concrete.
-    </p>
+      <p class="dialog-copy">
+        Record one specific action. Keep it simple and concrete.
+      </p>
 
-    <form id="actionForm">
-      <label>
-        Category
+      <form id="actionForm">
+        <label>
+          Category
 
-        <select id="actionCategory" required>
-          <option value="">Choose a category</option>
-          <option>Family</option>
-          <option>Relationships</option>
-          <option>Health</option>
-          <option>Work</option>
-          <option>Learning</option>
-          <option>Creativity</option>
-          <option>Service</option>
-          <option>Faith</option>
-          <option>Responsibility</option>
-          <option>Sacrifice</option>
-          <option>Other</option>
-        </select>
-      </label>
+          <select id="actionCategory" required>
+            <option value="">Choose a category</option>
+            <option>Family</option>
+            <option>Relationships</option>
+            <option>Health</option>
+            <option>Work</option>
+            <option>Learning</option>
+            <option>Creativity</option>
+            <option>Service</option>
+            <option>Faith</option>
+            <option>Responsibility</option>
+            <option>Sacrifice</option>
+            <option>Other</option>
+          </select>
+        </label>
 
-      <label>
-        What did you do?
+        <label>
+          What did you do?
 
-        <textarea
-          id="actionText"
-          maxlength="140"
-          rows="4"
-          required
-          placeholder="I..."
-        ></textarea>
-      </label>
+          <textarea
+            id="actionText"
+            maxlength="140"
+            rows="4"
+            required
+            placeholder="I..."
+          ></textarea>
+        </label>
 
-      <div class="character-count">
-        <span id="actionCharacterCount">0</span>/140
-      </div>
+        <div class="character-count">
+          <span id="actionCharacterCount">0</span>/140
+        </div>
+
+        <div
+          class="cf-turnstile"
+          data-sitekey="0x4AAAAAAFFXWD-I0BinHjw3"
+          data-action="meaningful_action"
+        ></div>
+
+        <button
+          id="submitActionButton"
+          class="primary-button"
+          type="submit"
+        >
+          Share Meaningful Action
+        </button>
+      </form>
 
       <div
-        class="cf-turnstile"
-        data-sitekey="0x4AAAAAAFFXWD-I0BinHjw3"
-        data-action="meaningful_action"
+        id="actionMessage"
+        class="message hidden"
+        role="status"
       ></div>
+    </div>
 
-      <button
-        id="submitActionButton"
-        class="primary-button"
-        type="submit"
-      >
-        Share Meaningful Action
-      </button>
-    </form>
+    <div id="actionPublishedState" class="hidden">
+      <p class="eyebrow">ACTION RECORDED</p>
 
-    <div
-      id="actionMessage"
-      class="message hidden"
-      role="status"
-    ></div>
+      <h2>Your Meaningful Action has been published.</h2>
+
+      <p class="dialog-copy">
+        It is now part of the public experiment.
+      </p>
+
+      <div class="dialog-actions">
+        <button
+          id="viewPublishedActionButton"
+          class="primary-button"
+          type="button"
+        >
+          View My Action
+        </button>
+
+        <button
+          id="shareAnotherActionButton"
+          class="secondary-button"
+          type="button"
+        >
+          Share Another Action
+        </button>
+      </div>
+    </div>
+
+    <div id="actionPendingState" class="hidden">
+      <p class="eyebrow">ACTION RECEIVED</p>
+
+      <h2>Your Meaningful Action is pending review.</h2>
+
+      <p class="dialog-copy">
+        It will appear publicly after it is approved.
+      </p>
+
+      <div class="dialog-actions">
+        <button
+          id="shareAnotherPendingActionButton"
+          class="primary-button"
+          type="button"
+        >
+          Share Another Action
+        </button>
+
+        <button
+          id="closePendingActionButton"
+          class="secondary-button"
+          type="button"
+        >
+          Close
+        </button>
+      </div>
+    </div>
   </dialog>
 
   <dialog id="authDialog">
