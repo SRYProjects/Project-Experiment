@@ -131,6 +131,79 @@
     </section>
   </main>
 
+  <dialog id="actionDialog">
+    <button
+      id="closeActionDialog"
+      class="close-button"
+      aria-label="Close"
+      type="button"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">YOUR MEANINGFUL ACTION</p>
+
+    <h2>What did you deliberately do because it mattered?</h2>
+
+    <p class="dialog-copy">
+      Record one specific action. Keep it simple and concrete.
+    </p>
+
+    <form id="actionForm">
+      <label>
+        Category
+        <select id="actionCategory" required>
+          <option value="">Choose a category</option>
+          <option>Family</option>
+          <option>Relationships</option>
+          <option>Health</option>
+          <option>Work</option>
+          <option>Learning</option>
+          <option>Creativity</option>
+          <option>Service</option>
+          <option>Faith</option>
+          <option>Responsibility</option>
+          <option>Other</option>
+        </select>
+      </label>
+
+      <label>
+        What did you do?
+        <textarea
+          id="actionText"
+          maxlength="140"
+          rows="4"
+          required
+          placeholder="I..."
+        ></textarea>
+      </label>
+
+      <div class="character-count">
+        <span id="actionCharacterCount">0</span>/140
+      </div>
+
+      <div
+        class="cf-turnstile"
+        data-sitekey="0x4AAAAAAFFXWD-I0BinHjw3"
+        data-action="meaningful_action"
+      ></div>
+
+      <button
+        id="submitActionButton"
+        class="primary-button"
+        type="submit"
+      >
+        Share Meaningful Action
+      </button>
+    </form>
+
+    <div
+      id="actionMessage"
+      class="message hidden"
+      role="status"
+    ></div>
+  </dialog>
+
   <dialog id="authDialog">
     <button id="closeDialog" class="close-button" aria-label="Close">×</button>
 
