@@ -25,7 +25,9 @@ body {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -113,6 +115,11 @@ h1 {
   background: var(--accent);
   color: var(--white);
   font-weight: 700;
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: .65;
 }
 
 .secondary-link {
@@ -246,6 +253,10 @@ dialog {
   box-shadow: 0 25px 80px rgba(0,0,0,.3);
 }
 
+#actionDialog {
+  width: min(600px, calc(100% - 32px));
+}
+
 dialog::backdrop {
   background: rgba(10,12,11,.72);
 }
@@ -276,11 +287,30 @@ label {
   font-weight: 700;
 }
 
-input {
+input,
+select,
+textarea {
   width: 100%;
   padding: 13px;
   border: 1px solid var(--line);
   background: var(--white);
+  color: var(--ink);
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.character-count {
+  margin-top: -10px;
+  text-align: right;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+#actionDialog .cf-turnstile {
+  min-height: 65px;
 }
 
 .text-button {
@@ -295,6 +325,14 @@ input {
   margin-top: 24px;
   padding: 15px;
   border: 1px solid var(--line);
+}
+
+.message.success {
+  border-color: #6f806e;
+}
+
+.message.pending {
+  border-color: #9a8254;
 }
 
 .hidden {
@@ -353,5 +391,9 @@ footer {
   .project-section {
     padding-left: 6vw;
     padding-right: 6vw;
+  }
+
+  dialog {
+    padding: 32px 22px;
   }
 }
