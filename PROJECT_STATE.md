@@ -146,36 +146,23 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 ## Database handoff checkpoint
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
-## Public Meaningful Actions feed — current increment
-The first feed increment is now committed in `src/index.js`:
-- public `GET /api/actions` endpoint;
+## Exact next step
+**Build the public Meaningful Actions feed, starting with the server/data endpoint in `src/index.js`.**
+
+Required feed behavior:
 - published entries only;
 - newest first;
-- returns action id, public username, category, action text, timestamp, and demo flag;
-- optional category filtering;
-- optional exact, case-insensitive username filtering using `profiles.username_normalized`;
-- invalid/impossible username searches return an empty result rather than a broad match.
-
-Commit: `0197070944c9a25db8c01c79fc2736657be19b34` — **Add public Meaningful Actions feed endpoint**.
-
-Repository inspection confirms the committed route and query logic are present. Production execution could not be verified from the coding environment because the production domain was not reachable from the available network tools. Do not assume live deployment success until the endpoint is checked directly.
-
-## Exact next step
-**Verify the deployed endpoint on production before building the homepage feed UI.**
-
-Check:
-1. `https://projectmeaningful.app/api/actions` returns JSON with published actions only.
-2. A category query such as `?category=Work` returns only that category.
-3. An exact username query using different capitalization returns only that user's published actions.
-
-If those checks pass, build the homepage Meaningful Actions feed UI from this endpoint:
-- username, category, action text, date/time;
-- visible **Example** label when `isDemo = true`;
-- category filter;
-- exact username search;
+- public username;
+- category;
+- action text;
+- date/time;
+- Example label for demo content;
+- demo content excluded from real statistics;
+- category filtering;
+- exact, case-insensitive username search;
 - clear no-results state;
-- fixed-height independently scrollable feed with visible scrollbar;
-- then update **View My Action** to target/highlight the newly submitted action by returned action id.
+- fixed-height independently scrollable homepage feed;
+- after the feed exists, make **View My Action** target the newly submitted entry rather than merely scroll to the section.
 
 Build this in small deployable increments and test before proceeding.
 
