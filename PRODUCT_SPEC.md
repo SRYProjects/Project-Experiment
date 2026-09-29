@@ -1,6 +1,9 @@
-# Project Meaningful — Product Specification
+# Project Experiment — Product Specification
 
-Status: Canonical V1 product decisions. Update only when an actual product decision changes.
+Status: Canonical V1 product decisions for the **Project Experiment** repository and public experiment. Update only when an actual product decision changes.
+
+## Project identity
+This repository is **`SRYProjects/Project-Experiment`**. It contains the lightweight public Project Meaningful experiment at `projectmeaningful.app`. It is **not** the separate, complex **TMP App (The Meaningful Project app)** project. Never use TMP App files, repository state, or requirements as implementation authority for this repository.
 
 ## Purpose
 Project Meaningful is a lightweight public experiment built around one question:
