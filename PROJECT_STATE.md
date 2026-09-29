@@ -1,19 +1,26 @@
-# Project Meaningful — Project State
+# Project Experiment — Project State
 
 Last updated: 2026-09-29  
-Repository: `SRYProjects/Project-Meaningful`  
+Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
 
 This file is the implementation checkpoint. The live repository/code is the implementation source of truth.
 
+## Project identity — do not confuse projects
+- **This project:** Project Experiment — repository `SRYProjects/Project-Experiment` — lightweight public experiment deployed at `projectmeaningful.app`.
+- **Separate project:** TMP App (The Meaningful Project app) — a larger, complex application with its own files, repository, requirements, and implementation state.
+- Never inspect, modify, or import TMP App material when working on Project Experiment unless the user explicitly directs a cross-project task.
+- The former repository name `SRYProjects/Project-Meaningful` is obsolete for this project.
+
 ## Operating rule — every future conversation
 At the start of every future conversation for this project:
-1. Read `PRODUCT_SPEC.md`.
-2. Read `PROJECT_STATE.md`.
-3. Inspect the current repository and recent commits.
-4. Treat the live code as implementation truth.
-5. Continue from the documented exact next step unless newer testing or code indicates otherwise.
+1. Confirm the repository is `SRYProjects/Project-Experiment`; do not substitute TMP App or the obsolete `Project-Meaningful` repository name.
+2. Read `PRODUCT_SPEC.md`.
+3. Read `PROJECT_STATE.md`.
+4. Inspect the current repository and recent commits.
+5. Treat the live code as implementation truth.
+6. Continue from the documented exact next step unless newer testing or code indicates otherwise.
 
 Never guess when history, documentation, and code conflict. Preserve tested behavior unless a newer product decision explicitly changes it.
 
