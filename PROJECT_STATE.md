@@ -29,6 +29,13 @@ Never guess when history, documentation, and code conflict. Preserve tested beha
 
 Runtime configuration includes Supabase URL plus server-side Supabase and Turnstile secrets and Workers AI binding. Secrets must never be placed in client code or documentation.
 
+### Database source of truth
+- `supabase/schema.sql` is the verified baseline of the live Supabase `public` schema as inspected on 2026-09-29.
+- It records the current enums, tables, generated/identity columns, constraints, indexes, functions, triggers, RLS policies, and effective API-role privileges.
+- It is a **fresh-project baseline**, not a script to rerun against production.
+- Future database changes must be committed as dated SQL files under `supabase/migrations/` and applied deliberately to Supabase. Do not make undocumented dashboard-only schema changes.
+- Supabase-managed schemas such as `auth` are external platform infrastructure and are intentionally not duplicated in the repository.
+
 ## Built
 ### Site shell
 - Homepage hero, experiment introduction, project activity area, Meaningful Actions placeholder, Discoveries placeholder, Project Meaningful section, footer.
@@ -118,6 +125,8 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - `is_demo` exists at content level and may also be represented elsewhere; normalize only if needed.
 - Turnstile is on Meaningful Action submission but not registration.
 - Rate limiting is not yet implemented.
+- Current Supabase table grants are broad for API roles; RLS is the operative row-access boundary. Preserve and audit RLS carefully whenever schema/policies change.
+- Security-definer/helper functions currently have EXECUTE granted to the standard API roles. Their definitions were captured exactly from production; privilege tightening can be considered separately rather than silently changing the verified baseline.
 - “View My Action” cannot identify/highlight the submitted item until the feed exists.
 
 ## Recent meaningful repository work
@@ -127,11 +136,15 @@ Current repository inspection confirms the live implementation contains:
 - `public/app.js`: post-submission states, backdrop close, Share Another Action, View My Action scroll behavior.
 - `src/index.js`: Sacrifice server allowlist plus authenticated Turnstile/moderation/database submission pipeline.
 - `wrangler.jsonc`: static assets, Worker API routing, Workers AI binding, Supabase URL.
+- `supabase/schema.sql`: verified baseline of the live public database schema.
 
-The repository's current files were inspected directly before this state file was created.
+The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
 ## Deployment status
 Production deployment is live at **projectmeaningful.app**. The latest code changes above were reported deployed successfully and then exercised on the live site.
+
+## Database handoff checkpoint
+On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
 **Build the public Meaningful Actions feed, starting with the server/data endpoint in `src/index.js`.**
