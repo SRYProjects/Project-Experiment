@@ -17,6 +17,7 @@ Standing operating contract for coding agents working in this repository.
 13. Update `PRODUCT_SPEC.md` only when an actual product decision changes.
 14. Do not use conversation memory as the sole authority when repository documentation or code is available.
 15. Never expose or commit secrets. Public client keys may remain client-side only when intentionally public; service/secret keys remain server-side.
-16. When handing code to the project owner manually, provide complete replacement files rather than snippets unless there is a compelling reason not to.
+16. Database work: treat `supabase/schema.sql` as the verified baseline. Put every future schema/policy/function/trigger change in a dated file under `supabase/migrations/`; apply it deliberately to Supabase and update the baseline only after production is verified. Never make undocumented dashboard-only schema changes.
+17. When handing code to the project owner manually, provide complete replacement files rather than snippets unless there is a compelling reason not to.
 
 Keep this file focused on operating discipline. Product requirements belong in `PRODUCT_SPEC.md`; implementation status belongs in `PROJECT_STATE.md`.
