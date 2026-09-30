@@ -93,6 +93,7 @@ Known schema includes:
 
 ## Tested and confirmed working
 Live production testing has confirmed:
+- public `GET /api/actions` returns published Meaningful Actions newest-first with username, category, action text, timestamp, and Example status, without exposing `user_id` or email;
 - custom domain loads;
 - Supabase/Resend magic-link authentication works end-to-end;
 - a separate/private browser session requires its own authentication context;
@@ -109,7 +110,7 @@ Live production testing has confirmed:
 Recent live test examples included Work (“Finished proposal for new clients”) and Sacrifice (“Instead of wasting time, I went for a walk”).
 
 ## Currently unfinished
-- Public Meaningful Actions feed: currently an empty placeholder.
+- Homepage Meaningful Actions feed UI: currently an empty placeholder.
 - Meaningful Actions category filter and exact case-insensitive username search.
 - Dedicated Meaningful Actions archive.
 - Discoveries submission, moderation, public feed, and archive.
@@ -154,7 +155,7 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Build the public Meaningful Actions feed, starting with the server/data endpoint in `src/index.js`.**
+**Build the homepage Meaningful Actions feed UI against the now-tested `GET /api/actions` endpoint.**
 
 Required feed behavior:
 - published entries only;
