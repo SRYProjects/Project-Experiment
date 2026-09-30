@@ -105,6 +105,11 @@ const shareAnotherPendingActionButton =
 const closePendingActionButton =
   document.querySelector("#closePendingActionButton");
 
+const actionsFeed =
+  document.querySelector("#actionsFeed");
+
+let lastPublishedActionId = null;
+
 /* -------------------------
    MESSAGES
 ------------------------- */
@@ -516,6 +521,163 @@ actionText.addEventListener(
 );
 
 /* -------------------------
+   PUBLIC MEANINGFUL ACTIONS
+------------------------- */
+
+function formatActionDate(value) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat(
+    undefined,
+    {
+      dateStyle: "medium",
+      timeStyle: "short"
+    }
+  ).format(date);
+}
+
+function createActionCard(action) {
+  const article =
+    document.createElement("article");
+
+  article.className = "action-card";
+  article.dataset.actionId =
+    String(action.id);
+
+  const meta =
+    document.createElement("div");
+
+  meta.className = "action-meta";
+
+  const username =
+    document.createElement("strong");
+
+  username.textContent =
+    action.username;
+
+  const category =
+    document.createElement("span");
+
+  category.textContent =
+    action.category;
+
+  const date =
+    document.createElement("time");
+
+  date.dateTime =
+    action.createdAt;
+
+  date.textContent =
+    formatActionDate(action.createdAt);
+
+  meta.append(
+    username,
+    category,
+    date
+  );
+
+  if (action.isExample) {
+    const example =
+      document.createElement("span");
+
+    example.className = "example-label";
+    example.textContent = "Example";
+
+    meta.append(example);
+  }
+
+  const text =
+    document.createElement("p");
+
+  text.className = "action-text";
+  text.textContent =
+    action.actionText;
+
+  article.append(meta, text);
+
+  return article;
+}
+
+async function loadPublicActions() {
+  actionsFeed.setAttribute(
+    "aria-busy",
+    "true"
+  );
+
+  try {
+    const response =
+      await fetch("/api/actions");
+
+    if (!response.ok) {
+      throw new Error(
+        "Public actions request failed"
+      );
+    }
+
+    const result =
+      await response.json();
+
+    const actions =
+      Array.isArray(result.actions)
+        ? result.actions
+        : [];
+
+    actionsFeed.replaceChildren();
+
+    if (actions.length === 0) {
+      const empty =
+        document.createElement("p");
+
+      empty.className = "empty-state";
+      empty.textContent =
+        "No Meaningful Actions have been published yet.";
+
+      actionsFeed.append(empty);
+
+      return;
+    }
+
+    const fragment =
+      document.createDocumentFragment();
+
+    for (const action of actions) {
+      fragment.append(
+        createActionCard(action)
+      );
+    }
+
+    actionsFeed.append(fragment);
+  } catch (error) {
+    console.error(
+      "Meaningful Actions feed failed:",
+      error
+    );
+
+    const unavailable =
+      document.createElement("p");
+
+    unavailable.className =
+      "empty-state";
+
+    unavailable.textContent =
+      "Meaningful Actions are temporarily unavailable.";
+
+    actionsFeed.replaceChildren(
+      unavailable
+    );
+  } finally {
+    actionsFeed.setAttribute(
+      "aria-busy",
+      "false"
+    );
+  }
+}
+
+/* -------------------------
    POST-SUBMISSION ACTIONS
 ------------------------- */
 
@@ -538,8 +700,10 @@ closePendingActionButton.addEventListener(
 
 viewPublishedActionButton.addEventListener(
   "click",
-  () => {
+  async () => {
     actionDialog.close();
+
+    await loadPublicActions();
 
     document
       .querySelector("#actions")
@@ -547,6 +711,20 @@ viewPublishedActionButton.addEventListener(
         behavior: "smooth",
         block: "start"
       });
+
+    if (lastPublishedActionId !== null) {
+      const card =
+        actionsFeed.querySelector(
+          `[data-action-id="${lastPublishedActionId}"]`
+        );
+
+      if (card) {
+        card.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      }
+    }
   }
 );
 
@@ -663,9 +841,15 @@ actionForm.addEventListener(
       }
 
       if (result.status === "published") {
+        lastPublishedActionId =
+          result.action?.id ?? null;
+
         showActionPublishedState();
 
-        await loadProjectStats();
+        await Promise.all([
+          loadProjectStats(),
+          loadPublicActions()
+        ]);
       } else {
         showActionPendingState();
       }
@@ -723,4 +907,7 @@ async function loadProjectStats() {
     stats.real_participants ?? 0;
 }
 
-await loadProjectStats();
+await Promise.all([
+  loadProjectStats(),
+  loadPublicActions()
+]);
