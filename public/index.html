@@ -88,6 +88,39 @@
         </p>
       </div>
 
+      <form id="actionsControls" class="feed-controls" role="search">
+        <label>
+          Category
+          <select id="actionsCategoryFilter">
+            <option value="">All categories</option>
+            <option>Family</option>
+            <option>Relationships</option>
+            <option>Health</option>
+            <option>Work</option>
+            <option>Learning</option>
+            <option>Creativity</option>
+            <option>Service</option>
+            <option>Faith</option>
+            <option>Responsibility</option>
+            <option>Sacrifice</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label>
+          Username
+          <input
+            id="actionsUsernameSearch"
+            type="search"
+            autocomplete="off"
+            placeholder="Exact username"
+          >
+        </label>
+
+        <button class="secondary-button" type="submit">Find Actions</button>
+        <button id="clearActionsFilters" class="text-button" type="button">Clear</button>
+      </form>
+
       <div id="actionsFeed" class="feed" aria-live="polite" aria-busy="true">
         <p class="empty-state">
           Loading Meaningful Actions…
