@@ -108,6 +108,19 @@ const closePendingActionButton =
 const actionsFeed =
   document.querySelector("#actionsFeed");
 
+const actionsControls =
+  document.querySelector("#actionsControls");
+
+const actionsCategoryFilter =
+  document.querySelector("#actionsCategoryFilter");
+
+const actionsUsernameSearch =
+  document.querySelector("#actionsUsernameSearch");
+
+const clearActionsFilters =
+  document.querySelector("#clearActionsFilters");
+
+let publicActions = [];
 let lastPublishedActionId = null;
 
 /* -------------------------
@@ -602,6 +615,59 @@ function createActionCard(action) {
   return article;
 }
 
+function renderPublicActions() {
+  const category =
+    actionsCategoryFilter.value;
+
+  const username =
+    actionsUsernameSearch.value
+      .trim()
+      .toLocaleLowerCase();
+
+  const actions =
+    publicActions.filter((action) => {
+      const categoryMatches =
+        !category ||
+        action.category === category;
+
+      const usernameMatches =
+        !username ||
+        action.username
+          .toLocaleLowerCase() === username;
+
+      return (
+        categoryMatches &&
+        usernameMatches
+      );
+    });
+
+  actionsFeed.replaceChildren();
+
+  if (actions.length === 0) {
+    const empty =
+      document.createElement("p");
+
+    empty.className = "empty-state";
+    empty.textContent =
+      "No results found.";
+
+    actionsFeed.append(empty);
+
+    return;
+  }
+
+  const fragment =
+    document.createDocumentFragment();
+
+  for (const action of actions) {
+    fragment.append(
+      createActionCard(action)
+    );
+  }
+
+  actionsFeed.append(fragment);
+}
+
 async function loadPublicActions() {
   actionsFeed.setAttribute(
     "aria-busy",
@@ -621,41 +687,19 @@ async function loadPublicActions() {
     const result =
       await response.json();
 
-    const actions =
+    publicActions =
       Array.isArray(result.actions)
         ? result.actions
         : [];
 
-    actionsFeed.replaceChildren();
-
-    if (actions.length === 0) {
-      const empty =
-        document.createElement("p");
-
-      empty.className = "empty-state";
-      empty.textContent =
-        "No Meaningful Actions have been published yet.";
-
-      actionsFeed.append(empty);
-
-      return;
-    }
-
-    const fragment =
-      document.createDocumentFragment();
-
-    for (const action of actions) {
-      fragment.append(
-        createActionCard(action)
-      );
-    }
-
-    actionsFeed.append(fragment);
+    renderPublicActions();
   } catch (error) {
     console.error(
       "Meaningful Actions feed failed:",
       error
     );
+
+    publicActions = [];
 
     const unavailable =
       document.createElement("p");
@@ -676,6 +720,28 @@ async function loadPublicActions() {
     );
   }
 }
+
+actionsControls.addEventListener(
+  "submit",
+  (event) => {
+    event.preventDefault();
+    renderPublicActions();
+  }
+);
+
+actionsCategoryFilter.addEventListener(
+  "change",
+  renderPublicActions
+);
+
+clearActionsFilters.addEventListener(
+  "click",
+  () => {
+    actionsCategoryFilter.value = "";
+    actionsUsernameSearch.value = "";
+    renderPublicActions();
+  }
+);
 
 /* -------------------------
    POST-SUBMISSION ACTIONS
