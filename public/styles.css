@@ -219,6 +219,54 @@ dialog h2 {
   background: var(--paper);
 }
 
+.action-card {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.action-card:first-child {
+  padding-top: 0;
+}
+
+.action-card:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.action-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.action-meta strong {
+  color: var(--ink);
+  font-size: .88rem;
+}
+
+.action-meta time {
+  margin-left: auto;
+}
+
+.example-label {
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.action-text {
+  margin: 9px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  line-height: 1.45;
+}
+
 .empty-state {
   color: var(--muted);
 }
