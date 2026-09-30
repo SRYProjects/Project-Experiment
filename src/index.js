@@ -245,6 +245,132 @@ async function insertAction(
 }
 
 /* -------------------------
+   PUBLIC ACTION FEED
+------------------------- */
+
+async function fetchPublishedActions(env) {
+  const params = new URLSearchParams({
+    select: "id,user_id,category,action_text,is_demo,created_at",
+    moderation_status: "eq.published",
+    order: "created_at.desc",
+    limit: "100"
+  });
+
+  const response = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/meaningful_actions?${params.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
+        apikey: env.SUPABASE_SECRET_KEY
+      }
+    }
+  );
+
+  if (!response.ok) {
+    const detail = await response.text();
+
+    console.error(
+      "Supabase public actions fetch failed:",
+      detail
+    );
+
+    throw new Error("Database fetch failed");
+  }
+
+  return response.json();
+}
+
+async function fetchProfilesById(userIds, env) {
+  if (userIds.length === 0) {
+    return [];
+  }
+
+  const params = new URLSearchParams({
+    select: "id,username",
+    id: `in.(${userIds.join(",")})`
+  });
+
+  const response = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/profiles?${params.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
+        apikey: env.SUPABASE_SECRET_KEY
+      }
+    }
+  );
+
+  if (!response.ok) {
+    const detail = await response.text();
+
+    console.error(
+      "Supabase public profiles fetch failed:",
+      detail
+    );
+
+    throw new Error("Profile fetch failed");
+  }
+
+  return response.json();
+}
+
+async function getPublicActions(env) {
+  const rows = await fetchPublishedActions(env);
+
+  const userIds = [
+    ...new Set(
+      rows
+        .map((row) => row.user_id)
+        .filter(
+          (id) =>
+            typeof id === "string" &&
+            /^[0-9a-f-]{36}$/i.test(id)
+        )
+    )
+  ];
+
+  const profiles =
+    await fetchProfilesById(userIds, env);
+
+  const usernameById =
+    new Map(
+      profiles
+        .filter(
+          (profile) =>
+            typeof profile?.id === "string" &&
+            typeof profile?.username === "string" &&
+            profile.username.trim()
+        )
+        .map((profile) => [
+          profile.id,
+          profile.username.trim()
+        ])
+    );
+
+  const actions = rows
+    .map((row) => {
+      const username =
+        usernameById.get(row.user_id);
+
+      if (!username) {
+        return null;
+      }
+
+      return {
+        id: row.id,
+        username,
+        category: row.category,
+        actionText: row.action_text,
+        createdAt: row.created_at,
+        isExample: row.is_demo === true
+      };
+    })
+    .filter(Boolean);
+
+  return json({ actions });
+}
+
+/* -------------------------
    ACTION SUBMISSION
 ------------------------- */
 
@@ -377,6 +503,15 @@ export default {
       new URL(request.url);
 
     try {
+      if (
+        url.pathname === "/api/actions" &&
+        request.method === "GET"
+      ) {
+        return await getPublicActions(
+          env
+        );
+      }
+
       if (
         url.pathname === "/api/actions" &&
         request.method === "POST"
