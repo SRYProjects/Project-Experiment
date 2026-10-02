@@ -46,7 +46,8 @@ Primary action: **Share Your Meaningful Action**.
 - Maximum 140 characters, enforced client- and server-side.
 - Categories: Family, Relationships, Health, Work, Learning, Creativity, Service, Faith, Responsibility, Sacrifice, Other.
 - Public feed: newest first; username, category, action, date/time.
-- Homepage feed is fixed-height and independently scrollable with a visible scrollbar.
+- Homepage feed is fixed-height and independently scrollable with a visible scrollbar. Keep the homepage stream compact rather than stretching short 140-character entries across excessive vertical space.
+- On wider screens, once Discoveries are fully implemented, present Meaningful Actions and Discoveries as complementary side-by-side public streams; stack them on smaller screens.
 - Category filtering.
 - Username search is exact and case-insensitive.
 - Clear “No results found” state.
