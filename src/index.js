@@ -248,13 +248,50 @@ async function insertAction(
    PUBLIC ACTION FEED
 ------------------------- */
 
-async function fetchPublishedActions(env) {
+async function fetchProfileByUsername(username, env) {
+  const params = new URLSearchParams({
+    select: "id,username",
+    username_normalized: `eq.${username.toLowerCase()}`,
+    limit: "1"
+  });
+
+  const response = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/profiles?${params.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
+        apikey: env.SUPABASE_SECRET_KEY
+      }
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Profile lookup failed");
+  }
+
+  const rows = await response.json();
+  return rows[0] ?? null;
+}
+
+async function fetchPublishedActions(
+  env,
+  { limit = 100, offset = 0, category = "", userId = "" } = {}
+) {
   const params = new URLSearchParams({
     select: "id,user_id,category,action_text,is_demo,created_at",
     moderation_status: "eq.published",
     order: "created_at.desc",
-    limit: "100"
+    limit: String(limit),
+    offset: String(offset)
   });
+
+  if (category) {
+    params.set("category", `eq.${category}`);
+  }
+
+  if (userId) {
+    params.set("user_id", `eq.${userId}`);
+  }
 
   const response = await fetch(
     `${env.SUPABASE_URL}/rest/v1/meaningful_actions?${params.toString()}`,
@@ -268,12 +305,7 @@ async function fetchPublishedActions(env) {
 
   if (!response.ok) {
     const detail = await response.text();
-
-    console.error(
-      "Supabase public actions fetch failed:",
-      detail
-    );
-
+    console.error("Supabase public actions fetch failed:", detail);
     throw new Error("Database fetch failed");
   }
 
@@ -301,25 +333,59 @@ async function fetchProfilesById(userIds, env) {
   );
 
   if (!response.ok) {
-    const detail = await response.text();
-
-    console.error(
-      "Supabase public profiles fetch failed:",
-      detail
-    );
-
     throw new Error("Profile fetch failed");
   }
 
   return response.json();
 }
 
-async function getPublicActions(env) {
-  const rows = await fetchPublishedActions(env);
+async function getPublicActions(request, env) {
+  const url = new URL(request.url);
+  const rawLimit = Number.parseInt(url.searchParams.get("limit") || "100", 10);
+  const rawOffset = Number.parseInt(url.searchParams.get("offset") || "0", 10);
+  const limit = Number.isFinite(rawLimit)
+    ? Math.min(Math.max(rawLimit, 1), 100)
+    : 100;
+  const offset = Number.isFinite(rawOffset)
+    ? Math.max(rawOffset, 0)
+    : 0;
+
+  const category = (url.searchParams.get("category") || "").trim();
+  const username = (url.searchParams.get("username") || "").trim();
+
+  if (category && !CATEGORIES.has(category)) {
+    return json({ error: "Invalid category." }, 400);
+  }
+
+  if (username && !/^[A-Za-z0-9_]{3,30}$/.test(username)) {
+    return json({ actions: [], hasMore: false });
+  }
+
+  let userId = "";
+
+  if (username) {
+    const profile = await fetchProfileByUsername(username, env);
+
+    if (!profile) {
+      return json({ actions: [], hasMore: false });
+    }
+
+    userId = profile.id;
+  }
+
+  const rows = await fetchPublishedActions(env, {
+    limit: limit + 1,
+    offset,
+    category,
+    userId
+  });
+
+  const hasMore = rows.length > limit;
+  const pageRows = rows.slice(0, limit);
 
   const userIds = [
     ...new Set(
-      rows
+      pageRows
         .map((row) => row.user_id)
         .filter(
           (id) =>
@@ -329,36 +395,29 @@ async function getPublicActions(env) {
     )
   ];
 
-  const profiles =
-    await fetchProfilesById(userIds, env);
-
-  const usernameById =
-    new Map(
-      profiles
-        .filter(
-          (profile) =>
-            typeof profile?.id === "string" &&
-            typeof profile?.username === "string" &&
-            profile.username.trim()
-        )
-        .map((profile) => [
-          profile.id,
+  const profiles = await fetchProfilesById(userIds, env);
+  const usernameById = new Map(
+    profiles
+      .filter(
+        (profile) =>
+          typeof profile?.id === "string" &&
+          typeof profile?.username === "string" &&
           profile.username.trim()
-        ])
-    );
+      )
+      .map((profile) => [profile.id, profile.username.trim()])
+  );
 
-  const actions = rows
+  const actions = pageRows
     .map((row) => {
-      const username =
-        usernameById.get(row.user_id);
+      const publicUsername = usernameById.get(row.user_id);
 
-      if (!username) {
+      if (!publicUsername) {
         return null;
       }
 
       return {
         id: row.id,
-        username,
+        username: publicUsername,
         category: row.category,
         actionText: row.action_text,
         createdAt: row.created_at,
@@ -367,7 +426,7 @@ async function getPublicActions(env) {
     })
     .filter(Boolean);
 
-  return json({ actions });
+  return json({ actions, hasMore });
 }
 
 /* -------------------------
@@ -508,6 +567,7 @@ export default {
         request.method === "GET"
       ) {
         return await getPublicActions(
+          request,
           env
         );
       }
