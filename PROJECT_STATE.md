@@ -111,8 +111,8 @@ Live production testing has confirmed:
 Recent live test examples included Work (“Finished proposal for new clients”) and Sacrifice (“Instead of wasting time, I went for a walk”).
 
 ## Currently unfinished
-- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented; latest production verification confirmed filtering/search behavior before the most recent presentation changes.
-- Dedicated Meaningful Actions archive.
+- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The feed height has been reduced from 330px to 260px and now links to the full archive. Latest production verification confirmed filtering/search behavior before these newest presentation/archive changes.
+- Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
 - Discoveries submission, moderation, public feed, and archive.
 - Your Record; nav currently shows a placeholder alert.
 - Registration Turnstile.
@@ -156,7 +156,7 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Verify the latest homepage/action-dialog presentation changes in production, then build the dedicated Meaningful Actions archive and continue through the remaining V1 roadmap.**
+**Verify the new Meaningful Actions archive and compact homepage feed in production. Then build Discoveries submission/moderation/feed/archive; once Discoveries are live, place Actions and Discoveries side-by-side on wider screens and stack them responsively on smaller screens.**
 
 Required feed behavior:
 - published entries only;
@@ -176,10 +176,9 @@ Required feed behavior:
 Build this in small deployable increments and test before proceeding.
 
 ## Short remaining roadmap
-1. Public Meaningful Actions endpoint/feed/search/filter + View My Action targeting.
-2. Dedicated Meaningful Actions archive.
-3. Discoveries submission/moderation/feed/archive.
-4. Your Record.
+1. Verify Meaningful Actions archive/pagination and finish View My Action targeting.
+2. Discoveries submission/moderation/feed/archive + desktop dual-stream homepage layout.
+3. Your Record.
 5. Registration abuse protection + rate limiting/search throttling/reserved usernames.
 6. Admin review/removal workflow.
 7. Demo content.
