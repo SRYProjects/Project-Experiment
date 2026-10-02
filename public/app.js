@@ -725,12 +725,16 @@ actionsControls.addEventListener(
   "submit",
   (event) => {
     event.preventDefault();
-    renderPublicActions();
   }
 );
 
 actionsCategoryFilter.addEventListener(
   "change",
+  renderPublicActions
+);
+
+actionsUsernameSearch.addEventListener(
+  "input",
   renderPublicActions
 );
 
@@ -740,6 +744,7 @@ clearActionsFilters.addEventListener(
     actionsCategoryFilter.value = "";
     actionsUsernameSearch.value = "";
     renderPublicActions();
+    actionsCategoryFilter.focus();
   }
 );
 
