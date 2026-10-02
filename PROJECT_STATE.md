@@ -1,6 +1,6 @@
 # Project Experiment — Project State
 
-Last updated: 2026-09-29  
+Last updated: 2026-10-02  
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -111,8 +111,7 @@ Live production testing has confirmed:
 Recent live test examples included Work (“Finished proposal for new clients”) and Sacrifice (“Instead of wasting time, I went for a walk”).
 
 ## Currently unfinished
-- Homepage Meaningful Actions feed styling/polish is in progress; live entries now render.
-- Meaningful Actions category filter and exact case-insensitive username search.
+- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented; latest production verification confirmed filtering/search behavior before the most recent presentation changes.
 - Dedicated Meaningful Actions archive.
 - Discoveries submission, moderation, public feed, and archive.
 - Your Record; nav currently shows a placeholder alert.
@@ -122,7 +121,8 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Admin review/removal UI and MFA/allowlist completion as applicable.
 - Demo content.
 - Account deletion/export UX and Privacy/Terms.
-- Final project launch date / dynamic Day N.
+- Final project launch date / dynamic Day N; until launch is set, the interface now says **Not launched** rather than showing a false Day 1.
+- Future full-application update opt-in persistence/consent mechanism; the current UI explains the option but deliberately does not collect consent yet.
 - Accessibility/polish pass.
 
 ## Known risks / technical debt
@@ -156,7 +156,7 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Finish and verify homepage Meaningful Actions feed presentation, then add category filtering and exact case-insensitive username search.**
+**Verify the latest homepage/action-dialog presentation changes in production, then build the dedicated Meaningful Actions archive and continue through the remaining V1 roadmap.**
 
 Required feed behavior:
 - published entries only;
