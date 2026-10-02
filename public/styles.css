@@ -221,14 +221,22 @@ dialog h2 {
 
 .feed-controls {
   display: grid;
-  grid-template-columns: minmax(150px, 220px) minmax(180px, 260px) auto;
+  grid-template-columns: 220px 260px max-content;
   align-items: end;
   gap: 12px;
   margin: 0 0 16px;
 }
 
+.feed-controls select,
+.feed-controls input,
 .feed-controls .secondary-button {
-  min-height: 47px;
+  height: 47px;
+}
+
+.feed-controls .secondary-button {
+  min-width: 110px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .action-card {
