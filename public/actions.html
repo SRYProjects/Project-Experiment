@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse published Meaningful Actions from Project Meaningful.">
+  <title>Meaningful Actions — Project Meaningful</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">PROJECT MEANINGFUL</a>
+    <nav aria-label="Primary navigation">
+      <a href="/">Home</a>
+      <a href="/#discoveries">Discoveries</a>
+      <a href="/#project">The Project</a>
+    </nav>
+  </header>
+  <main class="archive-page">
+    <section class="archive-heading">
+      <p class="eyebrow">THE PUBLIC RECORD</p>
+      <h1>Meaningful Actions</h1>
+      <p>Browse what participants chose to do because it was meaningful to them.</p>
+    </section>
+    <form id="archiveControls" class="feed-controls archive-controls" role="search">
+      <label>Category
+        <select id="archiveCategory">
+          <option value="">All categories</option>
+          <option>Family</option><option>Relationships</option><option>Health</option>
+          <option>Work</option><option>Learning</option><option>Creativity</option>
+          <option>Service</option><option>Faith</option><option>Responsibility</option>
+          <option>Sacrifice</option><option>Other</option>
+        </select>
+      </label>
+      <label>Username
+        <input id="archiveUsername" type="search" autocomplete="off" placeholder="See a participant’s actions">
+      </label>
+      <button id="archiveShowAll" class="secondary-button" type="button">Show All</button>
+    </form>
+    <div id="archiveFeed" class="archive-feed" aria-live="polite" aria-busy="true">
+      <p class="empty-state">Loading Meaningful Actions…</p>
+    </div>
+    <button id="loadMoreActions" class="secondary-button archive-load-more hidden" type="button">Load More</button>
+  </main>
+  <footer>
+    <span>Project Meaningful</span>
+    <a href="/">Return to the experiment</a>
+  </footer>
+  <script type="module" src="/actions.js"></script>
+</body>
+</html>
