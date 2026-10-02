@@ -106,7 +106,7 @@ Definitions:
 - Unverified users do not count.
 - Demo content is excluded from real counts.
 - Project day/today uses **America/New_York (Eastern Time)**.
-- Day 1 is based on a fixed launch date.
+- Day 1 is based on a fixed launch date. Before the public launch date is set, the interface must show **Not launched** rather than fabricate a day count.
 - Do not fabricate activity counts.
 
 ## Demo content
@@ -193,6 +193,8 @@ RLS is part of the database security model. Public statistics are exposed throug
 
 ## Larger/commercial direction
 The public experiment is one part of the larger Project Meaningful ecosystem: the Book, public Experiment, future deeper Application, and Community. V1 is free/public and is not the full commercial application.
+
+The experiment should invite interested participants to opt in to occasional information about the future full Meaningful application, but participation in the experiment must never subscribe them automatically. Until a consent-storage mechanism and appropriate disclosure are implemented, the site may explain the future opt-in but must not pretend to collect it.
 
 ## Revisions / rejected directions
 Later decisions supersede earlier proposals:
