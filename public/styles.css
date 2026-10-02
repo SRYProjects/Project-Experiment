@@ -221,7 +221,7 @@ dialog h2 {
 
 .feed-controls {
   display: grid;
-  grid-template-columns: minmax(150px, 220px) minmax(180px, 260px) auto auto;
+  grid-template-columns: minmax(150px, 220px) minmax(180px, 260px) auto;
   align-items: end;
   gap: 12px;
   margin: 0 0 16px;
@@ -229,10 +229,6 @@ dialog h2 {
 
 .feed-controls .secondary-button {
   min-height: 47px;
-}
-
-.feed-controls .text-button {
-  margin: 0 0 13px;
 }
 
 .action-card {
@@ -432,10 +428,6 @@ footer {
     grid-template-columns: 1fr 1fr;
   }
 
-  .feed-controls .text-button {
-    margin: 0;
-    justify-self: start;
-  }
 }
 
 @media (max-width: 800px) {
