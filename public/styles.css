@@ -321,6 +321,19 @@ dialog h2 {
   color: rgba(255,255,255,.68);
 }
 
+.project-link-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--white);
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 700;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 dialog {
   width: min(520px, calc(100% - 32px));
   padding: 40px;
