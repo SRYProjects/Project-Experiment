@@ -30,6 +30,18 @@ const authDialog =
 const actionDialog =
   document.querySelector("#actionDialog");
 
+const updatesDialog =
+  document.querySelector("#updatesDialog");
+
+const appUpdatesButton =
+  document.querySelector("#appUpdatesButton");
+
+const closeUpdatesDialog =
+  document.querySelector("#closeUpdatesDialog");
+
+const closeUpdatesDialogButton =
+  document.querySelector("#closeUpdatesDialogButton");
+
 const participateButton =
   document.querySelector("#participateButton");
 
@@ -267,6 +279,28 @@ function enableBackdropClose(dialog) {
 
 enableBackdropClose(authDialog);
 enableBackdropClose(actionDialog);
+enableBackdropClose(updatesDialog);
+
+appUpdatesButton.addEventListener(
+  "click",
+  () => {
+    updatesDialog.showModal();
+  }
+);
+
+closeUpdatesDialog.addEventListener(
+  "click",
+  () => {
+    updatesDialog.close();
+  }
+);
+
+closeUpdatesDialogButton.addEventListener(
+  "click",
+  () => {
+    updatesDialog.close();
+  }
+);
 
 existingUserButton.addEventListener(
   "click",
