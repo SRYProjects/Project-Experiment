@@ -73,8 +73,8 @@
       </div>
 
       <div>
-        <strong>Day 1</strong>
-        <span>Project Experiment</span>
+        <strong id="experimentDay">Not launched</strong>
+        <span>Of the Experiment</span>
       </div>
     </section>
 
@@ -113,7 +113,7 @@
             id="actionsUsernameSearch"
             type="search"
             autocomplete="off"
-            placeholder="Exact username"
+            placeholder="See a participant’s actions"
           >
         </label>
 
@@ -168,6 +168,9 @@
           <p>
             A deeper application being developed to help people examine how they actually live.
           </p>
+          <button id="appUpdatesButton" class="project-link-button" type="button">
+            Get updates about the full application
+          </button>
         </article>
 
         <article>
@@ -415,6 +418,32 @@
       class="message hidden"
       role="status"
     ></div>
+  </dialog>
+
+  <dialog id="updatesDialog">
+    <button
+      id="closeUpdatesDialog"
+      class="close-button"
+      aria-label="Close"
+      type="button"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">THE FULL APPLICATION</p>
+    <h2>Interested in what comes next?</h2>
+
+    <p class="dialog-copy">
+      The full Meaningful application is still being developed. If you participate in this experiment, you can choose to receive occasional updates when there is something substantive to share.
+    </p>
+
+    <p class="dialog-copy">
+      We will add the opt-in when the application is ready to collect it. Your Project Meaningful account will not be subscribed automatically.
+    </p>
+
+    <button id="closeUpdatesDialogButton" class="secondary-button" type="button">
+      Close
+    </button>
   </dialog>
 
   <footer>
