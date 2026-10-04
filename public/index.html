@@ -137,13 +137,19 @@
         <p>
           What have people discovered by deliberately doing meaningful things?
         </p>
+
+        <button id="shareDiscoveryButton" class="secondary-button section-button" type="button">
+          Share a Discovery
+        </button>
       </div>
 
-      <div id="discoveriesFeed" class="feed" aria-live="polite">
+      <div id="discoveriesFeed" class="feed" aria-live="polite" aria-busy="true">
         <p class="empty-state">
-          Discoveries will appear here as the experiment develops.
+          Loading Discoveries…
         </p>
       </div>
+
+      <a class="feed-archive-link" href="/discoveries.html">See all Discoveries →</a>
     </section>
 
     <section id="project" class="project-section">
@@ -313,6 +319,73 @@
           class="secondary-button"
           type="button"
         >
+          Close
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="discoveryDialog">
+    <button id="closeDiscoveryDialog" class="close-button" aria-label="Close" type="button">×</button>
+
+    <div id="discoveryEntryState">
+      <p class="eyebrow">YOUR DISCOVERY</p>
+      <h2>What did you discover?</h2>
+      <p class="dialog-copy">
+        Share one brief observation about what you noticed by deliberately doing something meaningful.
+      </p>
+
+      <form id="discoveryForm">
+        <label>
+          Your discovery
+          <textarea
+            id="discoveryText"
+            maxlength="280"
+            rows="5"
+            required
+            placeholder="I discovered that..."
+          ></textarea>
+        </label>
+
+        <div class="character-count">
+          <span id="discoveryCharacterCount">0</span>/280
+        </div>
+
+        <div id="discoveryTurnstile"></div>
+
+        <button id="submitDiscoveryButton" class="primary-button" type="submit">
+          Share Discovery
+        </button>
+      </form>
+
+      <div id="discoveryMessage" class="message hidden" role="status"></div>
+    </div>
+
+    <div id="discoveryPublishedState" class="hidden">
+      <p class="eyebrow">DISCOVERY RECORDED</p>
+      <h2>Your Discovery has been published.</h2>
+      <p class="dialog-copy">It is now part of the public experiment.</p>
+
+      <div class="dialog-actions">
+        <button id="viewPublishedDiscoveryButton" class="primary-button" type="button">
+          View My Discovery
+        </button>
+        <button id="shareAnotherDiscoveryButton" class="secondary-button" type="button">
+          Share Another Discovery
+        </button>
+      </div>
+    </div>
+
+    <div id="discoveryPendingState" class="hidden">
+      <p class="eyebrow">DISCOVERY RECEIVED</p>
+      <h2>Your Discovery is pending review.</h2>
+      <p class="dialog-copy">It will appear publicly after it is approved.</p>
+
+      <div class="dialog-actions">
+        <button id="shareAnotherPendingDiscoveryButton" class="primary-button" type="button">
+          Share Another Discovery
+        </button>
+        <button id="closePendingDiscoveryButton" class="secondary-button" type="button">
           Close
         </button>
       </div>
