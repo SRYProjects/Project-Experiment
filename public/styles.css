@@ -549,3 +549,12 @@ footer {
     width: 100%;
   }
 }
+
+
+.section-button {
+  margin-top: 10px;
+}
+
+.discovery-card {
+  min-height: 0;
+}
