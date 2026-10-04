@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse published Discoveries from Project Meaningful.">
+  <title>Discoveries — Project Meaningful</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">PROJECT MEANINGFUL</a>
+    <nav aria-label="Primary navigation">
+      <a href="/">Home</a>
+      <a href="/#actions">Meaningful Actions</a>
+      <a href="/#project">The Project</a>
+    </nav>
+  </header>
+
+  <main class="archive-page">
+    <section class="archive-heading">
+      <p class="eyebrow">WHAT PEOPLE ARE FINDING</p>
+      <h1>Discoveries</h1>
+      <p>Browse what participants noticed by deliberately doing meaningful things.</p>
+    </section>
+
+    <form id="archiveControls" class="feed-controls discovery-archive-controls" role="search">
+      <label>
+        Username
+        <input
+          id="archiveUsername"
+          type="search"
+          autocomplete="off"
+          placeholder="See a participant’s discoveries"
+        >
+      </label>
+
+      <button id="archiveShowAll" class="secondary-button" type="button">
+        Show All
+      </button>
+    </form>
+
+    <div id="archiveFeed" class="archive-feed" aria-live="polite" aria-busy="true">
+      <p class="empty-state">Loading Discoveries…</p>
+    </div>
+
+    <button id="loadMoreDiscoveries" class="secondary-button archive-load-more hidden" type="button">
+      Load More
+    </button>
+  </main>
+
+  <footer>
+    <span>Project Meaningful</span>
+    <a href="/">Return to the experiment</a>
+  </footer>
+
+  <script type="module" src="/discoveries.js"></script>
+</body>
+</html>
