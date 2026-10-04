@@ -1,6 +1,6 @@
 # Project Experiment — Project State
 
-Last updated: 2026-10-02  
+Last updated: 2026-10-04  
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -113,7 +113,8 @@ Recent live test examples included Work (“Finished proposal for new clients”
 ## Currently unfinished
 - Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The feed height has been reduced from 330px to 260px and now links to the full archive. Latest production verification confirmed filtering/search behavior before these newest presentation/archive changes.
 - Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
-- Discoveries submission, moderation, public feed, and archive.
+- Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are now implemented in code; production verification is required.
+- Desktop side-by-side Actions/Discoveries layout remains intentionally deferred until the Discoveries implementation is verified live.
 - Your Record; nav currently shows a placeholder alert.
 - Registration Turnstile.
 - Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
@@ -136,7 +137,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Rate limiting is not yet implemented.
 - Current Supabase table grants are broad for API roles; RLS is the operative row-access boundary. Preserve and audit RLS carefully whenever schema/policies change.
 - Security-definer/helper functions currently have EXECUTE granted to the standard API roles. Their definitions were captured exactly from production; privilege tightening can be considered separately rather than silently changing the verified baseline.
-- “View My Action” cannot identify/highlight the submitted item until the feed exists.
+- “View My Action” targeting is implemented by returned action ID and feed card `data-action-id`, but the targeting behavior still requires production verification.
 
 ## Recent meaningful repository work
 Current repository inspection confirms the live implementation contains:
@@ -146,6 +147,10 @@ Current repository inspection confirms the live implementation contains:
 - `src/index.js`: Sacrifice server allowlist plus authenticated Turnstile/moderation/database submission pipeline.
 - `wrangler.jsonc`: static assets, Worker API routing, Workers AI binding, Supabase URL.
 - `supabase/schema.sql`: verified baseline of the live public database schema.
+- `src/index.js`: Discoveries GET/POST API, server validation, Turnstile action verification, Workers AI moderation, Supabase insert, username filtering, and pagination.
+- `public/index.html` + `public/app.js`: Discoveries submission dialog, 280-character limit, dedicated Turnstile widget lifecycle, published/pending states, public feed, and View My Discovery targeting.
+- `public/discoveries.html` + `public/discoveries.js`: dedicated Discoveries archive with exact username search and Load More pagination.
+- JavaScript syntax/static checks passed for the Worker, homepage app, and Discoveries archive after these changes.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -156,28 +161,29 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Verify the new Meaningful Actions archive and compact homepage feed in production. Then build Discoveries submission/moderation/feed/archive; once Discoveries are live, place Actions and Discoveries side-by-side on wider screens and stack them responsively on smaller screens.**
+**Production-verify the current Meaningful Actions archive, View My Action targeting, and the newly built Discoveries pipeline end-to-end. Then place Meaningful Actions and Discoveries side-by-side on wider screens, stacked responsively on smaller screens, as already locked in the product specification.**
 
-Required feed behavior:
-- published entries only;
-- newest first;
-- public username;
-- category;
-- action text;
-- date/time;
-- Example label for demo content;
-- demo content excluded from real statistics;
-- category filtering;
-- exact, case-insensitive username search;
-- clear no-results state;
-- fixed-height independently scrollable homepage feed;
-- after the feed exists, make **View My Action** target the newly submitted entry rather than merely scroll to the section.
+Required live checks:
+- `/actions.html` loads published actions newest-first;
+- action category and exact case-insensitive username filtering work;
+- action archive Load More pagination works;
+- a newly published action is targeted by **View My Action**;
+- authenticated Discovery submission works through Turnstile, validation, moderation, and Supabase insertion;
+- published Discovery appears in the homepage feed and `/discoveries.html`;
+- pending Discovery remains non-public;
+- Discovery archive exact case-insensitive username filtering and Load More work;
+- **View My Discovery** targets the newly published Discovery;
+- existing Meaningful Action submission/authentication behavior remains intact.
 
-Build this in small deployable increments and test before proceeding.
+Automated/static status:
+- Worker, homepage app, and Discoveries archive JavaScript passed syntax checks on 2026-10-04.
+- This execution environment could not resolve `projectmeaningful.app`, so no false claim of production verification has been made.
+
+Build the responsive dual-stream layout only after the above live behavior is confirmed.
 
 ## Short remaining roadmap
-1. Verify Meaningful Actions archive/pagination and finish View My Action targeting.
-2. Discoveries submission/moderation/feed/archive + desktop dual-stream homepage layout.
+1. Production-verify Meaningful Actions archive/pagination, View My Action targeting, and Discoveries end-to-end.
+2. Add the approved desktop dual-stream Actions/Discoveries homepage layout with responsive stacking.
 3. Your Record.
 5. Registration abuse protection + rate limiting/search throttling/reserved usernames.
 6. Admin review/removal workflow.
