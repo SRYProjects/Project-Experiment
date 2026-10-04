@@ -30,6 +30,9 @@ const authDialog =
 const actionDialog =
   document.querySelector("#actionDialog");
 
+const discoveryDialog =
+  document.querySelector("#discoveryDialog");
+
 const updatesDialog =
   document.querySelector("#updatesDialog");
 
@@ -50,6 +53,51 @@ const closeDialog =
 
 const closeActionDialog =
   document.querySelector("#closeActionDialog");
+
+const closeDiscoveryDialog =
+  document.querySelector("#closeDiscoveryDialog");
+
+const shareDiscoveryButton =
+  document.querySelector("#shareDiscoveryButton");
+
+const discoveryEntryState =
+  document.querySelector("#discoveryEntryState");
+
+const discoveryPublishedState =
+  document.querySelector("#discoveryPublishedState");
+
+const discoveryPendingState =
+  document.querySelector("#discoveryPendingState");
+
+const discoveryForm =
+  document.querySelector("#discoveryForm");
+
+const discoveryText =
+  document.querySelector("#discoveryText");
+
+const discoveryCharacterCount =
+  document.querySelector("#discoveryCharacterCount");
+
+const discoveryMessage =
+  document.querySelector("#discoveryMessage");
+
+const submitDiscoveryButton =
+  document.querySelector("#submitDiscoveryButton");
+
+const viewPublishedDiscoveryButton =
+  document.querySelector("#viewPublishedDiscoveryButton");
+
+const shareAnotherDiscoveryButton =
+  document.querySelector("#shareAnotherDiscoveryButton");
+
+const shareAnotherPendingDiscoveryButton =
+  document.querySelector("#shareAnotherPendingDiscoveryButton");
+
+const closePendingDiscoveryButton =
+  document.querySelector("#closePendingDiscoveryButton");
+
+const discoveriesFeed =
+  document.querySelector("#discoveriesFeed");
 
 const joinForm =
   document.querySelector("#joinForm");
@@ -134,6 +182,9 @@ const clearActionsFilters =
 
 let publicActions = [];
 let lastPublishedActionId = null;
+let publicDiscoveries = [];
+let lastPublishedDiscoveryId = null;
+let discoveryTurnstileWidgetId = null;
 
 /* -------------------------
    MESSAGES
@@ -157,6 +208,16 @@ function showActionMessage(message) {
 function clearActionMessage() {
   actionMessage.textContent = "";
   actionMessage.className = "message hidden";
+}
+
+function showDiscoveryMessage(message) {
+  discoveryMessage.textContent = message;
+  discoveryMessage.className = "message";
+}
+
+function clearDiscoveryMessage() {
+  discoveryMessage.textContent = "";
+  discoveryMessage.className = "message hidden";
 }
 
 /* -------------------------
@@ -209,6 +270,70 @@ function prepareNewAction() {
   }, 0);
 }
 
+function showDiscoveryEntryState() {
+  discoveryEntryState.classList.remove("hidden");
+  discoveryPublishedState.classList.add("hidden");
+  discoveryPendingState.classList.add("hidden");
+}
+
+function showDiscoveryPublishedState() {
+  discoveryEntryState.classList.add("hidden");
+  discoveryPublishedState.classList.remove("hidden");
+  discoveryPendingState.classList.add("hidden");
+}
+
+function showDiscoveryPendingState() {
+  discoveryEntryState.classList.add("hidden");
+  discoveryPublishedState.classList.add("hidden");
+  discoveryPendingState.classList.remove("hidden");
+}
+
+function resetDiscoveryTurnstile() {
+  if (
+    window.turnstile &&
+    discoveryTurnstileWidgetId !== null
+  ) {
+    window.turnstile.reset(
+      discoveryTurnstileWidgetId
+    );
+  }
+}
+
+function ensureDiscoveryTurnstile() {
+  if (!window.turnstile) {
+    return;
+  }
+
+  window.turnstile.ready(() => {
+    if (discoveryTurnstileWidgetId === null) {
+      discoveryTurnstileWidgetId =
+        window.turnstile.render(
+          "#discoveryTurnstile",
+          {
+            sitekey:
+              "0x4AAAAAAFFXWD-I0BinHjw3",
+            action:
+              "meaningful_discovery"
+          }
+        );
+    } else {
+      resetDiscoveryTurnstile();
+    }
+  });
+}
+
+function prepareNewDiscovery() {
+  discoveryForm.reset();
+  discoveryCharacterCount.textContent = "0";
+  clearDiscoveryMessage();
+  showDiscoveryEntryState();
+  ensureDiscoveryTurnstile();
+
+  window.setTimeout(() => {
+    discoveryText.focus();
+  }, 0);
+}
+
 /* -------------------------
    AUTHENTICATED UI
 ------------------------- */
@@ -236,6 +361,17 @@ function openParticipation() {
   authDialog.showModal();
 }
 
+function openDiscovery() {
+  if (currentSession?.user) {
+    prepareNewDiscovery();
+    discoveryDialog.showModal();
+    return;
+  }
+
+  clearAuthMessage();
+  authDialog.showModal();
+}
+
 /* -------------------------
    DIALOGS
 ------------------------- */
@@ -243,6 +379,11 @@ function openParticipation() {
 participateButton.addEventListener(
   "click",
   openParticipation
+);
+
+shareDiscoveryButton.addEventListener(
+  "click",
+  openDiscovery
 );
 
 closeDialog.addEventListener(
@@ -256,6 +397,13 @@ closeActionDialog.addEventListener(
   "click",
   () => {
     actionDialog.close();
+  }
+);
+
+closeDiscoveryDialog.addEventListener(
+  "click",
+  () => {
+    discoveryDialog.close();
   }
 );
 
@@ -279,6 +427,7 @@ function enableBackdropClose(dialog) {
 
 enableBackdropClose(authDialog);
 enableBackdropClose(actionDialog);
+enableBackdropClose(discoveryDialog);
 enableBackdropClose(updatesDialog);
 
 appUpdatesButton.addEventListener(
@@ -541,6 +690,173 @@ signOutButton.addEventListener(
     setAuthenticatedUI(false);
   }
 );
+
+/* -------------------------
+   DISCOVERY CHARACTER COUNT
+------------------------- */
+
+discoveryText.addEventListener(
+  "input",
+  () => {
+    discoveryCharacterCount.textContent =
+      discoveryText.value.length;
+  }
+);
+
+/* -------------------------
+   PUBLIC DISCOVERIES
+------------------------- */
+
+function createDiscoveryCard(discovery) {
+  const article =
+    document.createElement("article");
+
+  article.className =
+    "action-card discovery-card";
+
+  article.dataset.discoveryId =
+    String(discovery.id);
+
+  const meta =
+    document.createElement("div");
+
+  meta.className = "action-meta";
+
+  const username =
+    document.createElement("strong");
+
+  username.textContent =
+    discovery.username;
+
+  const date =
+    document.createElement("time");
+
+  date.dateTime =
+    discovery.createdAt;
+
+  date.textContent =
+    formatActionDate(
+      discovery.createdAt
+    );
+
+  meta.append(
+    username,
+    date
+  );
+
+  if (discovery.isExample) {
+    const example =
+      document.createElement("span");
+
+    example.className =
+      "example-label";
+
+    example.textContent =
+      "Example";
+
+    meta.append(example);
+  }
+
+  const text =
+    document.createElement("p");
+
+  text.className = "action-text";
+
+  text.textContent =
+    discovery.discoveryText;
+
+  article.append(
+    meta,
+    text
+  );
+
+  return article;
+}
+
+function renderPublicDiscoveries() {
+  discoveriesFeed.replaceChildren();
+
+  if (
+    publicDiscoveries.length === 0
+  ) {
+    const empty =
+      document.createElement("p");
+
+    empty.className = "empty-state";
+    empty.textContent =
+      "No Discoveries have been published yet.";
+
+    discoveriesFeed.append(empty);
+    return;
+  }
+
+  const fragment =
+    document.createDocumentFragment();
+
+  for (
+    const discovery
+    of publicDiscoveries
+  ) {
+    fragment.append(
+      createDiscoveryCard(discovery)
+    );
+  }
+
+  discoveriesFeed.append(fragment);
+}
+
+async function loadPublicDiscoveries() {
+  discoveriesFeed.setAttribute(
+    "aria-busy",
+    "true"
+  );
+
+  try {
+    const response =
+      await fetch("/api/discoveries");
+
+    if (!response.ok) {
+      throw new Error(
+        "Public discoveries request failed"
+      );
+    }
+
+    const result =
+      await response.json();
+
+    publicDiscoveries =
+      Array.isArray(result.discoveries)
+        ? result.discoveries
+        : [];
+
+    renderPublicDiscoveries();
+  } catch (error) {
+    console.error(
+      "Discoveries feed failed:",
+      error
+    );
+
+    publicDiscoveries = [];
+
+    const unavailable =
+      document.createElement("p");
+
+    unavailable.className =
+      "empty-state";
+
+    unavailable.textContent =
+      "Discoveries are temporarily unavailable.";
+
+    discoveriesFeed.replaceChildren(
+      unavailable
+    );
+  } finally {
+    discoveriesFeed.setAttribute(
+      "aria-busy",
+      "false"
+    );
+  }
+}
 
 /* -------------------------
    YOUR RECORD
@@ -981,6 +1297,175 @@ actionForm.addEventListener(
 );
 
 /* -------------------------
+   DISCOVERY SUBMISSION
+------------------------- */
+
+shareAnotherDiscoveryButton.addEventListener(
+  "click",
+  prepareNewDiscovery
+);
+
+shareAnotherPendingDiscoveryButton.addEventListener(
+  "click",
+  prepareNewDiscovery
+);
+
+closePendingDiscoveryButton.addEventListener(
+  "click",
+  () => {
+    discoveryDialog.close();
+  }
+);
+
+viewPublishedDiscoveryButton.addEventListener(
+  "click",
+  async () => {
+    discoveryDialog.close();
+
+    await loadPublicDiscoveries();
+
+    document
+      .querySelector("#discoveries")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    if (
+      lastPublishedDiscoveryId !== null
+    ) {
+      const card =
+        discoveriesFeed.querySelector(
+          `[data-discovery-id="${lastPublishedDiscoveryId}"]`
+        );
+
+      if (card) {
+        card.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      }
+    }
+  }
+);
+
+discoveryForm.addEventListener(
+  "submit",
+  async (event) => {
+    event.preventDefault();
+
+    clearDiscoveryMessage();
+
+    if (!currentSession?.access_token) {
+      discoveryDialog.close();
+      authDialog.showModal();
+      return;
+    }
+
+    const text =
+      discoveryText.value.trim();
+
+    if (
+      !text ||
+      text.length > 280
+    ) {
+      showDiscoveryMessage(
+        "Your Discovery must contain 1–280 characters."
+      );
+      return;
+    }
+
+    const turnstileToken =
+      document.querySelector(
+        '#discoveryForm input[name="cf-turnstile-response"]'
+      )?.value;
+
+    if (!turnstileToken) {
+      showDiscoveryMessage(
+        "Please complete the verification."
+      );
+      return;
+    }
+
+    submitDiscoveryButton.disabled = true;
+    submitDiscoveryButton.textContent =
+      "Sharing...";
+
+    try {
+      const response =
+        await fetch(
+          "/api/discoveries",
+          {
+            method: "POST",
+
+            headers: {
+              "content-type":
+                "application/json",
+
+              Authorization:
+                `Bearer ${currentSession.access_token}`
+            },
+
+            body: JSON.stringify({
+              discoveryText: text,
+              turnstileToken
+            })
+          }
+        );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        showDiscoveryMessage(
+          result.error ||
+            "We couldn't submit your Discovery. Please try again."
+        );
+
+        resetDiscoveryTurnstile();
+        return;
+      }
+
+      discoveryForm.reset();
+      discoveryCharacterCount.textContent =
+        "0";
+
+      resetDiscoveryTurnstile();
+
+      if (
+        result.status === "published"
+      ) {
+        lastPublishedDiscoveryId =
+          result.discovery?.id ?? null;
+
+        showDiscoveryPublishedState();
+
+        await loadPublicDiscoveries();
+      } else {
+        showDiscoveryPendingState();
+      }
+    } catch (error) {
+      console.error(
+        "Discovery submission failed:",
+        error
+      );
+
+      showDiscoveryMessage(
+        "We couldn't submit your Discovery. Please try again."
+      );
+
+      resetDiscoveryTurnstile();
+    } finally {
+      submitDiscoveryButton.disabled =
+        false;
+
+      submitDiscoveryButton.textContent =
+        "Share Discovery";
+    }
+  }
+);
+
+/* -------------------------
    PROJECT STATISTICS
 ------------------------- */
 
@@ -1014,5 +1499,6 @@ async function loadProjectStats() {
 
 await Promise.all([
   loadProjectStats(),
-  loadPublicActions()
+  loadPublicActions(),
+  loadPublicDiscoveries()
 ]);
