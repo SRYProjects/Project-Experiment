@@ -114,7 +114,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The feed height has been reduced from 330px to 260px and now links to the full archive. Latest production verification confirmed filtering/search behavior before these newest presentation/archive changes.
 - Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
 - Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are now implemented in code; production verification is required.
-- Desktop side-by-side Actions/Discoveries layout remains intentionally deferred until the Discoveries implementation is verified live.
+- Meaningful Actions and Discoveries now render side-by-side on wider screens and stack responsively below 1050px. Production verification is required.
 - Your Record; nav currently shows a placeholder alert.
 - Registration Turnstile.
 - Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
@@ -161,7 +161,7 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Production-verify the current Meaningful Actions archive, View My Action targeting, and the newly built Discoveries pipeline end-to-end. Then place Meaningful Actions and Discoveries side-by-side on wider screens, stacked responsively on smaller screens, as already locked in the product specification.**
+**Production-verify the current Meaningful Actions archive, View My Action targeting, the Discoveries pipeline end-to-end, and the new responsive dual-stream homepage layout.**
 
 Required live checks:
 - `/actions.html` loads published actions newest-first;
@@ -179,11 +179,11 @@ Automated/static status:
 - Worker, homepage app, and Discoveries archive JavaScript passed syntax checks on 2026-10-04.
 - This execution environment could not resolve `projectmeaningful.app`, so no false claim of production verification has been made.
 
-Build the responsive dual-stream layout only after the above live behavior is confirmed.
+Confirm that the dual-stream layout is balanced and readable on desktop and stacks cleanly on tablet/mobile before proceeding to Your Record.
 
 ## Short remaining roadmap
 1. Production-verify Meaningful Actions archive/pagination, View My Action targeting, and Discoveries end-to-end.
-2. Add the approved desktop dual-stream Actions/Discoveries homepage layout with responsive stacking.
+2. Verify the responsive dual-stream Actions/Discoveries homepage layout in production.
 3. Your Record.
 5. Registration abuse protection + rate limiting/search throttling/reserved usernames.
 6. Admin review/removal workflow.
