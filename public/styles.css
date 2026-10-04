@@ -185,6 +185,44 @@ h1 {
   padding: 90px 8vw;
 }
 
+.public-streams {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+
+.public-streams .content-section {
+  min-width: 0;
+  padding: 72px 4vw;
+}
+
+.public-streams .content-section + .content-section {
+  border-left: 1px solid var(--line);
+}
+
+.public-streams .section-heading {
+  min-height: 210px;
+  margin-bottom: 28px;
+}
+
+.public-streams .section-heading h2 {
+  font-size: clamp(2.6rem, 4vw, 4.5rem);
+}
+
+.public-streams .feed-controls {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.public-streams .feed-controls .secondary-button {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.public-streams .feed {
+  height: 260px;
+}
+
+
 .alternate {
   background: var(--white);
 }
@@ -485,6 +523,34 @@ footer {
   font-size: .75rem;
 }
 
+@media (max-width: 1050px) {
+  .public-streams {
+    grid-template-columns: 1fr;
+  }
+
+  .public-streams .content-section {
+    padding: 72px 8vw;
+  }
+
+  .public-streams .content-section + .content-section {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .public-streams .section-heading {
+    min-height: 0;
+  }
+
+  .public-streams .feed-controls {
+    grid-template-columns: 220px 260px max-content;
+  }
+
+  .public-streams .feed-controls .secondary-button {
+    grid-column: auto;
+    justify-self: stretch;
+  }
+}
+
 @media (max-width: 900px) {
   .feed-controls {
     grid-template-columns: 1fr 1fr;
@@ -532,7 +598,8 @@ footer {
 
   .hero,
   .content-section,
-  .project-section {
+  .project-section,
+  .public-streams .content-section {
     padding-left: 6vw;
     padding-right: 6vw;
   }
