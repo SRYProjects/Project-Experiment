@@ -13,7 +13,8 @@ const CATEGORIES = new Set([
 ]);
 
 const EXPECTED_HOSTNAME = "projectmeaningful.app";
-const TURNSTILE_ACTION = "meaningful_action";
+const ACTION_TURNSTILE_ACTION = "meaningful_action";
+const DISCOVERY_TURNSTILE_ACTION = "meaningful_discovery";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -74,7 +75,8 @@ async function getAuthenticatedUser(request, env) {
 async function verifyTurnstile(
   token,
   request,
-  env
+  env,
+  expectedAction
 ) {
   if (
     typeof token !== "string" ||
@@ -122,7 +124,7 @@ async function verifyTurnstile(
     return (
       result.success === true &&
       result.hostname === EXPECTED_HOSTNAME &&
-      result.action === TURNSTILE_ACTION
+      result.action === expectedAction
     );
   } catch (error) {
     console.error(
@@ -516,7 +518,8 @@ async function submitAction(request, env) {
     await verifyTurnstile(
       body.turnstileToken,
       request,
-      env
+      env,
+      ACTION_TURNSTILE_ACTION
     );
 
   if (!verified) {
@@ -552,6 +555,382 @@ async function submitAction(request, env) {
   });
 }
 
+
+/* -------------------------
+   DISCOVERIES
+------------------------- */
+
+async function insertDiscovery(
+  userId,
+  discoveryText,
+  status,
+  env
+) {
+  const row = {
+    user_id: userId,
+    discovery_text: discoveryText,
+    moderation_status: status,
+    is_demo: false
+  };
+
+  if (status === "published") {
+    row.moderated_at =
+      new Date().toISOString();
+  }
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/discoveries`,
+      {
+        method: "POST",
+
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+
+          apikey:
+            env.SUPABASE_SECRET_KEY,
+
+          "content-type":
+            "application/json",
+
+          Prefer:
+            "return=representation"
+        },
+
+        body:
+          JSON.stringify(row)
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Supabase discovery insert failed:",
+      detail
+    );
+
+    throw new Error(
+      "Database insert failed"
+    );
+  }
+
+  return response.json();
+}
+
+async function fetchPublishedDiscoveries(
+  env,
+  { limit = 100, offset = 0, userId = "" } = {}
+) {
+  const params = new URLSearchParams({
+    select:
+      "id,user_id,discovery_text,is_demo,created_at",
+    moderation_status:
+      "eq.published",
+    order:
+      "created_at.desc",
+    limit:
+      String(limit),
+    offset:
+      String(offset)
+  });
+
+  if (userId) {
+    params.set(
+      "user_id",
+      `eq.${userId}`
+    );
+  }
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/discoveries?${params.toString()}`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Supabase public discoveries fetch failed:",
+      detail
+    );
+
+    throw new Error(
+      "Database fetch failed"
+    );
+  }
+
+  return response.json();
+}
+
+async function getPublicDiscoveries(
+  request,
+  env
+) {
+  const url =
+    new URL(request.url);
+
+  const rawLimit =
+    Number.parseInt(
+      url.searchParams.get("limit") || "100",
+      10
+    );
+
+  const rawOffset =
+    Number.parseInt(
+      url.searchParams.get("offset") || "0",
+      10
+    );
+
+  const limit =
+    Number.isFinite(rawLimit)
+      ? Math.min(
+          Math.max(rawLimit, 1),
+          100
+        )
+      : 100;
+
+  const offset =
+    Number.isFinite(rawOffset)
+      ? Math.max(rawOffset, 0)
+      : 0;
+
+  const username =
+    (
+      url.searchParams.get("username") ||
+      ""
+    ).trim();
+
+  if (
+    username &&
+    !/^[A-Za-z0-9_]{3,30}$/.test(
+      username
+    )
+  ) {
+    return json({
+      discoveries: [],
+      hasMore: false
+    });
+  }
+
+  let userId = "";
+
+  if (username) {
+    const profile =
+      await fetchProfileByUsername(
+        username,
+        env
+      );
+
+    if (!profile) {
+      return json({
+        discoveries: [],
+        hasMore: false
+      });
+    }
+
+    userId = profile.id;
+  }
+
+  const rows =
+    await fetchPublishedDiscoveries(
+      env,
+      {
+        limit: limit + 1,
+        offset,
+        userId
+      }
+    );
+
+  const hasMore =
+    rows.length > limit;
+
+  const pageRows =
+    rows.slice(0, limit);
+
+  const userIds = [
+    ...new Set(
+      pageRows
+        .map((row) => row.user_id)
+        .filter(
+          (id) =>
+            typeof id === "string" &&
+            /^[0-9a-f-]{36}$/i.test(id)
+        )
+    )
+  ];
+
+  const profiles =
+    await fetchProfilesById(
+      userIds,
+      env
+    );
+
+  const usernameById =
+    new Map(
+      profiles
+        .filter(
+          (profile) =>
+            typeof profile?.id === "string" &&
+            typeof profile?.username === "string" &&
+            profile.username.trim()
+        )
+        .map(
+          (profile) => [
+            profile.id,
+            profile.username.trim()
+          ]
+        )
+    );
+
+  const discoveries =
+    pageRows
+      .map((row) => {
+        const publicUsername =
+          usernameById.get(row.user_id);
+
+        if (!publicUsername) {
+          return null;
+        }
+
+        return {
+          id: row.id,
+          username:
+            publicUsername,
+          discoveryText:
+            row.discovery_text,
+          createdAt:
+            row.created_at,
+          isExample:
+            row.is_demo === true
+        };
+      })
+      .filter(Boolean);
+
+  return json({
+    discoveries,
+    hasMore
+  });
+}
+
+async function submitDiscovery(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json(
+      {
+        error:
+          "Authentication required."
+      },
+      401
+    );
+  }
+
+  let body;
+
+  try {
+    body =
+      await request.json();
+  } catch {
+    return json(
+      {
+        error:
+          "Invalid request."
+      },
+      400
+    );
+  }
+
+  const discoveryText =
+    typeof body.discoveryText === "string"
+      ? body.discoveryText.trim()
+      : "";
+
+  if (
+    !discoveryText ||
+    discoveryText.length > 280
+  ) {
+    return json(
+      {
+        error:
+          "Discoveries must contain 1–280 characters."
+      },
+      400
+    );
+  }
+
+  if (
+    containsProhibitedMarkupOrLink(
+      discoveryText
+    )
+  ) {
+    return json(
+      {
+        error:
+          "Links and markup are not permitted in Discoveries."
+      },
+      400
+    );
+  }
+
+  const verified =
+    await verifyTurnstile(
+      body.turnstileToken,
+      request,
+      env,
+      DISCOVERY_TURNSTILE_ACTION
+    );
+
+  if (!verified) {
+    return json(
+      {
+        error:
+          "Verification failed or expired. Please try again."
+      },
+      403
+    );
+  }
+
+  const status =
+    await moderateAction(
+      discoveryText,
+      env
+    );
+
+  const rows =
+    await insertDiscovery(
+      user.id,
+      discoveryText,
+      status,
+      env
+    );
+
+  return json({
+    success: true,
+    status,
+    discovery:
+      rows?.[0] ?? null
+  });
+}
+
 /* -------------------------
    WORKER
 ------------------------- */
@@ -577,6 +956,26 @@ export default {
         request.method === "POST"
       ) {
         return await submitAction(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/discoveries" &&
+        request.method === "GET"
+      ) {
+        return await getPublicDiscoveries(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/discoveries" &&
+        request.method === "POST"
+      ) {
+        return await submitDiscovery(
           request,
           env
         );
