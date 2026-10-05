@@ -113,7 +113,7 @@
           <div class="stream-heading">
             <div>
               <p class="stream-kicker">MEANINGFUL ACTIONS</p>
-              <h3>Actions</h3>
+              <h3><span class="stream-title-icon action-title-icon" aria-hidden="true">✦</span>Actions</h3>
             </div>
             <a class="stream-link" href="/actions.html">View all →</a>
           </div>
@@ -165,7 +165,7 @@
           <div class="stream-heading">
             <div>
               <p class="stream-kicker">DISCOVERIES</p>
-              <h3>What people noticed</h3>
+              <h3><span class="stream-title-icon discovery-title-icon" aria-hidden="true">◎</span>What people noticed</h3>
             </div>
             <a class="stream-link" href="/discoveries.html">View all →</a>
           </div>
@@ -174,11 +174,25 @@
             What people discovered by deliberately doing meaningful things.
           </p>
 
-          <div class="discovery-toolbar">
+          <form id="discoveriesControls" class="discovery-controls" role="search">
+            <label>
+              Username
+              <input
+                id="discoveriesUsernameSearch"
+                type="search"
+                autocomplete="off"
+                placeholder="Find a participant"
+              >
+            </label>
+
+            <button id="clearDiscoveriesFilters" class="filter-reset" type="button">
+              Clear
+            </button>
+
             <button id="shareDiscoveryButton" class="secondary-button compact-button" type="button">
               Share a Discovery
             </button>
-          </div>
+          </form>
 
           <div id="discoveriesFeed" class="feed" aria-live="polite" aria-busy="true">
             <p class="empty-state">Loading Discoveries…</p>
