@@ -19,8 +19,8 @@
     <a class="brand" href="/">PROJECT MEANINGFUL</a>
 
     <nav aria-label="Primary navigation">
-      <a href="#actions">Meaningful Actions</a>
-      <a href="#discoveries">Discoveries</a>
+      <a href="#community">Community</a>
+      <a href="#explore">Explore</a>
       <a href="#project">The Project</a>
       <button id="recordButton" class="nav-button hidden" type="button">Your Record</button>
       <button id="signOutButton" class="nav-button hidden" type="button">Sign Out</button>
@@ -29,34 +29,41 @@
 
   <main>
     <section class="hero">
-      <div class="hero-content">
-        <p class="eyebrow">A PUBLIC EXPERIMENT</p>
+      <div class="hero-shell">
+        <div class="hero-content">
+          <p class="eyebrow">A PUBLIC EXPERIMENT IN INTENTIONAL LIVING</p>
 
-        <h1>Are you living according to what you say matters?</h1>
+          <h1>Are you living according to what you say matters?</h1>
 
-        <p class="hero-copy">
-          We say many things matter. Our choices reveal where we actually
-          give our time, attention, and effort.
-        </p>
+          <p class="hero-copy">
+            We say many things matter. Our choices reveal where we actually
+            give our time, attention, and effort.
+          </p>
 
-        <button id="participateButton" class="primary-button" type="button">
-          Share Your Meaningful Action →
-        </button>
+          <div class="hero-actions">
+            <button id="participateButton" class="primary-button" type="button">
+              Share Your Meaningful Action →
+            </button>
 
-        <a class="secondary-link" href="#actions">
-          See what other people are choosing.
-        </a>
+            <a class="secondary-link" href="#community">
+              See what people are choosing
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-art-core"></div>
+          <span class="hero-art-line line-one"></span>
+          <span class="hero-art-line line-two"></span>
+          <span class="hero-art-line line-three"></span>
+          <span class="hero-art-point point-one"></span>
+          <span class="hero-art-point point-two"></span>
+          <span class="hero-art-point point-three"></span>
+        </div>
       </div>
     </section>
 
-    <section class="experiment-intro">
-      <p>
-        Do something deliberately because it matters to you.
-        Record what you did. See what happens when other people do the same.
-      </p>
-    </section>
-
-    <section class="activity">
+    <section class="activity" aria-label="Project activity">
       <div>
         <strong id="totalActions">—</strong>
         <span>Meaningful Actions</span>
@@ -78,117 +85,184 @@
       </div>
     </section>
 
-    <div class="public-streams">
-    <section id="actions" class="content-section">
-      <div class="section-heading">
-        <p class="eyebrow">THE EXPERIMENT IN ACTION</p>
-        <h2>Meaningful Actions</h2>
-
+    <section class="experiment-intro">
+      <p class="eyebrow">THE IDEA IS SIMPLE</p>
+      <div class="intro-grid">
+        <h2>Do something deliberately because it matters to you.</h2>
         <p>
-          Things people deliberately chose to do because they considered them meaningful.
+          Record what you did. Notice what happens. See what other people
+          discover when they make the same deliberate choice to act on what matters.
         </p>
       </div>
-
-      <form id="actionsControls" class="feed-controls" role="search">
-        <label>
-          Category
-          <select id="actionsCategoryFilter">
-            <option value="">All categories</option>
-            <option>Family</option>
-            <option>Relationships</option>
-            <option>Health</option>
-            <option>Work</option>
-            <option>Learning</option>
-            <option>Creativity</option>
-            <option>Service</option>
-            <option>Faith</option>
-            <option>Responsibility</option>
-            <option>Sacrifice</option>
-            <option>Other</option>
-          </select>
-        </label>
-
-        <label>
-          Username
-          <input
-            id="actionsUsernameSearch"
-            type="search"
-            autocomplete="off"
-            placeholder="See a participant’s actions"
-          >
-        </label>
-
-        <button id="clearActionsFilters" class="secondary-button" type="button">Show All</button>
-      </form>
-
-      <div id="actionsFeed" class="feed" aria-live="polite" aria-busy="true">
-        <p class="empty-state">
-          Loading Meaningful Actions…
-        </p>
-      </div>
-
-      <a class="feed-archive-link" href="/actions.html">See all Meaningful Actions →</a>
     </section>
 
-    <section id="discoveries" class="content-section alternate">
-      <div class="section-heading">
-        <p class="eyebrow">WHAT PEOPLE ARE FINDING</p>
-        <h2>Discoveries</h2>
-
+    <section id="community" class="community-section">
+      <div class="community-heading">
+        <div>
+          <p class="eyebrow">THE COMMUNITY IN MOTION</p>
+          <h2>What people are doing—and finding.</h2>
+        </div>
         <p>
-          What have people discovered by deliberately doing meaningful things?
-        </p>
-
-        <button id="shareDiscoveryButton" class="secondary-button section-button" type="button">
-          Share a Discovery
-        </button>
-      </div>
-
-      <div id="discoveriesFeed" class="feed" aria-live="polite" aria-busy="true">
-        <p class="empty-state">
-          Loading Discoveries…
+          A public record of deliberate actions and the discoveries that follow.
+          No ranking. No streaks. Just evidence of what people chose to do.
         </p>
       </div>
 
-      <a class="feed-archive-link" href="/discoveries.html">See all Discoveries →</a>
+      <div class="public-streams">
+        <section id="actions" class="stream-panel">
+          <div class="stream-heading">
+            <div>
+              <p class="stream-kicker">MEANINGFUL ACTIONS</p>
+              <h3>Actions</h3>
+            </div>
+            <a class="stream-link" href="/actions.html">View all →</a>
+          </div>
+
+          <p class="stream-description">
+            Things people deliberately chose to do because they considered them meaningful.
+          </p>
+
+          <form id="actionsControls" class="feed-controls" role="search">
+            <label>
+              Category
+              <select id="actionsCategoryFilter">
+                <option value="">All categories</option>
+                <option>Family</option>
+                <option>Relationships</option>
+                <option>Health</option>
+                <option>Work</option>
+                <option>Learning</option>
+                <option>Creativity</option>
+                <option>Service</option>
+                <option>Faith</option>
+                <option>Responsibility</option>
+                <option>Sacrifice</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label>
+              Username
+              <input
+                id="actionsUsernameSearch"
+                type="search"
+                autocomplete="off"
+                placeholder="Find a participant"
+              >
+            </label>
+
+            <button id="clearActionsFilters" class="filter-reset" type="button">
+              Clear
+            </button>
+          </form>
+
+          <div id="actionsFeed" class="feed" aria-live="polite" aria-busy="true">
+            <p class="empty-state">Loading Meaningful Actions…</p>
+          </div>
+        </section>
+
+        <section id="discoveries" class="stream-panel discoveries-panel">
+          <div class="stream-heading">
+            <div>
+              <p class="stream-kicker">DISCOVERIES</p>
+              <h3>What people noticed</h3>
+            </div>
+            <a class="stream-link" href="/discoveries.html">View all →</a>
+          </div>
+
+          <p class="stream-description">
+            What people discovered by deliberately doing meaningful things.
+          </p>
+
+          <div class="discovery-toolbar">
+            <button id="shareDiscoveryButton" class="secondary-button compact-button" type="button">
+              Share a Discovery
+            </button>
+          </div>
+
+          <div id="discoveriesFeed" class="feed" aria-live="polite" aria-busy="true">
+            <p class="empty-state">Loading Discoveries…</p>
+          </div>
+        </section>
+      </div>
     </section>
 
-    </div>
+    <section id="explore" class="explore-section">
+      <div class="explore-heading">
+        <p class="eyebrow">GO DEEPER</p>
+        <h2>Explore Project Meaningful</h2>
+        <p>
+          The experiment is one expression of a larger body of ideas, resources,
+          and work around living more deliberately.
+        </p>
+      </div>
+
+      <div class="resource-grid">
+        <article class="resource-card">
+          <span class="resource-number">01</span>
+          <h3>Articles</h3>
+          <p>Ideas, essays, and practical reflections that extend the conversation.</p>
+          <span class="resource-status">Resource links to be connected</span>
+        </article>
+
+        <article class="resource-card">
+          <span class="resource-number">02</span>
+          <h3>The Book</h3>
+          <p>The foundational ideas that established the premise behind Project Meaningful.</p>
+          <span class="resource-status">Book link to be connected</span>
+        </article>
+
+        <article class="resource-card">
+          <span class="resource-number">03</span>
+          <h3>Videos</h3>
+          <p>Talks, explanations, and conversations for people who prefer to watch and listen.</p>
+          <span class="resource-status">Video links to be connected</span>
+        </article>
+
+        <article class="resource-card resource-card-action">
+          <span class="resource-number">04</span>
+          <h3>Follow the Project</h3>
+          <p>Stay connected to the experiment and the fuller application being developed.</p>
+          <button id="appUpdatesButton" class="resource-button" type="button">
+            About future updates →
+          </button>
+        </article>
+      </div>
+    </section>
 
     <section id="project" class="project-section">
-      <p class="eyebrow">THE LARGER PROJECT</p>
-      <h2>Project Meaningful</h2>
+      <div class="project-heading">
+        <p class="eyebrow">ONE PROJECT. FOUR PARTS.</p>
+        <h2>Project Meaningful</h2>
+        <p>
+          The public experiment is deliberately lightweight. It sits inside a larger
+          architecture designed to examine, practice, and support meaningful living.
+        </p>
+      </div>
 
       <div class="project-grid">
         <article>
+          <span>01</span>
           <h3>The Book</h3>
-          <p>
-            The ideas that established the foundation for the project.
-          </p>
+          <p>The ideas that established the foundation for the project.</p>
         </article>
 
         <article>
+          <span>02</span>
           <h3>The Experiment</h3>
-          <p>
-            A public test of what happens when people deliberately act on what matters.
-          </p>
+          <p>A public test of what happens when people deliberately act on what matters.</p>
         </article>
 
         <article>
+          <span>03</span>
           <h3>The Application</h3>
-          <p>
-            A deeper application being developed to help people examine how they actually live.
-          </p>
-          <button id="appUpdatesButton" class="project-link-button" type="button">
-            Get updates about the full application
-          </button>
+          <p>A deeper application being developed to help people examine how they actually live.</p>
         </article>
 
         <article>
+          <span>04</span>
           <h3>The Community</h3>
-          <p>
-            A growing public record of meaningful actions and discoveries.
-          </p>
+          <p>A growing public record of meaningful actions and discoveries.</p>
         </article>
       </div>
     </section>
