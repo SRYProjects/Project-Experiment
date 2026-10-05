@@ -195,6 +195,10 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Each community stream must contain an obvious in-window participation button: **Log an Action** and **Log a Discovery**.
 - The hero should use a full-width abstract/background treatment rather than a separate decorative object beside the question.
 - Project activity statistics should be presented as a clearly readable summary band, not as small secondary metadata.
+- The transition between stats and community should include a clear **Join Project Meaningful** invitation with concrete participation benefits. Do not label this as a subscription until the application actually stores explicit consent.
+- The community area should feel open rather than boxed: individual entries provide the primary card/border structure; the Actions and Discoveries stream containers themselves should recede.
+- Use a white/open community field with selective blue/green accents so the live content feels active and central, not muted.
+- Primary blue participation buttons should use modest rounded corners rather than sharp rectangles.
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The site should not be uniformly dark, but the hero should remain dark, dramatic, and high-contrast with white type.
