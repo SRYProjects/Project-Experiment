@@ -99,6 +99,15 @@ const closePendingDiscoveryButton =
 const discoveriesFeed =
   document.querySelector("#discoveriesFeed");
 
+const discoveriesControls =
+  document.querySelector("#discoveriesControls");
+
+const discoveriesUsernameSearch =
+  document.querySelector("#discoveriesUsernameSearch");
+
+const clearDiscoveriesFilters =
+  document.querySelector("#clearDiscoveriesFilters");
+
 const joinForm =
   document.querySelector("#joinForm");
 
@@ -707,6 +716,13 @@ discoveryText.addEventListener(
    PUBLIC DISCOVERIES
 ------------------------- */
 
+const DISCOVERY_ICONS = [
+  "✦",
+  "◎",
+  "↗",
+  "◇"
+];
+
 function createDiscoveryCard(discovery) {
   const article =
     document.createElement("article");
@@ -717,10 +733,49 @@ function createDiscoveryCard(discovery) {
   article.dataset.discoveryId =
     String(discovery.id);
 
+  const tone =
+    Math.abs(
+      Number(discovery.id) || 0
+    ) % 4;
+
+  article.dataset.discoveryTone =
+    String(tone);
+
   const meta =
     document.createElement("div");
 
   meta.className = "action-meta";
+
+  const discoveryBadge =
+    document.createElement("span");
+
+  discoveryBadge.className =
+    "discovery-badge";
+
+  const discoveryIcon =
+    document.createElement("span");
+
+  discoveryIcon.className =
+    "discovery-icon";
+
+  discoveryIcon.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  discoveryIcon.textContent =
+    DISCOVERY_ICONS[tone];
+
+  const discoveryLabel =
+    document.createElement("span");
+
+  discoveryLabel.textContent =
+    "Discovery";
+
+  discoveryBadge.append(
+    discoveryIcon,
+    discoveryLabel
+  );
 
   const username =
     document.createElement("strong");
@@ -740,6 +795,7 @@ function createDiscoveryCard(discovery) {
     );
 
   meta.append(
+    discoveryBadge,
     username,
     date
   );
@@ -774,17 +830,32 @@ function createDiscoveryCard(discovery) {
 }
 
 function renderPublicDiscoveries() {
+  const username =
+    discoveriesUsernameSearch.value
+      .trim()
+      .toLocaleLowerCase();
+
+  const discoveries =
+    publicDiscoveries.filter(
+      (discovery) =>
+        !username ||
+        discovery.username
+          .toLocaleLowerCase() === username
+    );
+
   discoveriesFeed.replaceChildren();
 
   if (
-    publicDiscoveries.length === 0
+    discoveries.length === 0
   ) {
     const empty =
       document.createElement("p");
 
     empty.className = "empty-state";
     empty.textContent =
-      "No Discoveries have been published yet.";
+      username
+        ? "No results found."
+        : "No Discoveries have been published yet.";
 
     discoveriesFeed.append(empty);
     return;
@@ -795,7 +866,7 @@ function renderPublicDiscoveries() {
 
   for (
     const discovery
-    of publicDiscoveries
+    of discoveries
   ) {
     fragment.append(
       createDiscoveryCard(discovery)
@@ -857,6 +928,27 @@ async function loadPublicDiscoveries() {
     );
   }
 }
+
+discoveriesControls.addEventListener(
+  "submit",
+  (event) => {
+    event.preventDefault();
+  }
+);
+
+discoveriesUsernameSearch.addEventListener(
+  "input",
+  renderPublicDiscoveries
+);
+
+clearDiscoveriesFilters.addEventListener(
+  "click",
+  () => {
+    discoveriesUsernameSearch.value = "";
+    renderPublicDiscoveries();
+    discoveriesUsernameSearch.focus();
+  }
+);
 
 /* -------------------------
    YOUR RECORD
