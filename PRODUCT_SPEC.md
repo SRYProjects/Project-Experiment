@@ -191,9 +191,13 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Avoid mountains, meditation, stock wellness imagery, aspirational lifestyle clichés, featured-member/social-status hierarchy, and unnecessary animation.
 - Public streams should feel live through real timestamps/content, compact entry density, clear hierarchy, and inviting visual personality rather than gimmicks.
 - Meaningful Actions and Discoveries are the visual and functional center of the homepage. They should be larger than surrounding content, use readable type, and remain side-by-side on wider screens while stacking responsively on smaller screens.
+- Do not place decorative icons beside the Actions/Discoveries section headings unless they communicate real information. Keep iconography inside individual logged entries, where it aids scanning.
+- Each community stream must contain an obvious in-window participation button: **Log an Action** and **Log a Discovery**.
+- The hero should use a full-width abstract/background treatment rather than a separate decorative object beside the question.
+- Project activity statistics should be presented as a clearly readable summary band, not as small secondary metadata.
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
-- The overall palette should be lighter and more inviting, using Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively rather than relying on dark surfaces.
+- Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The site should not be uniformly dark, but the hero should remain dark, dramatic, and high-contrast with white type.
 - Include an **Explore Project Meaningful** resource area for Articles, the Book, Videos, and project/social/application updates. Do not invent external destinations; connect real links only when verified/provided.
 - The Book, Experiment, Application, and Community should read as one coherent project architecture rather than an appended footer block.
 - Responsive and accessible implementation is required.
