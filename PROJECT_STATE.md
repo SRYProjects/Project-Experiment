@@ -155,6 +155,9 @@ Current repository inspection confirms the live implementation contains:
 - The new Explore Project Meaningful area intentionally stages Articles, Book, Videos, and Follow the Project without fabricating external URLs. Real resource links remain to be connected when verified/provided.
 - Readability/community refinement completed: supporting type increased across the homepage; Meaningful Action cards now include category icons and color-coded category cues; community panels gained warmer card treatment and low-opacity blue/green background arcs derived from the Project Meaningful visual language.
 - Brand accent direction now uses the supplied Project Meaningful palette selectively: blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007`.
+- Community emphasis refinement completed: the overall site palette is lighter; Actions/Discoveries panels are larger; homepage feeds are now 460px high; action text/meta sizes were increased; each Action category now has its own distinct color/icon cue.
+- Discoveries now have card icons with rotating visual tones and exact case-insensitive homepage username search with Clear behavior matching the Actions pattern.
+- The header, hero, activity strip, and Project architecture section were lightened so the community streams carry the strongest visual emphasis.
 - The supplied Meaningful logos and book artwork were reviewed. They are intentionally not forced into the current homepage layout yet; the Book artwork is reserved for the real Book resource destination, and the logo assets remain available for later brand integration if the production review shows they improve rather than clutter the site.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
@@ -166,7 +169,7 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Production-review the redesigned and readability-refined homepage visually and functionally before building additional features.**
+**Production-review the brighter, enlarged community-first homepage visually and functionally before building additional features.**
 
 Required review:
 - hero has the intended serious, distinctive Project Meaningful identity and does not read as wellness/stock imagery;
