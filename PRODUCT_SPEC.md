@@ -189,8 +189,11 @@ RLS is part of the database security model. Public statistics are exposed throug
 - The public site should feel like a living community project with intellectual substance behind it.
 - Dark/abstract/moody hero direction suggesting deliberate choice versus autopilot; geometric/structured visual language is preferred over generic gradients or stock imagery.
 - Avoid mountains, meditation, stock wellness imagery, aspirational lifestyle clichés, featured-member/social-status hierarchy, and unnecessary animation.
-- Public streams should feel live through real timestamps/content, compact entry density, and clear hierarchy rather than gimmicks.
-- Meaningful Actions and Discoveries remain the living center of the homepage; on wider screens they sit side-by-side and stack responsively on smaller screens.
+- Public streams should feel live through real timestamps/content, compact entry density, clear hierarchy, and inviting visual personality rather than gimmicks.
+- Meaningful Actions and Discoveries are the visual and functional center of the homepage. They should be larger than surrounding content, use readable type, and remain side-by-side on wider screens while stacking responsively on smaller screens.
+- Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
+- Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
+- The overall palette should be lighter and more inviting, using Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively rather than relying on dark surfaces.
 - Include an **Explore Project Meaningful** resource area for Articles, the Book, Videos, and project/social/application updates. Do not invent external destinations; connect real links only when verified/provided.
 - The Book, Experiment, Application, and Community should read as one coherent project architecture rather than an appended footer block.
 - Responsive and accessible implementation is required.
