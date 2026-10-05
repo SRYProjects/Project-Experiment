@@ -51,35 +51,35 @@
           </div>
         </div>
 
-        <div class="hero-art" aria-hidden="true">
-          <div class="hero-art-core"></div>
-          <span class="hero-art-line line-one"></span>
-          <span class="hero-art-line line-two"></span>
-          <span class="hero-art-line line-three"></span>
-          <span class="hero-art-point point-one"></span>
-          <span class="hero-art-point point-two"></span>
-          <span class="hero-art-point point-three"></span>
-        </div>
       </div>
     </section>
 
     <section class="activity" aria-label="Project activity">
-      <div>
+      <div class="activity-intro">
+        <strong>One deliberate action at a time.</strong>
+        <span>See what people are choosing, recording, and discovering together.</span>
+      </div>
+
+      <div class="activity-stat">
+        <span class="stat-icon" aria-hidden="true">✦</span>
         <strong id="totalActions">—</strong>
         <span>Meaningful Actions</span>
       </div>
 
-      <div>
+      <div class="activity-stat">
+        <span class="stat-icon" aria-hidden="true">↗</span>
         <strong id="todayActions">—</strong>
         <span>Actions Today</span>
       </div>
 
-      <div>
+      <div class="activity-stat">
+        <span class="stat-icon" aria-hidden="true">◎</span>
         <strong id="participants">—</strong>
         <span>Participants</span>
       </div>
 
-      <div>
+      <div class="activity-stat">
+        <span class="stat-icon" aria-hidden="true">□</span>
         <strong id="experimentDay">Not launched</strong>
         <span>Of the Experiment</span>
       </div>
@@ -113,7 +113,7 @@
           <div class="stream-heading">
             <div>
               <p class="stream-kicker">MEANINGFUL ACTIONS</p>
-              <h3><span class="stream-title-icon action-title-icon" aria-hidden="true">✦</span>Actions</h3>
+              <h3>Actions</h3>
             </div>
             <a class="stream-link" href="/actions.html">View all →</a>
           </div>
@@ -154,6 +154,10 @@
             <button id="clearActionsFilters" class="filter-reset" type="button">
               Clear
             </button>
+
+            <button id="logActionButton" class="primary-button stream-action-button" type="button">
+              Log an Action
+            </button>
           </form>
 
           <div id="actionsFeed" class="feed" aria-live="polite" aria-busy="true">
@@ -165,7 +169,7 @@
           <div class="stream-heading">
             <div>
               <p class="stream-kicker">DISCOVERIES</p>
-              <h3><span class="stream-title-icon discovery-title-icon" aria-hidden="true">◎</span>What people noticed</h3>
+              <h3>What people noticed</h3>
             </div>
             <a class="stream-link" href="/discoveries.html">View all →</a>
           </div>
@@ -189,8 +193,8 @@
               Clear
             </button>
 
-            <button id="shareDiscoveryButton" class="secondary-button compact-button" type="button">
-              Share a Discovery
+            <button id="shareDiscoveryButton" class="primary-button stream-action-button" type="button">
+              Log a Discovery
             </button>
           </form>
 
