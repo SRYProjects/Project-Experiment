@@ -76,7 +76,7 @@ Categories currently supported end-to-end include **Sacrifice**.
 - Buttons: **View My Action**, **Share Another Action**.
 - Pending state has pending-review confirmation and no public-view action.
 - Dialog can close via X, Escape, or backdrop click.
-- “View My Action” currently scrolls to the Meaningful Actions section; it cannot show/highlight the actual item until the public feed is built.
+- “View My Action” now reloads the public feed and targets the newly published entry by returned action ID.
 
 ### Database established
 Known schema includes:
@@ -114,7 +114,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The feed height has been reduced from 330px to 260px and now links to the full archive. Latest production verification confirmed filtering/search behavior before these newest presentation/archive changes.
 - Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
 - Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are now implemented in code; production verification is required.
-- Meaningful Actions and Discoveries now render side-by-side on wider screens and stack responsively below 1050px. Production verification is required.
+- Homepage has been substantially redesigned around a distinctive abstract hero, compact activity strip, denser side-by-side community streams, an Explore Project Meaningful resource band, and a clearer Book / Experiment / Application / Community architecture. Production visual verification is required.
 - Your Record; nav currently shows a placeholder alert.
 - Registration Turnstile.
 - Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
@@ -151,6 +151,8 @@ Current repository inspection confirms the live implementation contains:
 - `public/index.html` + `public/app.js`: Discoveries submission dialog, 280-character limit, dedicated Turnstile widget lifecycle, published/pending states, public feed, and View My Discovery targeting.
 - `public/discoveries.html` + `public/discoveries.js`: dedicated Discoveries archive with exact username search and Load More pagination.
 - JavaScript syntax/static checks passed for the Worker, homepage app, and Discoveries archive after these changes.
+- `public/index.html` + `public/styles.css`: substantial homepage redesign completed on 2026-10-05. The redesign preserves all existing interaction IDs/JS hooks; integrity check found no duplicate IDs and no missing DOM selectors.
+- The new Explore Project Meaningful area intentionally stages Articles, Book, Videos, and Follow the Project without fabricating external URLs. Real resource links remain to be connected when verified/provided.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -161,29 +163,29 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Production-verify the current Meaningful Actions archive, View My Action targeting, the Discoveries pipeline end-to-end, and the new responsive dual-stream homepage layout.**
+**Production-review the redesigned homepage visually and functionally before building additional features.**
 
-Required live checks:
-- `/actions.html` loads published actions newest-first;
-- action category and exact case-insensitive username filtering work;
-- action archive Load More pagination works;
-- a newly published action is targeted by **View My Action**;
-- authenticated Discovery submission works through Turnstile, validation, moderation, and Supabase insertion;
-- published Discovery appears in the homepage feed and `/discoveries.html`;
-- pending Discovery remains non-public;
-- Discovery archive exact case-insensitive username filtering and Load More work;
-- **View My Discovery** targets the newly published Discovery;
-- existing Meaningful Action submission/authentication behavior remains intact.
+Required review:
+- hero has the intended serious, distinctive Project Meaningful identity and does not read as wellness/stock imagery;
+- activity strip remains readable and accurate;
+- Actions and Discoveries feel like the living center of the site, with compact readable entries and usable controls;
+- desktop dual-stream layout remains balanced; tablet/mobile stacking remains clean;
+- Explore Project Meaningful feels valuable without implying nonexistent links or resources;
+- Book / Experiment / Application / Community read as one coherent larger project;
+- all existing authentication, Meaningful Action submission, Discovery submission, archive, and View My Action / View My Discovery behavior still works;
+- no regression in accessibility, overflow, or mobile navigation.
+
+After that review:
+1. connect verified Articles / Book / Videos / social destinations when the user provides or confirms them;
+2. proceed to **Your Record** unless the homepage review identifies a higher-priority correction.
 
 Automated/static status:
-- Worker, homepage app, and Discoveries archive JavaScript passed syntax checks on 2026-10-04.
-- This execution environment could not resolve `projectmeaningful.app`, so no false claim of production verification has been made.
-
-Confirm that the dual-stream layout is balanced and readable on desktop and stacks cleanly on tablet/mobile before proceeding to Your Record.
+- Homepage DOM integrity check passed on 2026-10-05: no duplicate IDs and no JavaScript-referenced IDs missing after the redesign.
+- No backend/database changes were made for this redesign.
 
 ## Short remaining roadmap
-1. Production-verify Meaningful Actions archive/pagination, View My Action targeting, and Discoveries end-to-end.
-2. Verify the responsive dual-stream Actions/Discoveries homepage layout in production.
+1. Production-review the redesigned homepage and confirm no functional regressions.
+2. Connect verified resource destinations for Articles / Book / Videos / social when available.
 3. Your Record.
 5. Registration abuse protection + rate limiting/search throttling/reserved usernames.
 6. Admin review/removal workflow.
