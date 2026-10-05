@@ -20,14 +20,13 @@ Conceptual flow: **Question → Participation → Evidence → Personal Record �
 
 Homepage order:
 1. Header
-2. Hero
-3. Participation invitation
-4. Project activity
-5. Meaningful Actions
-6. Discoveries
-7. Your Record
-8. The Meaningful Project
-9. Footer
+2. Hero / primary participation invitation
+3. Project activity
+4. Brief experiment premise
+5. Community activity: Meaningful Actions + Discoveries as complementary live streams
+6. Explore Project Meaningful: Articles, Book, Videos, and project/future-application updates
+7. The larger Project Meaningful architecture: Book, Experiment, Application, Community
+8. Footer
 
 Primary action: **Share Your Meaningful Action**.
 
@@ -186,10 +185,14 @@ Discovery stores user ID, text, timestamp, demo/real flag, and moderation status
 RLS is part of the database security model. Public statistics are exposed through a database function and exclude demo/unpublished content.
 
 ## Visual direction
-- Serious, editorial, restrained; not “wellness.”
-- Dark/abstract/moody hero direction suggesting deliberate choice versus autopilot.
-- Avoid mountains, meditation, stock wellness imagery, aspirational lifestyle clichés, and unnecessary animation.
-- Public streams should feel live through real timestamps/content, not gimmicks.
+- Serious, editorial, distinctive; not “wellness,” but also not a sterile database interface.
+- The public site should feel like a living community project with intellectual substance behind it.
+- Dark/abstract/moody hero direction suggesting deliberate choice versus autopilot; geometric/structured visual language is preferred over generic gradients or stock imagery.
+- Avoid mountains, meditation, stock wellness imagery, aspirational lifestyle clichés, featured-member/social-status hierarchy, and unnecessary animation.
+- Public streams should feel live through real timestamps/content, compact entry density, and clear hierarchy rather than gimmicks.
+- Meaningful Actions and Discoveries remain the living center of the homepage; on wider screens they sit side-by-side and stack responsively on smaller screens.
+- Include an **Explore Project Meaningful** resource area for Articles, the Book, Videos, and project/social/application updates. Do not invent external destinations; connect real links only when verified/provided.
+- The Book, Experiment, Application, and Community should read as one coherent project architecture rather than an appended footer block.
 - Responsive and accessible implementation is required.
 
 ## Larger/commercial direction
