@@ -158,6 +158,11 @@ Current repository inspection confirms the live implementation contains:
 - Community emphasis refinement completed: the overall site palette is lighter; Actions/Discoveries panels are larger; homepage feeds are now 460px high; action text/meta sizes were increased; each Action category now has its own distinct color/icon cue.
 - Discoveries now have card icons with rotating visual tones and exact case-insensitive homepage username search with Clear behavior matching the Actions pattern.
 - The header, hero, activity strip, and Project architecture section were lightened so the community streams carry the strongest visual emphasis.
+- 2026-10-05 design correction: the washed-out hero direction was rejected. The hero is again dark, dramatic, and white-on-dark, now using a full-width abstract background instead of the separate geometric side graphic.
+- Community stream header icons were removed; entry-level category/discovery icons remain.
+- Actions/Discoveries containers widened to a 1680px maximum presentation width while preserving the currently approved card treatment.
+- Added an explicit **Log an Action** button inside the Actions window and changed the Discoveries in-window CTA to **Log a Discovery**.
+- Rebuilt the project activity area as a clearer stats band with an explanatory lead-in and more prominent values.
 - The supplied Meaningful logos and book artwork were reviewed. They are intentionally not forced into the current homepage layout yet; the Book artwork is reserved for the real Book resource destination, and the logo assets remain available for later brand integration if the production review shows they improve rather than clutter the site.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
@@ -169,7 +174,7 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Production-review the brighter, enlarged community-first homepage visually and functionally before building additional features.**
+**Production-review the corrected community-first homepage: dark dramatic hero, clarified stats band, wider Actions/Discoveries windows, and in-window participation CTAs.**
 
 Required review:
 - hero has the intended serious, distinctive Project Meaningful identity and does not read as wellness/stock imagery;
