@@ -189,6 +189,9 @@ const actionsUsernameSearch =
 const clearActionsFilters =
   document.querySelector("#clearActionsFilters");
 
+const logActionButton =
+  document.querySelector("#logActionButton");
+
 let publicActions = [];
 let lastPublishedActionId = null;
 let publicDiscoveries = [];
@@ -386,6 +389,11 @@ function openDiscovery() {
 ------------------------- */
 
 participateButton.addEventListener(
+  "click",
+  openParticipation
+);
+
+logActionButton.addEventListener(
   "click",
   openParticipation
 );
