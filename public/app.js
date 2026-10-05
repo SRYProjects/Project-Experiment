@@ -903,6 +903,20 @@ function formatActionDate(value) {
   ).format(date);
 }
 
+const ACTION_CATEGORY_ICONS = {
+  Family: "♥",
+  Relationships: "↔",
+  Health: "+",
+  Work: "◆",
+  Learning: "◫",
+  Creativity: "✦",
+  Service: "◎",
+  Faith: "△",
+  Responsibility: "✓",
+  Sacrifice: "◇",
+  Other: "•"
+};
+
 function createActionCard(action) {
   const article =
     document.createElement("article");
@@ -911,22 +925,52 @@ function createActionCard(action) {
   article.dataset.actionId =
     String(action.id);
 
+  article.dataset.category =
+    action.category;
+
   const meta =
     document.createElement("div");
 
   meta.className = "action-meta";
+
+  const categoryBadge =
+    document.createElement("span");
+
+  categoryBadge.className =
+    "category-badge";
+
+  const categoryIcon =
+    document.createElement("span");
+
+  categoryIcon.className =
+    "category-icon";
+
+  categoryIcon.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  categoryIcon.textContent =
+    ACTION_CATEGORY_ICONS[
+      action.category
+    ] || "•";
+
+  const categoryText =
+    document.createElement("span");
+
+  categoryText.textContent =
+    action.category;
+
+  categoryBadge.append(
+    categoryIcon,
+    categoryText
+  );
 
   const username =
     document.createElement("strong");
 
   username.textContent =
     action.username;
-
-  const category =
-    document.createElement("span");
-
-  category.textContent =
-    action.category;
 
   const date =
     document.createElement("time");
@@ -938,8 +982,8 @@ function createActionCard(action) {
     formatActionDate(action.createdAt);
 
   meta.append(
+    categoryBadge,
     username,
-    category,
     date
   );
 
