@@ -48,6 +48,9 @@ const closeUpdatesDialogButton =
 const participateButton =
   document.querySelector("#participateButton");
 
+const joinProjectButton =
+  document.querySelector("#joinProjectButton");
+
 const closeDialog =
   document.querySelector("#closeDialog");
 
@@ -389,6 +392,11 @@ function openDiscovery() {
 ------------------------- */
 
 participateButton.addEventListener(
+  "click",
+  openParticipation
+);
+
+joinProjectButton.addEventListener(
   "click",
   openParticipation
 );
