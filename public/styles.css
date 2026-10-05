@@ -5,8 +5,10 @@
   --paper-deep: #e8e2d7;
   --white: #fff;
   --line: #d6d0c4;
-  --accent: #b55332;
-  --accent-dark: #81361f;
+  --accent: #0066cc;
+  --accent-dark: #004f9f;
+  --green: #519d2d;
+  --gold: #e8b007;
   --dark: #171b1a;
   --dark-soft: #242a28;
   --sage: #59695f;
@@ -60,7 +62,7 @@ a {
 
 .brand {
   color: var(--white);
-  font-size: .82rem;
+  font-size: .92rem;
   font-weight: 800;
   letter-spacing: .16em;
   text-decoration: none;
@@ -78,7 +80,7 @@ nav a,
   border: 0;
   background: transparent;
   text-decoration: none;
-  font-size: .82rem;
+  font-size: .94rem;
 }
 
 nav a:hover,
@@ -92,9 +94,9 @@ nav a:hover,
   min-height: 600px;
   color: var(--white);
   background:
-    radial-gradient(circle at 78% 26%, rgba(181,83,50,.42), transparent 34%),
-    radial-gradient(circle at 64% 78%, rgba(89,105,95,.32), transparent 30%),
-    linear-gradient(125deg, #151b1a 0%, #1f2825 48%, #2a211e 100%);
+    radial-gradient(circle at 78% 26%, rgba(0,102,204,.42), transparent 34%),
+    radial-gradient(circle at 66% 82%, rgba(81,157,45,.26), transparent 31%),
+    linear-gradient(125deg, #12191a 0%, #1a2525 48%, #1d2424 100%);
 }
 
 .hero::before {
@@ -128,7 +130,7 @@ nav a:hover,
 
 .eyebrow {
   margin: 0 0 16px;
-  font-size: .7rem;
+  font-size: .78rem;
   font-weight: 800;
   letter-spacing: .19em;
   text-transform: uppercase;
@@ -148,7 +150,7 @@ nav a:hover,
   max-width: 610px;
   margin: 28px 0 30px;
   color: rgba(255,255,255,.74);
-  font-size: 1.08rem;
+  font-size: 1.2rem;
 }
 
 .hero-actions {
@@ -238,10 +240,10 @@ nav a:hover,
     conic-gradient(
       from 35deg,
       rgba(255,255,255,.12),
-      rgba(181,83,50,.14),
+      rgba(0,102,204,.16),
       rgba(89,105,95,.18),
       rgba(255,255,255,.03),
-      rgba(181,83,50,.12)
+      rgba(81,157,45,.14)
     );
   transform: rotate(12deg);
 }
@@ -294,7 +296,7 @@ nav a:hover,
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #d98763;
+  background: #e8b007;
   box-shadow: 0 0 0 7px rgba(217,135,99,.09);
 }
 
@@ -306,13 +308,13 @@ nav a:hover,
 .point-two {
   top: 61%;
   left: 30%;
-  background: #91a094;
+  background: #519d2d;
 }
 
 .point-three {
   right: 16%;
   bottom: 16%;
-  background: #d8c2a7;
+  background: #0066cc;
 }
 
 .activity {
@@ -353,7 +355,7 @@ nav a:hover,
 .activity span {
   margin-top: 3px;
   color: rgba(255,255,255,.55);
-  font-size: .68rem;
+  font-size: .76rem;
   text-transform: uppercase;
   letter-spacing: .11em;
 }
@@ -384,15 +386,48 @@ nav a:hover,
 .intro-grid p {
   margin: 0;
   color: var(--muted);
-  font-size: 1rem;
+  font-size: 1.12rem;
+  line-height: 1.65;
 }
 
 .community-section {
+  position: relative;
+  overflow: hidden;
   padding: 78px 6vw 86px;
   background:
-    linear-gradient(rgba(255,255,255,.58), rgba(255,255,255,.58)),
+    radial-gradient(ellipse at 8% 18%, rgba(0,102,204,.08), transparent 25%),
+    radial-gradient(ellipse at 93% 84%, rgba(81,157,45,.09), transparent 29%),
+    linear-gradient(rgba(255,255,255,.62), rgba(255,255,255,.62)),
     linear-gradient(120deg, var(--paper), var(--paper-deep));
   border-bottom: 1px solid var(--line);
+}
+
+.community-section::before,
+.community-section::after {
+  content: "";
+  position: absolute;
+  width: 760px;
+  height: 190px;
+  border: 18px solid rgba(0,102,204,.055);
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-16deg);
+  pointer-events: none;
+}
+
+.community-section::before {
+  left: -350px;
+  top: 90px;
+}
+
+.community-section::after {
+  right: -360px;
+  bottom: 25px;
+  border-color: rgba(81,157,45,.06);
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(164deg);
 }
 
 .community-heading {
@@ -453,7 +488,7 @@ nav a:hover,
 .stream-kicker {
   margin: 0 0 5px;
   color: var(--muted);
-  font-size: .66rem;
+  font-size: .76rem;
   font-weight: 800;
   letter-spacing: .14em;
 }
@@ -468,7 +503,7 @@ nav a:hover,
 
 .stream-link {
   padding-top: 8px;
-  font-size: .78rem;
+  font-size: .9rem;
   font-weight: 700;
   white-space: nowrap;
   text-underline-offset: 3px;
@@ -478,7 +513,8 @@ nav a:hover,
   max-width: 620px;
   margin: 12px 0 20px;
   color: var(--muted);
-  font-size: .92rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
 }
 
 .feed-controls {
@@ -492,7 +528,7 @@ nav a:hover,
 .feed-controls label {
   display: grid;
   gap: 6px;
-  font-size: .68rem;
+  font-size: .76rem;
   font-weight: 800;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -505,7 +541,7 @@ nav a:hover,
   border: 1px solid var(--line);
   background: rgba(255,255,255,.95);
   color: var(--ink);
-  font-size: .82rem;
+  font-size: .92rem;
 }
 
 .filter-reset {
@@ -514,7 +550,7 @@ nav a:hover,
   border: 1px solid var(--line);
   background: transparent;
   color: var(--muted);
-  font-size: .76rem;
+  font-size: .86rem;
   font-weight: 700;
 }
 
@@ -532,30 +568,105 @@ nav a:hover,
 
 .compact-button {
   padding: 10px 14px;
-  font-size: .8rem;
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
 .feed {
   height: 300px;
   overflow-y: auto;
   padding: 10px 18px;
-  background: rgba(255,255,255,.7);
+  background: rgba(255,255,255,.46);
   border: 1px solid var(--line);
   scrollbar-color: #aaa499 transparent;
   scrollbar-width: thin;
 }
 
 .action-card {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--line);
+  position: relative;
+  padding: 17px 14px 17px 16px;
+  margin: 7px 0;
+  border: 1px solid rgba(214,208,196,.78);
+  border-left: 4px solid var(--accent);
+  background: rgba(255,255,255,.8);
+  box-shadow: 0 6px 18px rgba(24,26,24,.04);
+}
+
+.action-card[data-category="Health"],
+.action-card[data-category="Service"],
+.action-card[data-category="Responsibility"] {
+  border-left-color: var(--green);
+}
+
+.action-card[data-category="Learning"],
+.action-card[data-category="Creativity"],
+.action-card[data-category="Faith"] {
+  border-left-color: var(--gold);
+}
+
+.action-card[data-category="Family"],
+.action-card[data-category="Relationships"] {
+  border-left-color: #7a5aa6;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.category-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(0,102,204,.09);
+  font-size: .82rem;
+}
+
+.action-card[data-category="Health"] .category-badge,
+.action-card[data-category="Service"] .category-badge,
+.action-card[data-category="Responsibility"] .category-badge {
+  color: var(--green);
+}
+
+.action-card[data-category="Health"] .category-icon,
+.action-card[data-category="Service"] .category-icon,
+.action-card[data-category="Responsibility"] .category-icon {
+  background: rgba(81,157,45,.1);
+}
+
+.action-card[data-category="Learning"] .category-badge,
+.action-card[data-category="Creativity"] .category-badge,
+.action-card[data-category="Faith"] .category-badge {
+  color: #a77900;
+}
+
+.action-card[data-category="Learning"] .category-icon,
+.action-card[data-category="Creativity"] .category-icon,
+.action-card[data-category="Faith"] .category-icon {
+  background: rgba(232,176,7,.12);
+}
+
+.action-card[data-category="Family"] .category-badge,
+.action-card[data-category="Relationships"] .category-badge {
+  color: #6b4d90;
+}
+
+.action-card[data-category="Family"] .category-icon,
+.action-card[data-category="Relationships"] .category-icon {
+  background: rgba(122,90,166,.1);
 }
 
 .action-card:first-child {
-  padding-top: 8px;
+  margin-top: 2px;
 }
 
 .action-card:last-child {
-  border-bottom: 0;
+  margin-bottom: 2px;
 }
 
 .action-meta {
@@ -564,12 +675,13 @@ nav a:hover,
   align-items: baseline;
   gap: 6px 12px;
   color: var(--muted);
-  font-size: .72rem;
+  font-size: .82rem;
 }
 
 .action-meta strong {
   color: var(--ink);
-  font-size: .8rem;
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
 .action-meta time {
@@ -588,7 +700,7 @@ nav a:hover,
 .action-text {
   margin: 7px 0 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.04rem;
+  font-size: 1.22rem;
   line-height: 1.4;
 }
 
@@ -636,8 +748,8 @@ nav a:hover,
 
 .resource-number,
 .project-grid article > span {
-  color: var(--accent);
-  font-size: .68rem;
+  color: var(--green);
+  font-size: .78rem;
   font-weight: 800;
   letter-spacing: .14em;
 }
@@ -658,7 +770,7 @@ nav a:hover,
 .resource-status {
   margin-top: auto;
   color: #81796d;
-  font-size: .72rem;
+  font-size: .8rem;
   font-weight: 700;
   letter-spacing: .04em;
   text-transform: uppercase;
