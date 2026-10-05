@@ -163,6 +163,10 @@ Current repository inspection confirms the live implementation contains:
 - Actions/Discoveries containers widened to a 1680px maximum presentation width while preserving the currently approved card treatment.
 - Added an explicit **Log an Action** button inside the Actions window and changed the Discoveries in-window CTA to **Log a Discovery**.
 - Rebuilt the project activity area as a clearer stats band with an explanatory lead-in and more prominent values.
+- 2026-10-05 community refinement: primary blue CTAs now have rounded corners; the former muted "The Idea Is Simple" section is now a vibrant blue/green **Join Project Meaningful** invitation with three explicit participation benefits and a working **Join the Experiment** button.
+- The community section background is now white/open; outer stream-panel borders, heavy shadows, and rounded "window" containers were removed so the individual Action/Discovery entries provide the visual structure.
+- Actions/Discoveries presentation width increased again to a 1720px maximum with more whitespace between the two streams and a subtle divider only where useful.
+- The decision remains to avoid the word **Subscribe** until explicit update-consent persistence exists; joining the experiment and subscribing to future communications are separate actions.
 - The supplied Meaningful logos and book artwork were reviewed. They are intentionally not forced into the current homepage layout yet; the Book artwork is reserved for the real Book resource destination, and the logo assets remain available for later brand integration if the production review shows they improve rather than clutter the site.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
@@ -174,7 +178,7 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Production-review the corrected community-first homepage: dark dramatic hero, clarified stats band, wider Actions/Discoveries windows, and in-window participation CTAs.**
+**Production-review the open community-first homepage: vibrant Join Project Meaningful invitation, white borderless stream field, wider Actions/Discoveries presentation, and rounded participation CTAs.**
 
 Required review:
 - hero has the intended serious, distinctive Project Meaningful identity and does not read as wellness/stock imagery;
