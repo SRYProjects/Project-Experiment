@@ -332,25 +332,39 @@ function resetDiscoveryTurnstile() {
   }
 }
 
-function ensureDiscoveryTurnstile() {
+function ensureDiscoveryTurnstile(attempt = 0) {
   if (!window.turnstile) {
+    if (attempt < 20) {
+      window.setTimeout(
+        () => ensureDiscoveryTurnstile(attempt + 1),
+        250
+      );
+    }
+
     return;
   }
 
   window.turnstile.ready(() => {
-    if (discoveryTurnstileWidgetId === null) {
-      discoveryTurnstileWidgetId =
-        window.turnstile.render(
-          "#discoveryTurnstile",
-          {
-            sitekey:
-              "0x4AAAAAAFFXWD-I0BinHjw3",
-            action:
-              "meaningful_discovery"
-          }
-        );
-    } else {
-      resetDiscoveryTurnstile();
+    try {
+      if (discoveryTurnstileWidgetId === null) {
+        discoveryTurnstileWidgetId =
+          window.turnstile.render(
+            "#discoveryTurnstile",
+            {
+              sitekey:
+                "0x4AAAAAAFFXWD-I0BinHjw3",
+              action:
+                "meaningful_discovery"
+            }
+          );
+      } else {
+        resetDiscoveryTurnstile();
+      }
+    } catch (error) {
+      console.error(
+        "Discovery verification failed to initialize:",
+        error
+      );
     }
   });
 }
@@ -396,8 +410,8 @@ function openParticipation() {
 
 function openDiscovery() {
   if (currentSession?.user) {
-    prepareNewDiscovery();
     discoveryDialog.showModal();
+    prepareNewDiscovery();
     return;
   }
 
