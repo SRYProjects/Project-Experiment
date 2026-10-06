@@ -204,6 +204,13 @@ Current repository inspection confirms the live implementation contains:
   - live database verification found 55 demo actions / 15 demo discoveries / 15 fictional handles and zero real rows missing authenticated user IDs;
   - live `project_stats()` returned real-only totals (6 real published actions, 1 action today, 1 real participant at verification time), confirming Example rows do not inflate statistics;
   - Supabase security/performance advisors were run after the migration. They surfaced the repository's already-known SECURITY DEFINER / RLS performance warnings and no demo-identity-specific finding.
+- 2026-10-06 Community-only layout refinement:
+  - Meaningful Actions left column was intentionally left unchanged;
+  - Discoveries remains in the right column but its homepage feed is reduced to 560px on desktop (440px on mobile);
+  - the existing **STAY CONNECTED / Follow The Meaningful Project** block was moved from below the Community section into the right column directly beneath Discoveries;
+  - Follow content/copy and existing interaction IDs were preserved; its cards were compacted only enough to fit the right rail;
+  - no JavaScript behavior was changed.
+- Static verification after this move: duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; one Actions section, one Discoveries section, one Follow section; Action feed global 1480px height preserved; CSS brace balance **passed**.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -217,19 +224,16 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the 2026-10-06 homepage refinement on `projectmeaningful.app` after Cloudflare deploys the latest `main`.**
+**Production-review only the revised `THE COMMUNITY IN MOTION` composition on `projectmeaningful.app`.**
 
 Verify:
-- the activity strip under the hero is visibly larger and now belongs to the same dark blue/green/gold design family as the rest of the site;
-- **Share Something Meaningful** is the Join-card CTA and still opens the Action participation flow;
-- Action category/text fields and the Discovery text field are comfortably readable at desktop and mobile sizes;
-- the expanded community area exposes roughly 25â€“30 entries collectively across the two desktop streams, with internal scrolling still working;
-- Example entries are visibly labeled **Example**, use fictional usernames, work with category/username filtering and archives, and do not change the real project-activity counts;
-- **Log a Discovery** reliably opens the Discovery dialog, Turnstile appears, and a real Discovery can be submitted;
-- **Follow The Meaningful Project** appears as one consolidated lower section with Articles, one Book entry, Videos, The Application, and Project Updates; the duplicate Experiment/Book architecture section is gone;
-- Your Record and existing auth/Action/archive behavior remain intact.
+- the Meaningful Actions left column is visually unchanged;
+- Discoveries is shorter in the right column;
+- **STAY CONNECTED / Follow The Meaningful Project** now appears directly beneath Discoveries in that same right column;
+- the compact Follow cards remain readable and balanced without causing overflow;
+- existing Discovery, Follow/updates, filtering, and archive interactions still work.
 
-If this production review passes, the next functional priority is connecting verified resource destinations and then abuse protection/rate limiting rather than further structural homepage work unless the live design reveals a specific defect.
+Do not make additional homepage changes unless this review reveals a specific defect.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
