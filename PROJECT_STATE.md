@@ -111,10 +111,10 @@ Live production testing has confirmed:
 Recent live test examples included Work (“Finished proposal for new clients”) and Sacrifice (“Instead of wasting time, I went for a walk”).
 
 ## Currently unfinished
-- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The feed height has been reduced from 330px to 260px and now links to the full archive. Latest production verification confirmed filtering/search behavior before these newest presentation/archive changes.
+- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The desktop community feeds are now 1480px high, with shorter responsive heights on tablet/mobile, and link to the full archives. Production verification of the expanded presentation and Example-content search/filter behavior is required.
 - Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
-- Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are now implemented in code; production verification is required.
-- Homepage has been substantially redesigned around a distinctive abstract hero, compact activity strip, denser side-by-side community streams, an Explore Project Meaningful resource band, and a clearer Book / Experiment / Application / Community architecture. Production visual verification is required.
+- Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are implemented in code. The 2026-10-06 dialog/Turnstile lifecycle fix requires production verification.
+- Homepage now uses a distinctive abstract hero, a larger dark blue/green/gold project-activity band, expanded side-by-side community streams, and one consolidated **Follow The Meaningful Project** section. Production visual verification is required.
 - Your Record is implemented in code as a private authenticated modal with published-action count, distinct published-action days, newest-first action history, and visible Pending/Rejected states. Production verification is required.
 - Registration Turnstile.
 - Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
