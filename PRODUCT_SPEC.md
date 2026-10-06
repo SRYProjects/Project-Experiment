@@ -22,11 +22,10 @@ Homepage order:
 1. Header
 2. Hero / primary participation invitation
 3. Project activity
-4. Brief experiment premise
+4. Brief experiment premise + **Share Something Meaningful** participation invitation
 5. Community activity: Meaningful Actions + Discoveries as complementary live streams
-6. Explore Project Meaningful: Articles, Book, Videos, and project/future-application updates
-7. The larger Project Meaningful architecture: Book, Experiment, Application, Community
-8. Footer
+6. **Follow The Meaningful Project**: Articles, the Book, Videos, the future Application, and project updates
+7. Footer
 
 Primary action: **Share Your Meaningful Action**.
 
@@ -45,7 +44,7 @@ Primary action: **Share Your Meaningful Action**.
 - Maximum 140 characters, enforced client- and server-side.
 - Categories: Family, Relationships, Health, Work, Learning, Creativity, Service, Faith, Responsibility, Sacrifice, Other.
 - Public feed: newest first; username, category, action, date/time.
-- Homepage feed is fixed-height and independently scrollable with a visible scrollbar. Keep the homepage stream compact rather than stretching short 140-character entries across excessive vertical space.
+- Homepage feed is fixed-height and independently scrollable with a visible scrollbar. On wide screens, the community presentation should be tall enough to expose roughly 25–30 logged community entries across the two side-by-side streams at a glance, while remaining shorter on tablet/mobile.
 - On wider screens, once Discoveries are fully implemented, present Meaningful Actions and Discoveries as complementary side-by-side public streams; stack them on smaller screens.
 - Category filtering.
 - Username search is exact and case-insensitive.
@@ -110,7 +109,9 @@ Definitions:
 - Do not fabricate activity counts.
 
 ## Demo content
-Planned launch seeding: approximately 15 fictional composite participants, 50–60 demo actions, and a smaller set of discoveries. Every demo item must be visibly labeled **Example** and excluded from real counts. Demo identities must not impersonate real people.
+V1 seeded Example content uses **15 fictional composite participant handles, 55 demo actions, and 15 demo discoveries**. Every demo item is visibly labeled **Example** and excluded from real counts. Demo identities must not impersonate real people.
+
+Demo content must not require fake authentication accounts. Real submissions remain tied to an authenticated profile; demo rows use a dedicated fictional demo username and no authenticated user ID.
 
 ## Content integrity and moderation
 All user content is plain text.
@@ -178,9 +179,9 @@ Established database entities:
 - action_category enum;
 - moderation_status enum.
 
-Meaningful Action stores user ID, category, action text, timestamp, demo/real flag, moderation status, and moderation timestamp as applicable.
+Meaningful Action stores either an authenticated user ID (real content) or a fictional demo username (Example content), plus category, action text, timestamp, demo/real flag, moderation status, and moderation timestamp as applicable.
 
-Discovery stores user ID, text, timestamp, demo/real flag, and moderation status.
+Discovery stores either an authenticated user ID (real content) or a fictional demo username (Example content), plus text, timestamp, demo/real flag, and moderation status.
 
 RLS is part of the database security model. Public statistics are exposed through a database function and exclude demo/unpublished content.
 
@@ -202,8 +203,8 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The site should not be uniformly dark, but the hero should remain dark, dramatic, and high-contrast with white type.
-- Include an **Explore Project Meaningful** resource area for Articles, the Book, Videos, and project/social/application updates. Do not invent external destinations; connect real links only when verified/provided.
-- The Book, Experiment, Application, and Community should read as one coherent project architecture rather than an appended footer block.
+- Use one consolidated lower-page section titled **Follow The Meaningful Project**. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. The Experiment is not repeated there because the visitor is already experiencing it, and the Community is not repeated because it is immediately above.
+- Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
 
 ## Larger/commercial direction
@@ -226,6 +227,5 @@ Do not infer answers to these:
 - Exact abuse/rate-limit thresholds.
 - Final reserved-username list and username-change policy.
 - Exact account export UX.
-- Final demo identities/content.
 - Whether/when current moderation will support automatic rejection distinct from pending.
 - Detailed Privacy/Terms copy.
