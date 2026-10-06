@@ -167,6 +167,12 @@ Current repository inspection confirms the live implementation contains:
 - The community section background is now white/open; outer stream-panel borders, heavy shadows, and rounded "window" containers were removed so the individual Action/Discovery entries provide the visual structure.
 - Actions/Discoveries presentation width increased again to a 1720px maximum with more whitespace between the two streams and a subtle divider only where useful.
 - The decision remains to avoid the word **Subscribe** until explicit update-consent persistence exists; joining the experiment and subscribing to future communications are separate actions.
+- Final 2026-10-05 visual consolidation before conversation handoff:
+  - **Join Project Meaningful** now follows the approved partner-inspired treatment: substantially larger headline/body type, numbered participation benefits, gold circular benefit icons, and a prominent pill-shaped Join the Experiment CTA.
+  - The project-activity band directly under the hero was strengthened: the far-left statement is restored to a clearly larger display size, the band is taller/more pronounced, statistic values are larger, and each metric has a visible gold icon treatment.
+  - **Explore Project Meaningful** was rebuilt into the same dark/high-contrast brand family as the hero, with blue/gold emphasis, gold-outlined resource cards, and visual resource cues.
+  - The final **Project Meaningful** architecture section was also rebuilt as a dark green/navy companion section, with higher-contrast typography and visual cues for Book / Experiment / Application / Community.
+  - Existing Actions/Discoveries card design and behavior were intentionally preserved.
 - The supplied Meaningful logos and book artwork were reviewed. They are intentionally not forced into the current homepage layout yet; the Book artwork is reserved for the real Book resource destination, and the logo assets remain available for later brand integration if the production review shows they improve rather than clutter the site.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
@@ -178,35 +184,37 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Production-review the open community-first homepage: vibrant Join Project Meaningful invitation, white borderless stream field, wider Actions/Discoveries presentation, and rounded participation CTAs.**
+**Begin the next conversation by production-reviewing the final 2026-10-05 homepage visual consolidation before adding new functionality.**
 
-Required review:
-- hero has the intended serious, distinctive Project Meaningful identity and does not read as wellness/stock imagery;
-- activity strip remains readable and accurate;
-- Actions and Discoveries feel like the living center of the site, with compact readable entries and usable controls;
-- desktop dual-stream layout remains balanced; tablet/mobile stacking remains clean;
-- Explore Project Meaningful feels valuable without implying nonexistent links or resources;
-- Book / Experiment / Application / Community read as one coherent larger project;
-- all existing authentication, Meaningful Action submission, Discovery submission, archive, and View My Action / View My Discovery behavior still works;
-- no regression in accessibility, overflow, or mobile navigation.
+Verify on **projectmeaningful.app** after Cloudflare deploys the latest `main` commits:
+- Join Project Meaningful matches the intended partner-inspired hierarchy: large headline, readable numbered benefits, visible gold icons, and prominent Join CTA;
+- the activity/stat band under the hero is materially more pronounced and the far-left statement is no longer undersized;
+- Actions and Discoveries remain unchanged functionally and visually except for previously approved refinements;
+- Explore Project Meaningful now feels visually related to the hero rather than like a pale utility section;
+- the final Project Meaningful architecture section also carries the dark brand language cleanly;
+- desktop/tablet/mobile layouts remain balanced with no overflow or contrast regression;
+- all existing auth, Action submission, Discovery submission, filters/search, archives, and View My Action / View My Discovery behavior still work.
 
-After that review:
-1. connect verified Articles / Book / Videos / social destinations when the user provides or confirms them;
-2. proceed to **Your Record** unless the homepage review identifies a higher-priority correction.
+Automated/static status at handoff:
+- homepage JavaScript syntax check: **passed**;
+- duplicate HTML IDs: **none**;
+- JavaScript-referenced DOM IDs missing after redesign: **none**;
+- Join benefit rows present: **3**;
+- Explore resource visual cues present: **4**;
+- Project architecture visual cues present: **4**;
+- no backend/database changes were made in this final visual pass.
 
-Automated/static status:
-- Homepage DOM integrity check passed on 2026-10-05: no duplicate IDs and no JavaScript-referenced IDs missing after the redesign.
-- No backend/database changes were made for this redesign.
+If production review passes, the next functional build priority remains **Your Record**, unless the visual review reveals a higher-priority correction.
 
 ## Short remaining roadmap
-1. Production-review the redesigned homepage and confirm no functional regressions.
-2. Connect verified resource destinations for Articles / Book / Videos / social when available.
-3. Your Record.
-5. Registration abuse protection + rate limiting/search throttling/reserved usernames.
-6. Admin review/removal workflow.
-7. Demo content.
-8. Account deletion/export, Privacy/Terms, launch-day logic.
-9. Accessibility, responsive/polish, final launch testing.
+1. Production-review the final homepage visual consolidation and confirm no functional regressions.
+2. Your Record.
+3. Connect verified resource destinations for Articles / Book / Videos / social when available.
+4. Registration abuse protection + rate limiting/search throttling/reserved usernames.
+5. Admin review/removal workflow.
+6. Demo content.
+7. Account deletion/export, Privacy/Terms, launch-day logic.
+8. Accessibility, responsive/polish, final launch testing.
 
 ## End-of-session protocol
 After every substantial build session:
