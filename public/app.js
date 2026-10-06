@@ -63,6 +63,18 @@ const recordFeed =
 const recordLogActionButton =
   document.querySelector("#recordLogActionButton");
 
+const communityRecordButton =
+  document.querySelector("#communityRecordButton");
+
+const railTotalActions =
+  document.querySelector("#railTotalActions");
+
+const railParticipants =
+  document.querySelector("#railParticipants");
+
+const railTodayActions =
+  document.querySelector("#railTodayActions");
+
 const participateButton =
   document.querySelector("#participateButton");
 
@@ -1209,17 +1221,24 @@ async function loadRecord() {
   }
 }
 
+async function openRecord() {
+  if (!currentSession?.user) {
+    openReturningParticipantAuth();
+    return;
+  }
+
+  recordDialog.showModal();
+  await loadRecord();
+}
+
 recordButton.addEventListener(
   "click",
-  async () => {
-    if (!currentSession?.user) {
-      openReturningParticipantAuth();
-      return;
-    }
+  openRecord
+);
 
-    recordDialog.showModal();
-    await loadRecord();
-  }
+communityRecordButton.addEventListener(
+  "click",
+  openRecord
 );
 
 recordLogActionButton.addEventListener(
@@ -1898,6 +1917,15 @@ async function loadProjectStats() {
     "#participants"
   ).textContent =
     stats.real_participants ?? 0;
+
+  railTotalActions.textContent =
+    stats.total_actions ?? 0;
+
+  railParticipants.textContent =
+    stats.real_participants ?? 0;
+
+  railTodayActions.textContent =
+    stats.actions_today ?? 0;
 }
 
 await Promise.all([
