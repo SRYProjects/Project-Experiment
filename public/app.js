@@ -36,6 +36,9 @@ const discoveryDialog =
 const updatesDialog =
   document.querySelector("#updatesDialog");
 
+const recordDialog =
+  document.querySelector("#recordDialog");
+
 const appUpdatesButton =
   document.querySelector("#appUpdatesButton");
 
@@ -44,6 +47,21 @@ const closeUpdatesDialog =
 
 const closeUpdatesDialogButton =
   document.querySelector("#closeUpdatesDialogButton");
+
+const closeRecordDialog =
+  document.querySelector("#closeRecordDialog");
+
+const recordPublishedActions =
+  document.querySelector("#recordPublishedActions");
+
+const recordPublishedDays =
+  document.querySelector("#recordPublishedDays");
+
+const recordFeed =
+  document.querySelector("#recordFeed");
+
+const recordLogActionButton =
+  document.querySelector("#recordLogActionButton");
 
 const participateButton =
   document.querySelector("#participateButton");
@@ -453,6 +471,7 @@ function enableBackdropClose(dialog) {
 enableBackdropClose(authDialog);
 enableBackdropClose(actionDialog);
 enableBackdropClose(discoveryDialog);
+enableBackdropClose(recordDialog);
 enableBackdropClose(updatesDialog);
 
 appUpdatesButton.addEventListener(
@@ -473,6 +492,13 @@ closeUpdatesDialogButton.addEventListener(
   "click",
   () => {
     updatesDialog.close();
+  }
+);
+
+closeRecordDialog.addEventListener(
+  "click",
+  () => {
+    recordDialog.close();
   }
 );
 
@@ -970,12 +996,223 @@ clearDiscoveriesFilters.addEventListener(
    YOUR RECORD
 ------------------------- */
 
+function openReturningParticipantAuth() {
+  clearAuthMessage();
+  authForm.classList.add("hidden");
+  existingForm.classList.remove("hidden");
+  authDialog.showModal();
+}
+
+function setRecordLoading() {
+  recordPublishedActions.textContent = "—";
+  recordPublishedDays.textContent = "—";
+  recordFeed.replaceChildren();
+
+  const loading =
+    document.createElement("p");
+
+  loading.className = "empty-state";
+  loading.textContent = "Loading your record…";
+  recordFeed.append(loading);
+}
+
+function createRecordActionCard(action) {
+  const article =
+    document.createElement("article");
+
+  article.className = "record-entry";
+  article.dataset.category =
+    action.category || "Other";
+
+  const statusValue =
+    ["published", "pending", "rejected"].includes(
+      action.status
+    )
+      ? action.status
+      : "pending";
+
+  const meta =
+    document.createElement("div");
+
+  meta.className = "record-entry-meta";
+
+  const category =
+    document.createElement("span");
+
+  category.className = "record-category";
+
+  const categoryIcon =
+    document.createElement("span");
+
+  categoryIcon.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  categoryIcon.textContent =
+    ACTION_CATEGORY_ICONS[action.category] || "•";
+
+  const categoryText =
+    document.createElement("span");
+
+  categoryText.textContent =
+    action.category || "Other";
+
+  category.append(
+    categoryIcon,
+    categoryText
+  );
+
+  const date =
+    document.createElement("time");
+
+  date.dateTime = action.createdAt;
+  date.textContent =
+    formatActionDate(action.createdAt);
+
+  const status =
+    document.createElement("span");
+
+  status.className = "record-status";
+  status.dataset.status = statusValue;
+  status.textContent =
+    statusValue.charAt(0).toUpperCase() +
+    statusValue.slice(1);
+
+  meta.append(category, date, status);
+
+  const text =
+    document.createElement("p");
+
+  text.className = "record-entry-text";
+  text.textContent = action.actionText || "";
+
+  article.append(meta, text);
+  return article;
+}
+
+function renderRecord(result) {
+  const summary = result?.summary || {};
+  const actions = Array.isArray(result?.actions)
+    ? result.actions
+    : [];
+
+  recordPublishedActions.textContent =
+    summary.publishedActions ?? 0;
+
+  recordPublishedDays.textContent =
+    summary.publishedDays ?? 0;
+
+  recordFeed.replaceChildren();
+
+  if (actions.length === 0) {
+    const empty =
+      document.createElement("p");
+
+    empty.className = "empty-state";
+    empty.textContent =
+      "You have not recorded a Meaningful Action yet.";
+
+    recordFeed.append(empty);
+    return;
+  }
+
+  const fragment =
+    document.createDocumentFragment();
+
+  for (const action of actions) {
+    fragment.append(
+      createRecordActionCard(action)
+    );
+  }
+
+  recordFeed.append(fragment);
+}
+
+async function loadRecord() {
+  if (!currentSession?.access_token) {
+    recordDialog.close();
+    openReturningParticipantAuth();
+    return;
+  }
+
+  setRecordLoading();
+  recordFeed.setAttribute(
+    "aria-busy",
+    "true"
+  );
+
+  try {
+    const response = await fetch(
+      "/api/record",
+      {
+        headers: {
+          Authorization:
+            `Bearer ${currentSession.access_token}`
+        }
+      }
+    );
+
+    if (response.status === 401) {
+      currentSession = null;
+      setAuthenticatedUI(false);
+      recordDialog.close();
+      openReturningParticipantAuth();
+      return;
+    }
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        "Your Record request failed"
+      );
+    }
+
+    renderRecord(result);
+  } catch (error) {
+    console.error(
+      "Your Record failed:",
+      error
+    );
+
+    recordFeed.replaceChildren();
+
+    const unavailable =
+      document.createElement("p");
+
+    unavailable.className = "empty-state";
+    unavailable.textContent =
+      "Your Record is temporarily unavailable. Please try again.";
+
+    recordFeed.append(unavailable);
+  } finally {
+    recordFeed.setAttribute(
+      "aria-busy",
+      "false"
+    );
+  }
+}
+
 recordButton.addEventListener(
   "click",
+  async () => {
+    if (!currentSession?.user) {
+      openReturningParticipantAuth();
+      return;
+    }
+
+    recordDialog.showModal();
+    await loadRecord();
+  }
+);
+
+recordLogActionButton.addEventListener(
+  "click",
   () => {
-    alert(
-      "Your Record will be added in the next build stage."
-    );
+    recordDialog.close();
+    openParticipation();
   }
 );
 
