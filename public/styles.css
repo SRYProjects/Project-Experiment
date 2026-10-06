@@ -2119,3 +2119,92 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* 2026-10-06: standalone Follow The Meaningful Project section with separate cards */
+.standalone-follow-section {
+  width: 100%;
+  margin: 0;
+  padding: 72px 5vw 82px;
+  border-radius: 0;
+}
+
+.standalone-follow-section .explore-heading {
+  width: min(1280px, 100%);
+  margin: 0 auto 34px;
+  grid-template-columns: minmax(0, .75fr) minmax(360px, 1.25fr);
+  gap: 42px;
+}
+
+.standalone-follow-section .explore-heading h2 {
+  font-size: clamp(2.6rem, 3.8vw, 4.1rem);
+}
+
+.standalone-follow-section .resource-grid,
+.standalone-follow-section.follow-section .resource-grid {
+  width: min(1420px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px;
+  border: 0;
+  box-shadow: none;
+}
+
+.standalone-follow-section .resource-card,
+.standalone-follow-section.follow-section .resource-card {
+  min-height: 300px;
+  padding: 28px 24px;
+  border: 1px solid rgba(232,176,7,.52);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(232,176,7,.10), transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
+  box-shadow: 0 16px 30px rgba(0,0,0,.20);
+}
+
+.standalone-follow-section .resource-card:nth-child(even) {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(0,102,204,.11), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
+}
+
+.standalone-follow-section .resource-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  font-size: 1.25rem;
+}
+
+.standalone-follow-section .resource-card h3 {
+  margin: 28px 0 12px;
+  color: #f2cd55;
+  font-size: 1.8rem;
+}
+
+.standalone-follow-section .resource-card p {
+  font-size: .98rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 1200px) {
+  .standalone-follow-section .resource-grid,
+  .standalone-follow-section.follow-section .resource-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .standalone-follow-section .explore-heading {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 700px) {
+  .standalone-follow-section {
+    padding: 56px 5vw 64px;
+  }
+
+  .standalone-follow-section .resource-grid,
+  .standalone-follow-section.follow-section .resource-grid {
+    grid-template-columns: 1fr;
+  }
+}
