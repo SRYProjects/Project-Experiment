@@ -23,9 +23,8 @@ Homepage order:
 2. Hero / primary participation invitation
 3. Project activity
 4. Brief experiment premise + **Share Something Meaningful** participation invitation
-5. Community activity: Meaningful Actions + Discoveries as complementary live streams
-6. **Follow The Meaningful Project**: Articles, the Book, Videos, the future Application, and project updates
-7. Footer
+5. Community activity: Meaningful Actions remain the full-height left column; the right column contains a shorter Discoveries stream followed by **Follow The Meaningful Project** (Articles, the Book, Videos, the future Application, and project updates)
+6. Footer
 
 Primary action: **Share Your Meaningful Action**.
 
@@ -203,7 +202,7 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The site should not be uniformly dark, but the hero should remain dark, dramatic, and high-contrast with white type.
-- Use one consolidated lower-page section titled **Follow The Meaningful Project**. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. The Experiment is not repeated there because the visitor is already experiencing it, and the Community is not repeated because it is immediately above.
+- **Follow The Meaningful Project** lives inside the right column of **The Community in Motion**, directly beneath a shorter Discoveries stream. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. Meaningful Actions remains the full-height left column. The Experiment and Community are not repeated there.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
 
