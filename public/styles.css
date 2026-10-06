@@ -1692,3 +1692,95 @@ footer {
     font-size: 1.05rem;
   }
 }
+
+/* 2026-10-06: move Stay Connected into the Community right rail only */
+.community-right-rail {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+#discoveriesFeed {
+  height: 560px;
+}
+
+.community-right-rail .follow-section {
+  width: 100%;
+  padding: 36px 30px 32px;
+  border-radius: 18px;
+}
+
+.community-right-rail .explore-heading {
+  width: 100%;
+  margin: 0 0 26px;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.community-right-rail .explore-heading h2 {
+  font-size: clamp(2.35rem, 3.2vw, 3.35rem);
+}
+
+.community-right-rail .explore-heading > p {
+  max-width: none;
+}
+
+.community-right-rail .resource-grid,
+.community-right-rail .follow-section .resource-grid {
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.community-right-rail .resource-card,
+.community-right-rail .follow-section .resource-card {
+  min-height: 205px;
+  padding: 20px 18px;
+}
+
+.community-right-rail .resource-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 1.05rem;
+}
+
+.community-right-rail .resource-card h3 {
+  margin: 20px 0 8px;
+  font-size: 1.55rem;
+}
+
+.community-right-rail .resource-card p {
+  margin-bottom: 16px;
+  font-size: .92rem;
+  line-height: 1.5;
+}
+
+.community-right-rail .resource-status {
+  font-size: .72rem;
+}
+
+@media (max-width: 1100px) {
+  #discoveriesFeed {
+    height: 560px;
+  }
+
+  .community-right-rail .resource-grid,
+  .community-right-rail .follow-section .resource-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  #discoveriesFeed {
+    height: 440px;
+  }
+
+  .community-right-rail .resource-grid,
+  .community-right-rail .follow-section .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .community-right-rail .follow-section {
+    padding: 30px 22px 26px;
+  }
+}
