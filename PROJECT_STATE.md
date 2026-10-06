@@ -111,10 +111,10 @@ Live production testing has confirmed:
 Recent live test examples included Work (“Finished proposal for new clients”) and Sacrifice (“Instead of wasting time, I went for a walk”).
 
 ## Currently unfinished
-- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The desktop community feeds are now 1480px high, with shorter responsive heights on tablet/mobile, and link to the full archives. Production verification of the expanded presentation and Example-content search/filter behavior is required.
+- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The Community area now uses a normal 1280px maximum reading width; the desktop Action feed is 760px high with shorter responsive heights, and links to the full archive. Production verification is required.
 - Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
 - Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are implemented in code. The 2026-10-06 dialog/Turnstile lifecycle fix requires production verification.
-- Homepage now uses a distinctive abstract hero, a larger dark blue/green/gold project-activity band, expanded side-by-side community streams, and one consolidated **Follow The Meaningful Project** section. Production visual verification is required.
+- Homepage now uses a distinctive abstract hero, a larger dark blue/green/gold project-activity band, a normally proportioned Community section with a compact right rail, and one consolidated **Follow The Meaningful Project** section beneath the Community columns. Production visual verification is required.
 - Your Record is implemented in code as a private authenticated modal with published-action count, distinct published-action days, newest-first action history, and visible Pending/Rejected states. Production verification is required.
 - Registration Turnstile.
 - Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
@@ -211,6 +211,15 @@ Current repository inspection confirms the live implementation contains:
   - Follow content/copy and existing interaction IDs were preserved; its cards were compacted only enough to fit the right rail;
   - no JavaScript behavior was changed.
 - Static verification after this move: duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; one Actions section, one Discoveries section, one Follow section; Action feed global 1480px height preserved; CSS brace balance **passed**.
+- 2026-10-06 Community proportion/right-rail redesign supersedes the immediately preceding Community layout:
+  - reduced the Community content width from 1720px to a **1280px maximum**;
+  - changed desktop proportions to a primary Action column and a substantially narrower right rail;
+  - reduced the desktop Action feed from **1480px to 760px** and the Discoveries feed to **330px**, with responsive reductions on smaller screens;
+  - rebuilt the right rail as compact stacked **Project Activity**, **Your Record**, and **Discoveries** cards, using the supplied concept for hierarchy rather than literal replication;
+  - Project Activity mirrors the existing real statistics; **Your Record** reuses the existing private authenticated flow;
+  - moved **Follow The Meaningful Project** beneath the two Community columns as a compact five-part ecosystem section;
+  - Meaningful Actions content, filters, cards, and submission behavior were not redesigned.
+- Static validation after this redesign: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; Community 1280px constraint **present**; Action 760px feed **present**; right-rail Activity/Record/Discoveries cards **present**; Follow section occurs once beneath the columns; CSS brace balance **passed**.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -224,16 +233,19 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review only the revised `THE COMMUNITY IN MOTION` composition on `projectmeaningful.app`.**
+**Production-review only the revised `THE COMMUNITY IN MOTION` section on `projectmeaningful.app`.**
 
 Verify:
-- the Meaningful Actions left column is visually unchanged;
-- Discoveries is shorter in the right column;
-- **STAY CONNECTED / Follow The Meaningful Project** now appears directly beneath Discoveries in that same right column;
-- the compact Follow cards remain readable and balanced without causing overflow;
-- existing Discovery, Follow/updates, filtering, and archive interactions still work.
+- the Community area now reads at a normal, comfortable width rather than stretching across the screen;
+- Meaningful Actions remains the primary left column and its existing cards/filters/behavior are intact;
+- the desktop Action feed is no longer excessively tall;
+- the right rail reads as **Project Activity → Your Record → Discoveries**;
+- compact statistics match the existing real project statistics;
+- **View Your Record** opens the existing private authenticated flow;
+- Discoveries remains readable, searchable, scrollable, and its submission/archive controls still work;
+- **Follow The Meaningful Project** appears once directly beneath the two columns.
 
-Do not make additional homepage changes unless this review reveals a specific defect.
+Make no further homepage changes unless this production review reveals a specific defect.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
