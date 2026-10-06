@@ -220,6 +220,13 @@ Current repository inspection confirms the live implementation contains:
   - moved **Follow The Meaningful Project** beneath the two Community columns as a compact five-part ecosystem section;
   - Meaningful Actions content, filters, cards, and submission behavior were not redesigned.
 - Static validation after this redesign: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; Community 1280px constraint **present**; Action 760px feed **present**; right-rail Activity/Record/Discoveries cards **present**; Follow section occurs once beneath the columns; CSS brace balance **passed**.
+- 2026-10-06 Follow-section refinement:
+  - **Follow The Meaningful Project** is now a separate standalone section outside **The Community in Motion**;
+  - the same five areas remain in the same order with existing copy/behavior preserved;
+  - the former connected/divided resource rectangle was replaced with five independent dark cards separated by visible gaps, following the supplied reference as design inspiration rather than literal replication;
+  - responsive behavior keeps the cards at five across on wide screens, two across at intermediate widths, and one per row on narrow screens;
+  - no Community, Action, Discovery, Record, or backend behavior was changed.
+- Static validation after the Follow change: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; one standalone Follow section; five resource cards; separated-card gap **present**; shared grid border removed in the standalone override; CSS brace balance **passed**.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -233,19 +240,16 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review only the revised `THE COMMUNITY IN MOTION` section on `projectmeaningful.app`.**
+**Production-review only the new standalone `Follow The Meaningful Project` section on `projectmeaningful.app`.**
 
 Verify:
-- the Community area now reads at a normal, comfortable width rather than stretching across the screen;
-- Meaningful Actions remains the primary left column and its existing cards/filters/behavior are intact;
-- the desktop Action feed is no longer excessively tall;
-- the right rail reads as **Project Activity → Your Record → Discoveries**;
-- compact statistics match the existing real project statistics;
-- **View Your Record** opens the existing private authenticated flow;
-- Discoveries remains readable, searchable, scrollable, and its submission/archive controls still work;
-- **Follow The Meaningful Project** appears once directly beneath the two columns.
+- it is visually separate from **The Community in Motion**;
+- the five areas appear as five distinct cards with visible space between them rather than one divided rectangle;
+- Articles, The Book, Videos, The Application, and Project Updates remain in the same order with their existing copy/statuses/actions;
+- the dark/gold treatment reads cleanly at desktop width;
+- cards reflow to two columns and then one column without overflow.
 
-Make no further homepage changes unless this production review reveals a specific defect.
+Make no other homepage changes unless this review reveals a specific defect.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
