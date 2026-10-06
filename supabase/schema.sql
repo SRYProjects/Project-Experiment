@@ -51,7 +51,8 @@ create table public.profiles (
 
 create table public.meaningful_actions (
   id bigint generated always as identity,
-  user_id uuid not null,
+  user_id uuid null,
+  demo_username text null,
   category public.action_category not null,
   action_text text not null,
   moderation_status public.moderation_status not null default 'pending',
@@ -65,12 +66,29 @@ create table public.meaningful_actions (
     check (
       char_length(trim(both from action_text)) >= 1
       and char_length(trim(both from action_text)) <= 140
+    ),
+  constraint meaningful_actions_identity_check
+    check (
+      (
+        is_demo = false
+        and user_id is not null
+        and demo_username is null
+      )
+      or
+      (
+        is_demo = true
+        and user_id is null
+        and demo_username is not null
+        and demo_username = lower(demo_username)
+        and demo_username ~ '^[a-z0-9_]{3,30}$'
+      )
     )
 );
 
 create table public.discoveries (
   id bigint generated always as identity,
-  user_id uuid not null,
+  user_id uuid null,
+  demo_username text null,
   discovery_text text not null,
   moderation_status public.moderation_status not null default 'pending',
   is_demo boolean not null default false,
@@ -83,6 +101,22 @@ create table public.discoveries (
     check (
       char_length(trim(both from discovery_text)) >= 1
       and char_length(trim(both from discovery_text)) <= 280
+    ),
+  constraint discoveries_identity_check
+    check (
+      (
+        is_demo = false
+        and user_id is not null
+        and demo_username is null
+      )
+      or
+      (
+        is_demo = true
+        and user_id is null
+        and demo_username is not null
+        and demo_username = lower(demo_username)
+        and demo_username ~ '^[a-z0-9_]{3,30}$'
+      )
     )
 );
 
