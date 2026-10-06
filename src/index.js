@@ -277,10 +277,10 @@ async function fetchProfileByUsername(username, env) {
 
 async function fetchPublishedActions(
   env,
-  { limit = 100, offset = 0, category = "", userId = "" } = {}
+  { limit = 100, offset = 0, category = "", userId = "", demoUsername = "" } = {}
 ) {
   const params = new URLSearchParams({
-    select: "id,user_id,category,action_text,is_demo,created_at",
+    select: "id,user_id,demo_username,category,action_text,is_demo,created_at",
     moderation_status: "eq.published",
     order: "created_at.desc",
     limit: String(limit),
@@ -293,6 +293,13 @@ async function fetchPublishedActions(
 
   if (userId) {
     params.set("user_id", `eq.${userId}`);
+  }
+
+  if (demoUsername) {
+    params.set(
+      "demo_username",
+      `eq.${demoUsername}`
+    );
   }
 
   const response = await fetch(
@@ -364,22 +371,29 @@ async function getPublicActions(request, env) {
   }
 
   let userId = "";
+  let demoUsername = "";
 
   if (username) {
-    const profile = await fetchProfileByUsername(username, env);
+    const profile =
+      await fetchProfileByUsername(
+        username,
+        env
+      );
 
-    if (!profile) {
-      return json({ actions: [], hasMore: false });
+    if (profile) {
+      userId = profile.id;
+    } else {
+      demoUsername =
+        username.toLowerCase();
     }
-
-    userId = profile.id;
   }
 
   const rows = await fetchPublishedActions(env, {
     limit: limit + 1,
     offset,
     category,
-    userId
+    userId,
+    demoUsername
   });
 
   const hasMore = rows.length > limit;
@@ -411,7 +425,14 @@ async function getPublicActions(request, env) {
 
   const actions = pageRows
     .map((row) => {
-      const publicUsername = usernameById.get(row.user_id);
+      const publicUsername =
+        row.is_demo === true &&
+        typeof row.demo_username === "string" &&
+        row.demo_username.trim()
+          ? row.demo_username.trim()
+          : usernameById.get(
+              row.user_id
+            );
 
       if (!publicUsername) {
         return null;
@@ -793,11 +814,11 @@ async function insertDiscovery(
 
 async function fetchPublishedDiscoveries(
   env,
-  { limit = 100, offset = 0, userId = "" } = {}
+  { limit = 100, offset = 0, userId = "", demoUsername = "" } = {}
 ) {
   const params = new URLSearchParams({
     select:
-      "id,user_id,discovery_text,is_demo,created_at",
+      "id,user_id,demo_username,discovery_text,is_demo,created_at",
     moderation_status:
       "eq.published",
     order:
@@ -812,6 +833,13 @@ async function fetchPublishedDiscoveries(
     params.set(
       "user_id",
       `eq.${userId}`
+    );
+  }
+
+  if (demoUsername) {
+    params.set(
+      "demo_username",
+      `eq.${demoUsername}`
     );
   }
 
@@ -896,6 +924,7 @@ async function getPublicDiscoveries(
   }
 
   let userId = "";
+  let demoUsername = "";
 
   if (username) {
     const profile =
@@ -904,14 +933,12 @@ async function getPublicDiscoveries(
         env
       );
 
-    if (!profile) {
-      return json({
-        discoveries: [],
-        hasMore: false
-      });
+    if (profile) {
+      userId = profile.id;
+    } else {
+      demoUsername =
+        username.toLowerCase();
     }
-
-    userId = profile.id;
   }
 
   const rows =
@@ -920,7 +947,8 @@ async function getPublicDiscoveries(
       {
         limit: limit + 1,
         offset,
-        userId
+        userId,
+        demoUsername
       }
     );
 
@@ -969,7 +997,14 @@ async function getPublicDiscoveries(
     pageRows
       .map((row) => {
         const publicUsername =
-          usernameById.get(row.user_id);
+          row.is_demo === true &&
+          typeof row.demo_username ===
+            "string" &&
+          row.demo_username.trim()
+            ? row.demo_username.trim()
+            : usernameById.get(
+                row.user_id
+              );
 
         if (!publicUsername) {
           return null;
