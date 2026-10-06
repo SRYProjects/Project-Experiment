@@ -2208,3 +2208,299 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* 2026-10-06 design-balance pass: activity, community, scrollbars, follow */
+
+/* PROJECT ACTIVITY: create a clear transition from the dark hero into the page */
+.activity {
+  color: #173247;
+  background: #eef4f2;
+  border-top: 0;
+  border-bottom: 1px solid #d3dfdb;
+  box-shadow: 0 12px 30px rgba(18,45,54,.08);
+}
+
+.activity > div {
+  min-height: 154px;
+  padding: 28px 2.35vw;
+  border-right: 1px solid #d3dfdb;
+}
+
+.activity-intro {
+  color: #fff;
+  background:
+    linear-gradient(135deg, #12384d 0%, #13574f 100%);
+}
+
+.activity-intro strong {
+  color: #fff;
+  font-size: clamp(1.85rem, 2.15vw, 2.35rem);
+}
+
+.activity-intro span {
+  color: rgba(255,255,255,.78);
+  font-size: 1rem;
+}
+
+.activity-stat {
+  background: rgba(255,255,255,.72);
+}
+
+.activity-stat:nth-child(3) {
+  background: #f7f5ea;
+}
+
+.activity-stat:nth-child(4) {
+  background: #eef5f1;
+}
+
+.activity-stat:nth-child(5) {
+  background: #f0f4f7;
+}
+
+.activity-stat .stat-icon {
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: #176b63;
+  box-shadow: 0 7px 16px rgba(23,107,99,.18);
+}
+
+.activity-stat:nth-child(3) .stat-icon {
+  background: #b98514;
+  box-shadow: 0 7px 16px rgba(185,133,20,.17);
+}
+
+.activity-stat:nth-child(4) .stat-icon {
+  background: #256b91;
+  box-shadow: 0 7px 16px rgba(37,107,145,.17);
+}
+
+.activity-stat:nth-child(5) .stat-icon {
+  background: #536d7b;
+  box-shadow: 0 7px 16px rgba(83,109,123,.17);
+}
+
+.activity-stat .stat-icon svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.activity-stat strong {
+  color: #12304d;
+  font-size: 2.5rem;
+}
+
+.activity-stat > span:last-child {
+  color: #5c6b67;
+}
+
+/* COMMUNITY: align the heading with the actual columns */
+.community-section {
+  background:
+    linear-gradient(180deg, #f7f9f8 0%, #f2f5f3 100%);
+}
+
+.community-heading {
+  width: min(1280px, calc(100% - 48px));
+  grid-template-columns: minmax(0, 2fr) minmax(320px, .86fr);
+  gap: 30px;
+  align-items: end;
+}
+
+.community-heading > p {
+  width: 100%;
+  max-width: none;
+  padding-left: 0;
+}
+
+/* Give the two sides enough distinction without turning them into heavy boxes */
+#actions.stream-panel {
+  padding: 24px;
+  border: 1px solid #dbe3df;
+  border-radius: 16px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 10px 26px rgba(25,52,60,.055);
+}
+
+.community-right-rail {
+  gap: 20px;
+}
+
+.activity-summary-card {
+  border-color: #cfdfdf;
+  background:
+    linear-gradient(145deg, #edf5f5 0%, #f7faf9 100%);
+}
+
+.record-summary-card {
+  border-color: #cfe1d7;
+  background:
+    linear-gradient(145deg, #e8f4ed 0%, #f5faf7 100%);
+}
+
+#discoveries.community-rail-card {
+  border-color: #ddd8ca;
+  background:
+    linear-gradient(180deg, #fffdf8 0%, #faf8f1 100%);
+}
+
+/* Logged Actions should read like normal body copy, not display copy */
+#actionsFeed .action-card {
+  padding: 15px 16px 15px 17px;
+  margin: 8px 0;
+}
+
+#actionsFeed .action-meta {
+  font-size: .82rem;
+}
+
+#actionsFeed .action-meta strong {
+  font-size: .9rem;
+}
+
+#actionsFeed .action-text {
+  margin-top: 7px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: .96rem;
+  line-height: 1.48;
+}
+
+/* Scrollbars should be obvious enough to discover, but visually quiet */
+.feed {
+  scrollbar-width: auto;
+  scrollbar-color: #718079 #e3e9e6;
+}
+
+.feed::-webkit-scrollbar {
+  width: 11px;
+}
+
+.feed::-webkit-scrollbar-track {
+  background: #e3e9e6;
+  border-radius: 999px;
+}
+
+.feed::-webkit-scrollbar-thumb {
+  min-height: 56px;
+  border: 2px solid #e3e9e6;
+  border-radius: 999px;
+  background: #718079;
+}
+
+.feed::-webkit-scrollbar-thumb:hover {
+  background: #52625b;
+}
+
+#discoveriesFeed {
+  padding-right: 9px;
+  scrollbar-color: #65756d #e7e3d9;
+}
+
+#discoveriesFeed::-webkit-scrollbar-track {
+  background: #e7e3d9;
+}
+
+#discoveriesFeed::-webkit-scrollbar-thumb {
+  border-color: #e7e3d9;
+  background: #65756d;
+}
+
+/* FOLLOW: replace the harsh blue/gold palette with one cohesive editorial palette */
+.standalone-follow-section {
+  color: #173247;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(23,107,99,.09), transparent 26%),
+    linear-gradient(180deg, #f2f5f2 0%, #e9efec 100%);
+  border-top: 1px solid #d5dfda;
+  border-bottom: 1px solid #d5dfda;
+}
+
+.standalone-follow-section::after {
+  display: none;
+}
+
+.standalone-follow-section .explore-heading .eyebrow {
+  color: #176b63;
+}
+
+.standalone-follow-section .explore-heading h2 {
+  color: #173247;
+  text-shadow: none;
+}
+
+.standalone-follow-section .explore-heading > p {
+  color: #66736f;
+}
+
+.standalone-follow-section .resource-card,
+.standalone-follow-section.follow-section .resource-card {
+  border: 1px solid #d4ddd8;
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 12px 26px rgba(28,51,57,.075);
+}
+
+.standalone-follow-section .resource-card:nth-child(even) {
+  background: rgba(248,250,248,.96);
+}
+
+.standalone-follow-section .resource-number {
+  color: #7d8a85;
+}
+
+.standalone-follow-section .resource-icon {
+  color: #fff;
+  background: #176b63;
+  box-shadow: none;
+}
+
+.standalone-follow-section .resource-card:nth-child(2) .resource-icon,
+.standalone-follow-section .resource-card:nth-child(4) .resource-icon {
+  background: #245f82;
+}
+
+.standalone-follow-section .resource-card:nth-child(3) .resource-icon {
+  background: #aa7b19;
+}
+
+.standalone-follow-section .resource-card:nth-child(5) .resource-icon {
+  background: #405e6f;
+}
+
+.standalone-follow-section .resource-card h3 {
+  color: #173247;
+}
+
+.standalone-follow-section .resource-card p {
+  color: #606d69;
+}
+
+.standalone-follow-section .resource-status,
+.standalone-follow-section .resource-button {
+  color: #176b63;
+}
+
+@media (max-width: 1100px) {
+  .community-heading {
+    width: min(900px, calc(100% - 40px));
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 760px) {
+  .community-heading {
+    width: calc(100% - 28px);
+  }
+
+  #actions.stream-panel {
+    padding: 18px;
+  }
+}
