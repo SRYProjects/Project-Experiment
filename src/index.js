@@ -432,6 +432,177 @@ async function getPublicActions(request, env) {
 }
 
 /* -------------------------
+   PRIVATE USER RECORD
+------------------------- */
+
+function easternDateKey(value) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const parts =
+    new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone: "America/New_York",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }
+    ).formatToParts(date);
+
+  const byType =
+    Object.fromEntries(
+      parts.map((part) => [
+        part.type,
+        part.value
+      ])
+    );
+
+  if (
+    !byType.year ||
+    !byType.month ||
+    !byType.day
+  ) {
+    return "";
+  }
+
+  return `${byType.year}-${byType.month}-${byType.day}`;
+}
+
+async function fetchUserActions(
+  userId,
+  env
+) {
+  const rows = [];
+  const pageSize = 1000;
+  let offset = 0;
+
+  while (true) {
+    const params =
+      new URLSearchParams({
+        select:
+          "id,category,action_text,moderation_status,created_at",
+        user_id:
+          `eq.${userId}`,
+        is_demo:
+          "eq.false",
+        order:
+          "created_at.desc",
+        limit:
+          String(pageSize),
+        offset:
+          String(offset)
+      });
+
+    const response = await fetch(
+      `${env.SUPABASE_URL}/rest/v1/meaningful_actions?${params.toString()}`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const detail =
+        await response.text();
+
+      console.error(
+        "Supabase user record fetch failed:",
+        detail
+      );
+
+      throw new Error(
+        "Database fetch failed"
+      );
+    }
+
+    const page =
+      await response.json();
+
+    rows.push(...page);
+
+    if (page.length < pageSize) {
+      break;
+    }
+
+    offset += pageSize;
+  }
+
+  return rows;
+}
+
+async function getUserRecord(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json(
+      {
+        error:
+          "Authentication required."
+      },
+      401
+    );
+  }
+
+  const rows =
+    await fetchUserActions(
+      user.id,
+      env
+    );
+
+  const published =
+    rows.filter(
+      (row) =>
+        row.moderation_status ===
+        "published"
+    );
+
+  const publishedDays =
+    new Set(
+      published
+        .map((row) =>
+          easternDateKey(
+            row.created_at
+          )
+        )
+        .filter(Boolean)
+    ).size;
+
+  return json({
+    summary: {
+      publishedActions:
+        published.length,
+      publishedDays
+    },
+    actions:
+      rows.map((row) => ({
+        id: row.id,
+        category: row.category,
+        actionText:
+          row.action_text,
+        status:
+          row.moderation_status,
+        createdAt:
+          row.created_at
+      }))
+  });
+}
+
+/* -------------------------
    ACTION SUBMISSION
 ------------------------- */
 
@@ -941,6 +1112,16 @@ export default {
       new URL(request.url);
 
     try {
+      if (
+        url.pathname === "/api/record" &&
+        request.method === "GET"
+      ) {
+        return await getUserRecord(
+          request,
+          env
+        );
+      }
+
       if (
         url.pathname === "/api/actions" &&
         request.method === "GET"
