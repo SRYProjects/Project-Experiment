@@ -2504,3 +2504,196 @@ footer {
     padding: 18px;
   }
 }
+
+/* 2026-10-06 refinement: Join contrast, balanced Community columns, Discovery prominence, neutral section rhythm */
+
+/* JOIN PROJECT MEANINGFUL: warm contrast against the blue/green parent section */
+.join-project {
+  color: #173247;
+  background:
+    radial-gradient(circle at 86% 16%, rgba(191,145,47,.12), transparent 30%),
+    linear-gradient(145deg, #f4ecdd 0%, #eee1ca 100%);
+  border: 1px solid #d7c19c;
+  box-shadow: 0 22px 54px rgba(4,34,48,.24);
+}
+
+.join-project::after {
+  border-color: rgba(23,50,71,.08);
+}
+
+.join-kicker {
+  color: #176b63;
+}
+
+.join-project h3 {
+  color: #173247;
+}
+
+.join-benefit {
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+}
+
+.join-benefit .benefit-icon {
+  width: 42px;
+  height: 42px;
+  color: #fff;
+  background: #176b63;
+  box-shadow: 0 6px 14px rgba(23,107,99,.16);
+}
+
+.join-benefit:nth-child(2) .benefit-icon {
+  background: #245f82;
+}
+
+.join-benefit:nth-child(3) .benefit-icon {
+  background: #9a741f;
+}
+
+.join-benefit p {
+  color: #344a57;
+}
+
+.join-project-button {
+  background: #173247;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(23,50,71,.18);
+}
+
+.join-project-button:hover {
+  background: #0f5c55;
+}
+
+/* COMMUNITY: equal-height composition and stronger right-rail differentiation */
+.public-streams {
+  align-items: stretch;
+}
+
+#actions.stream-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+#actionsFeed {
+  height: auto;
+  min-height: 560px;
+  flex: 1 1 auto;
+}
+
+.community-right-rail {
+  height: 100%;
+}
+
+.community-right-rail .community-rail-card {
+  border-width: 1px;
+  box-shadow: 0 10px 24px rgba(27,48,56,.07);
+}
+
+.activity-summary-card {
+  border-color: #c7d5dc;
+  background:
+    linear-gradient(145deg, #e9f0f3 0%, #f5f8f8 100%);
+}
+
+.activity-summary-card .rail-symbol {
+  color: #fff;
+  background: #2d6582;
+}
+
+.record-summary-card {
+  border-color: #d8cdbd;
+  background:
+    linear-gradient(145deg, #f3eee6 0%, #faf7f2 100%);
+}
+
+.record-summary-card .rail-symbol-record {
+  color: #fff;
+  background: #8a6e45;
+}
+
+#discoveries.community-rail-card {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  border: 1px solid #cfc6b4;
+  border-top: 4px solid #176b63;
+  background:
+    linear-gradient(180deg, #fffdf8 0%, #f7f3ea 100%);
+  box-shadow: 0 14px 30px rgba(27,48,56,.10);
+}
+
+#discoveries .stream-kicker {
+  color: #176b63;
+  letter-spacing: .12em;
+}
+
+#discoveries .stream-heading h3 {
+  color: #173247;
+  font-size: 2rem;
+}
+
+#discoveries .stream-description {
+  color: #53615d;
+}
+
+#discoveriesFeed {
+  height: auto;
+  min-height: 260px;
+  flex: 1 1 auto;
+}
+
+/* Keep the two desktop columns visually finished on the same baseline */
+@media (min-width: 1101px) {
+  .public-streams {
+    grid-auto-rows: 1fr;
+  }
+
+  #actions.stream-panel,
+  .community-right-rail {
+    min-height: 760px;
+  }
+}
+
+/* FOLLOW: warm-neutral section instead of adjacent mint/green fields */
+.standalone-follow-section {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(155,126,74,.07), transparent 28%),
+    linear-gradient(180deg, #efece6 0%, #e7e2d9 100%);
+  border-top: 1px solid #d5cfc4;
+  border-bottom: 1px solid #d5cfc4;
+}
+
+.standalone-follow-section .resource-card,
+.standalone-follow-section.follow-section .resource-card {
+  border-color: #d8d0c4;
+  background: #fbfaf7;
+  box-shadow: 0 12px 26px rgba(44,49,49,.08);
+}
+
+.standalone-follow-section .resource-card:nth-child(even) {
+  background: #f5f2ec;
+}
+
+.standalone-follow-section .resource-card-top {
+  justify-content: flex-start;
+}
+
+@media (max-width: 1100px) {
+  #actionsFeed {
+    min-height: 520px;
+  }
+
+  #discoveriesFeed {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 760px) {
+  #actionsFeed {
+    min-height: 460px;
+  }
+
+  #discoveriesFeed {
+    min-height: 300px;
+  }
+}
