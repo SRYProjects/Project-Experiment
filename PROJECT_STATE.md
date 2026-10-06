@@ -227,6 +227,15 @@ Current repository inspection confirms the live implementation contains:
   - responsive behavior keeps the cards at five across on wide screens, two across at intermediate widths, and one per row on narrow screens;
   - no Community, Action, Discovery, Record, or backend behavior was changed.
 - Static validation after the Follow change: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; one standalone Follow section; five resource cards; separated-card gap **present**; shared grid border removed in the standalone override; CSS brace balance **passed**.
+- 2026-10-06 design-balance correction based on live screenshot review:
+  - reduced logged Meaningful Action body copy to normal reading scale (`.96rem`, sans-serif) and tightened card padding/meta sizing;
+  - aligned the Community heading's right-side explanatory text to the actual right rail by matching the Community heading grid to the live two-column proportions;
+  - increased visual separation inside **The Community in Motion** with a cool light section field, a distinct white Action panel, blue-tinted Project Activity card, green-tinted Your Record card, and warm-neutral Discoveries card;
+  - replaced faint feed scrollbars with clearly visible but restrained track/thumb styling for both Actions and Discoveries;
+  - redesigned **One deliberate action at a time** as a light contrast band with a deep blue/green introduction block, differentiated stat cells, and a coherent SVG icon-tile system replacing improvised glyphs;
+  - recolored the standalone **Follow The Meaningful Project** section to a restrained light editorial palette with navy/teal typography and individually accented icons, removing the harsh dark blue/gold treatment;
+  - no submission/auth/database behavior changed.
+- Static validation after this pass: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; four SVG activity icons **present**; Action copy-size override **present**; Community heading/right-rail grid alignment **present**; visible scrollbar styling **present**; Community contrast treatments **present**; Follow palette override **present**; CSS brace balance **passed**.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -240,16 +249,17 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review only the new standalone `Follow The Meaningful Project` section on `projectmeaningful.app`.**
+**Production-review the 2026-10-06 design-balance pass on `projectmeaningful.app`.**
 
 Verify:
-- it is visually separate from **The Community in Motion**;
-- the five areas appear as five distinct cards with visible space between them rather than one divided rectangle;
-- Articles, The Book, Videos, The Application, and Project Updates remain in the same order with their existing copy/statuses/actions;
-- the dark/gold treatment reads cleanly at desktop width;
-- cards reflow to two columns and then one column without overflow.
+- logged Action text reads at normal body-copy size rather than display size;
+- the Community heading's explanatory paragraph aligns with the right rail beneath it;
+- Action / Project Activity / Your Record / Discoveries areas are clearly distinguishable without looking boxed or noisy;
+- Actions and Discoveries scrollbars are immediately discoverable but visually restrained;
+- **One deliberate action at a time** now creates a clear visual transition from the hero and its four stat icons look like one intentional system;
+- **Follow The Meaningful Project** uses the new lighter, restrained editorial palette consistently across all five separate cards.
 
-Make no other homepage changes unless this review reveals a specific defect.
+Do not make further structural changes unless production review reveals a specific defect.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
