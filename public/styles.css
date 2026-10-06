@@ -206,19 +206,21 @@ nav a:hover,
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(340px, 1.9fr) repeat(4, minmax(160px, .78fr));
+  grid-template-columns: minmax(390px, 1.9fr) repeat(4, minmax(170px, .78fr));
+  color: var(--white);
   background:
-    linear-gradient(90deg, #f9f3e7 0%, #f4eddf 58%, #efe5d5 100%);
-  color: var(--ink);
-  border-top: 1px solid #d9cdbb;
-  border-bottom: 1px solid #d9cdbb;
-  box-shadow: 0 12px 28px rgba(25,31,28,.06);
+    radial-gradient(circle at 12% 50%, rgba(0,102,204,.28), transparent 24%),
+    radial-gradient(circle at 88% 50%, rgba(81,157,45,.18), transparent 28%),
+    linear-gradient(105deg, #0f1c28 0%, #12302f 58%, #10251f 100%);
+  border-top: 1px solid rgba(232,176,7,.38);
+  border-bottom: 1px solid rgba(232,176,7,.32);
+  box-shadow: 0 16px 38px rgba(8,20,20,.2);
 }
 
 .activity > div {
-  min-height: 142px;
-  padding: 26px 2.35vw;
-  border-right: 1px solid #d9cdbb;
+  min-height: 176px;
+  padding: 34px 2.6vw;
+  border-right: 1px solid rgba(255,255,255,.14);
 }
 
 .activity > div:last-child {
@@ -229,23 +231,23 @@ nav a:hover,
   display: flex;
   justify-content: center;
   flex-direction: column;
-  background: rgba(255,255,255,.5);
+  background: linear-gradient(120deg, rgba(0,102,204,.18), rgba(255,255,255,.025));
 }
 
 .activity-intro strong {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.7rem, 2vw, 2.15rem);
+  font-size: clamp(2rem, 2.35vw, 2.7rem);
   font-weight: 400;
-  line-height: 1.08;
-  letter-spacing: -.015em;
+  line-height: 1.04;
+  letter-spacing: -.02em;
 }
 
 .activity-intro span {
-  margin-top: 10px;
-  max-width: 470px;
-  color: #5b5b55;
-  font-size: 1rem;
-  line-height: 1.5;
+  margin-top: 14px;
+  max-width: 520px;
+  color: rgba(255,255,255,.78);
+  font-size: 1.08rem;
+  line-height: 1.55;
 }
 
 .activity-stat {
@@ -259,14 +261,15 @@ nav a:hover,
 .activity-stat .stat-icon {
   grid-row: 1 / 3;
   align-self: center;
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: #8b6913;
-  background: rgba(232,176,7,.15);
-  font-size: 1.18rem;
+  color: #f4d75f;
+  background: rgba(232,176,7,.12);
+  border: 1px solid rgba(244,215,95,.34);
+  font-size: 1.28rem;
   font-weight: 800;
 }
 
@@ -277,18 +280,19 @@ nav a:hover,
 
 .activity-stat strong {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 2.55rem;
+  font-size: 2.85rem;
   font-weight: 400;
   line-height: .95;
+  color: var(--white);
 }
 
 .activity-stat > span:last-child {
-  margin-top: 7px;
-  color: #5f625e;
-  font-size: .76rem;
+  margin-top: 9px;
+  color: rgba(255,255,255,.66);
+  font-size: .78rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: .09em;
+  letter-spacing: .1em;
 }
 
 #experimentDay {
@@ -631,7 +635,7 @@ nav a:hover,
 }
 
 .feed {
-  height: 460px;
+  height: 1480px;
   overflow-y: auto;
   padding: 10px 18px;
   background: rgba(255,255,255,.46);
@@ -888,7 +892,7 @@ nav a:hover,
   width: min(1420px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   border-top: 2px solid rgba(232,176,7,.72);
   border-left: 2px solid rgba(232,176,7,.72);
   box-shadow: 0 0 34px rgba(232,176,7,.07);
@@ -1352,7 +1356,7 @@ footer {
   }
 
   .activity div:nth-child(-n+2) {
-    border-bottom: 1px solid #d9cdbb;
+    border-bottom: 1px solid rgba(255,255,255,.14);
   }
 
   .community-section,
@@ -1385,7 +1389,7 @@ footer {
   .activity div {
     min-height: 92px;
     border-right: 0;
-    border-bottom: 1px solid #d9cdbb;
+    border-bottom: 1px solid rgba(255,255,255,.14);
   }
 
   .activity div:last-child {
@@ -1619,3 +1623,72 @@ footer {
   }
 }
 
+/* 2026-10-06 refinement: participation inputs, expanded community, merged follow section */
+#actionDialog,
+#discoveryDialog {
+  width: min(660px, calc(100% - 32px));
+}
+
+#actionDialog label,
+#discoveryDialog label {
+  gap: 10px;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+#actionDialog select,
+#actionDialog textarea,
+#discoveryDialog textarea {
+  padding: 16px 17px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+#actionDialog select {
+  min-height: 56px;
+}
+
+#actionDialog textarea,
+#discoveryDialog textarea {
+  min-height: 170px;
+}
+
+.follow-section .resource-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.follow-section .resource-card {
+  min-height: 310px;
+}
+
+@media (max-width: 1100px) {
+  .feed {
+    height: 980px;
+  }
+
+  .follow-section .resource-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .feed {
+    height: 720px;
+  }
+
+  .follow-section .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #actionDialog label,
+  #discoveryDialog label {
+    font-size: .98rem;
+  }
+
+  #actionDialog select,
+  #actionDialog textarea,
+  #discoveryDialog textarea {
+    font-size: 1.05rem;
+  }
+}
