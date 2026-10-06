@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Project Meaningful — a public experiment in living according to what matters.">
   <title>Project Meaningful</title>
-  <link rel="stylesheet" href="/styles.css?v=community-right-rail-20261006-2">
+  <link rel="stylesheet" href="/styles.css?v=community-layout-20261006-3">
 
   <script
     src="https://challenges.cloudflare.com/turnstile/v0/api.js"
@@ -193,111 +193,158 @@
           </div>
         </section>
 
-        <div class="community-right-rail">
-          <section id="discoveries" class="stream-panel discoveries-panel">
-          <div class="stream-heading">
-            <div>
-              <p class="stream-kicker">DISCOVERIES</p>
-              <h3>What people noticed</h3>
+        <aside class="community-right-rail" aria-label="Community summary and discoveries">
+          <section class="community-rail-card activity-summary-card" aria-label="Project activity summary">
+            <div class="rail-heading">
+              <span class="rail-symbol" aria-hidden="true">▥</span>
+              <div>
+                <p class="rail-kicker">PROJECT ACTIVITY</p>
+                <h3>Project Activity</h3>
+              </div>
             </div>
-            <a class="stream-link" href="/discoveries.html">View all →</a>
-          </div>
 
-          <p class="stream-description">
-            What people discovered by deliberately doing meaningful things.
+            <p class="rail-copy">
+              Real participation in this public experiment.
+            </p>
+
+            <div class="rail-stat-grid">
+              <div>
+                <strong id="railTotalActions">—</strong>
+                <span>Actions</span>
+              </div>
+              <div>
+                <strong id="railParticipants">—</strong>
+                <span>Participants</span>
+              </div>
+              <div>
+                <strong id="railTodayActions">—</strong>
+                <span>Today</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="community-rail-card record-summary-card">
+            <div class="rail-heading">
+              <span class="rail-symbol rail-symbol-record" aria-hidden="true">●</span>
+              <div>
+                <p class="rail-kicker">YOUR RECORD</p>
+                <h3>Your Record</h3>
+              </div>
+            </div>
+
+            <p class="rail-copy">
+              See your own history of meaningful actions.
+            </p>
+
+            <button id="communityRecordButton" class="primary-button rail-record-button" type="button">
+              View Your Record →
+            </button>
+          </section>
+
+          <section id="discoveries" class="community-rail-card discoveries-panel">
+            <div class="stream-heading">
+              <div>
+                <p class="stream-kicker">DISCOVERIES</p>
+                <h3>What people noticed</h3>
+              </div>
+              <a class="stream-link" href="/discoveries.html">View all →</a>
+            </div>
+
+            <p class="stream-description">
+              What people discovered by deliberately doing meaningful things.
+            </p>
+
+            <form id="discoveriesControls" class="discovery-controls" role="search">
+              <label>
+                Username
+                <input
+                  id="discoveriesUsernameSearch"
+                  type="search"
+                  autocomplete="off"
+                  placeholder="Find a participant"
+                >
+              </label>
+
+              <button id="clearDiscoveriesFilters" class="filter-reset" type="button">
+                Clear
+              </button>
+
+              <button id="shareDiscoveryButton" class="primary-button stream-action-button" type="button">
+                Log a Discovery
+              </button>
+            </form>
+
+            <div id="discoveriesFeed" class="feed" aria-live="polite" aria-busy="true">
+              <p class="empty-state">Loading Discoveries…</p>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <section id="follow" class="explore-section follow-section community-follow-section">
+        <div class="explore-heading">
+          <p class="eyebrow">STAY CONNECTED</p>
+          <h2>Follow The Meaningful Project</h2>
+          <p>
+            Continue beyond the public experiment through the ideas, resources,
+            and application being developed around meaningful living.
           </p>
-
-          <form id="discoveriesControls" class="discovery-controls" role="search">
-            <label>
-              Username
-              <input
-                id="discoveriesUsernameSearch"
-                type="search"
-                autocomplete="off"
-                placeholder="Find a participant"
-              >
-            </label>
-
-            <button id="clearDiscoveriesFilters" class="filter-reset" type="button">
-              Clear
-            </button>
-
-            <button id="shareDiscoveryButton" class="primary-button stream-action-button" type="button">
-              Log a Discovery
-            </button>
-          </form>
-
-          <div id="discoveriesFeed" class="feed" aria-live="polite" aria-busy="true">
-            <p class="empty-state">Loading Discoveries…</p>
-          </div>
-          </section>
-
-          <section id="follow" class="explore-section follow-section">
-      <div class="explore-heading">
-        <p class="eyebrow">STAY CONNECTED</p>
-        <h2>Follow The Meaningful Project</h2>
-        <p>
-          Continue beyond the public experiment through the ideas, resources,
-          and application being developed around meaningful living.
-        </p>
-      </div>
-
-      <div class="resource-grid">
-        <article class="resource-card">
-          <div class="resource-card-top">
-            <span class="resource-number">01</span>
-            <span class="resource-icon resource-icon-articles" aria-hidden="true">✎</span>
-          </div>
-          <h3>Articles</h3>
-          <p>Ideas, essays, and practical reflections that extend the conversation.</p>
-          <span class="resource-status">Resource links to be connected</span>
-        </article>
-
-        <article class="resource-card">
-          <div class="resource-card-top">
-            <span class="resource-number">02</span>
-            <span class="resource-icon resource-icon-book" aria-hidden="true">▤</span>
-          </div>
-          <h3>The Book</h3>
-          <p>The foundational ideas that established the premise behind Project Meaningful.</p>
-          <span class="resource-status">Book link to be connected</span>
-        </article>
-
-        <article class="resource-card">
-          <div class="resource-card-top">
-            <span class="resource-number">03</span>
-            <span class="resource-icon resource-icon-video" aria-hidden="true">▶</span>
-          </div>
-          <h3>Videos</h3>
-          <p>Talks, explanations, and conversations for people who prefer to watch and listen.</p>
-          <span class="resource-status">Video links to be connected</span>
-        </article>
-
-        <article class="resource-card">
-          <div class="resource-card-top">
-            <span class="resource-number">04</span>
-            <span class="resource-icon resource-icon-follow" aria-hidden="true">▯</span>
-          </div>
-          <h3>The Application</h3>
-          <p>A deeper application being developed to help people examine how they actually live.</p>
-          <span class="resource-status">In development</span>
-        </article>
-
-        <article class="resource-card resource-card-action">
-          <div class="resource-card-top">
-            <span class="resource-number">05</span>
-            <span class="resource-icon resource-icon-follow" aria-hidden="true">✣</span>
-          </div>
-          <h3>Project Updates</h3>
-          <p>Stay connected as Project Meaningful develops beyond this public experiment.</p>
-          <button id="appUpdatesButton" class="resource-button" type="button">
-            About future updates →
-          </button>
-        </article>
-      </div>
-          </section>
         </div>
-      </div>
+
+        <div class="resource-grid">
+          <article class="resource-card">
+            <div class="resource-card-top">
+              <span class="resource-number">01</span>
+              <span class="resource-icon resource-icon-articles" aria-hidden="true">✎</span>
+            </div>
+            <h3>Articles</h3>
+            <p>Ideas, essays, and practical reflections that extend the conversation.</p>
+            <span class="resource-status">Resource links to be connected</span>
+          </article>
+
+          <article class="resource-card">
+            <div class="resource-card-top">
+              <span class="resource-number">02</span>
+              <span class="resource-icon resource-icon-book" aria-hidden="true">▤</span>
+            </div>
+            <h3>The Book</h3>
+            <p>The foundational ideas that established the premise behind Project Meaningful.</p>
+            <span class="resource-status">Book link to be connected</span>
+          </article>
+
+          <article class="resource-card">
+            <div class="resource-card-top">
+              <span class="resource-number">03</span>
+              <span class="resource-icon resource-icon-video" aria-hidden="true">▶</span>
+            </div>
+            <h3>Videos</h3>
+            <p>Talks, explanations, and conversations for people who prefer to watch and listen.</p>
+            <span class="resource-status">Video links to be connected</span>
+          </article>
+
+          <article class="resource-card">
+            <div class="resource-card-top">
+              <span class="resource-number">04</span>
+              <span class="resource-icon resource-icon-follow" aria-hidden="true">▯</span>
+            </div>
+            <h3>The Application</h3>
+            <p>A deeper application being developed to help people examine how they actually live.</p>
+            <span class="resource-status">In development</span>
+          </article>
+
+          <article class="resource-card resource-card-action">
+            <div class="resource-card-top">
+              <span class="resource-number">05</span>
+              <span class="resource-icon resource-icon-follow" aria-hidden="true">✣</span>
+            </div>
+            <h3>Project Updates</h3>
+            <p>Stay connected as Project Meaningful develops beyond this public experiment.</p>
+            <button id="appUpdatesButton" class="resource-button" type="button">
+              About future updates →
+            </button>
+          </article>
+        </div>
+      </section>
     </section>
   </main>
 
@@ -683,6 +730,6 @@
     </span>
   </footer>
 
-  <script type="module" src="/app.js?v=community-right-rail-20261006-2"></script>
+  <script type="module" src="/app.js?v=community-layout-20261006-3"></script>
 </body>
 </html>
