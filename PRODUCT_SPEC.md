@@ -23,8 +23,9 @@ Homepage order:
 2. Hero / primary participation invitation
 3. Project activity
 4. Brief experiment premise + **Share Something Meaningful** participation invitation
-5. Community activity: a normally proportioned two-column desktop layout with Meaningful Actions on the left and a compact right rail containing Project Activity, Your Record access, and a shorter Discoveries stream; **Follow The Meaningful Project** sits directly beneath the two columns
-6. Footer
+5. Community activity: a normally proportioned two-column desktop layout with Meaningful Actions on the left and a compact right rail containing Project Activity, Your Record access, and a shorter Discoveries stream
+6. **Follow The Meaningful Project** as its own standalone section
+7. Footer
 
 Primary action: **Share Your Meaningful Action**.
 
@@ -202,7 +203,7 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The site should not be uniformly dark, but the hero should remain dark, dramatic, and high-contrast with white type.
-- **Follow The Meaningful Project** sits directly beneath the two-column Community composition as one compact horizontal ecosystem section on wider screens. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. The Experiment and Community are not repeated there.
+- **Follow The Meaningful Project** is a separate standalone section after the Community section. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. On wider screens, these appear as five visually separate cards with visible spacing rather than one divided rectangle. The Experiment and Community are not repeated there.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
 
