@@ -120,7 +120,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
 - Reserved username enforcement.
 - Admin review/removal UI and MFA/allowlist completion as applicable.
-- Demo content.
+- Demo content is now implemented: 15 fictional Example participant handles, 55 Example actions, and 15 Example discoveries. Production feed/search/archive verification is required.
 - Account deletion/export UX and Privacy/Terms.
 - Final project launch date / dynamic Day N; until launch is set, the interface now says **Not launched** rather than showing a false Day 1.
 - Future full-application update opt-in persistence/consent mechanism; the current UI explains the option but deliberately does not collect consent yet.
@@ -131,8 +131,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Audit log append-only protection currently depends on application/RLS boundaries; privileged/direct database access can bypass RLS. Stronger DB-level protection may be warranted before admin tooling.
 - Reserved usernames are not yet enforced.
 - Username-change policy is unresolved.
-- Demo profiles may require special handling because profiles are tied to auth users.
-- `is_demo` exists at content level and may also be represented elsewhere; normalize only if needed.
+- Example content now uses dedicated `demo_username` fields on actions/discoveries rather than fake auth/profile rows; real rows remain auth-backed. The identity constraints must be preserved in future schema work.
 - Turnstile is on Meaningful Action submission but not registration.
 - Rate limiting is not yet implemented.
 - Current Supabase table grants are broad for API roles; RLS is the operative row-access boundary. Preserve and audit RLS carefully whenever schema/policies change.
@@ -183,52 +182,62 @@ Current repository inspection confirms the live implementation contains:
   - added authenticated `GET /api/record` in the Worker, verifying the bearer token through Supabase Auth before querying only the authenticated user's non-demo actions;
   - no database migration was required.
 - Your Record validation after the build: homepage JavaScript syntax **passed**; Worker JavaScript syntax **passed**; duplicate HTML IDs **none**; JavaScript-referenced DOM IDs missing **none**; CSS brace balance **passed**; live Supabase project status **ACTIVE_HEALTHY**; read-only aggregate query confirmed the fields and Eastern-Time date semantics used by the record summary.
+- 2026-10-06 design refinement requested after live review:
+  - rebuilt the project-activity strip under the hero as a larger dark navy/green brand band with stronger white type and gold statistic cues;
+  - changed the Join card CTA from **Join the Experiment** to **Share Something Meaningful**;
+  - enlarged Action category/text fields and Discovery text fields, including field/label typography and touch target size;
+  - expanded desktop community feed height to 1480px so the two side-by-side streams can expose roughly 25–30 entries collectively before internal scrolling; tablet/mobile use shorter responsive heights;
+  - fixed the Discovery dialog lifecycle so the modal opens before Turnstile initialization and added retry handling if the verification script has not loaded yet;
+  - merged **Go Deeper** and **One Project. Four Parts.** into one **Follow The Meaningful Project** section containing Articles, one Book entry, Videos, The Application, and Project Updates; the Experiment and duplicate Community architecture cards are no longer repeated.
+- Example-content infrastructure and seeding completed:
+  - migration `supabase/migrations/20261006170000_demo_content_support.sql` committed and applied to production Supabase as migration version `20261006170315`;
+  - actions/discoveries now support either a real authenticated `user_id` or a lowercase fictional `demo_username`, enforced by database identity constraints;
+  - seeded **15** fictional Example handles, **55** Example actions, and **15** Example discoveries;
+  - public Worker feed/search mapping now supports Example usernames while preserving existing real-profile behavior;
+  - every Example remains `is_demo = true`, visibly renders with the existing **Example** label, and remains excluded from `project_stats()`.
+- Validation after this refinement:
+  - homepage JS syntax **passed**;
+  - Worker JS syntax **passed**;
+  - duplicate HTML IDs **none**;
+  - JavaScript-referenced DOM IDs missing **none**;
+  - CSS brace balance **passed**;
+  - live database verification found 55 demo actions / 15 demo discoveries / 15 fictional handles and zero real rows missing authenticated user IDs;
+  - live `project_stats()` returned real-only totals (6 real published actions, 1 action today, 1 real participant at verification time), confirming Example rows do not inflate statistics;
+  - Supabase security/performance advisors were run after the migration. They surfaced the repository's already-known SECURITY DEFINER / RLS performance warnings and no demo-identity-specific finding.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
 ## Deployment status
-Production deployment is live at **projectmeaningful.app**. The latest code changes above were reported deployed successfully and then exercised on the live site.
+Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The 2026-10-06 refinement commits are on `main`; rendered production verification after Cloudflare picks them up is the next required step.
 
 ## Database handoff checkpoint
-On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
+- The original live Supabase public-schema baseline was captured on 2026-09-29.
+- On 2026-10-06 migration `20261006170315 demo_content_support` was applied deliberately to production and verified.
+- `supabase/schema.sql` has been refreshed to reflect the verified post-migration schema; the dated migration remains the history of the change.
+- Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-test the newly built Your Record flow on `projectmeaningful.app` after Cloudflare deploys the latest `main` commits.**
+**Production-review the 2026-10-06 homepage refinement on `projectmeaningful.app` after Cloudflare deploys the latest `main`.**
 
-Verify while signed in:
-- **Your Record** opens from the header without a placeholder alert;
-- the published-action count matches the participant's published actions;
-- the distinct-day count reflects days with a published action using Eastern Time;
-- the private history is newest-first and shows the participant's own actions only;
-- pending actions appear privately with a visible **Pending** status and remain absent from public feeds/counts;
-- **Log an Action** closes Your Record and opens a fresh action form;
-- closing by X, Escape, and backdrop works;
-- an expired/invalid session returns the participant to the returning-user sign-in flow rather than exposing record data;
-- desktop/mobile layout has no overflow or unreadable status/meta treatment.
+Verify:
+- the activity strip under the hero is visibly larger and now belongs to the same dark blue/green/gold design family as the rest of the site;
+- **Share Something Meaningful** is the Join-card CTA and still opens the Action participation flow;
+- Action category/text fields and the Discovery text field are comfortably readable at desktop and mobile sizes;
+- the expanded community area exposes roughly 25–30 entries collectively across the two desktop streams, with internal scrolling still working;
+- Example entries are visibly labeled **Example**, use fictional usernames, work with category/username filtering and archives, and do not change the real project-activity counts;
+- **Log a Discovery** reliably opens the Discovery dialog, Turnstile appears, and a real Discovery can be submitted;
+- **Follow The Meaningful Project** appears as one consolidated lower section with Articles, one Book entry, Videos, The Application, and Project Updates; the duplicate Experiment/Book architecture section is gone;
+- Your Record and existing auth/Action/archive behavior remain intact.
 
-Also finish the rendered production review of the 2026-10-05 homepage consolidation, which could not be directly viewed from this environment even though the current code-level review passed.
-
-Automated/static status after the Your Record build:
-- homepage JavaScript syntax: **passed**;
-- Worker JavaScript syntax: **passed**;
-- duplicate HTML IDs: **none**;
-- JavaScript-referenced DOM IDs missing: **none**;
-- CSS brace balance: **passed**;
-- authenticated `/api/record` route present and filtered by server-verified user ID;
-- Eastern-Time day-key logic present;
-- Supabase Project Experiment status: **ACTIVE_HEALTHY**;
-- no database schema change was required.
-
-If production verification passes, continue with the next remaining V1 priority rather than revisiting Your Record.
+If this production review passes, the next functional priority is connecting verified resource destinations and then abuse protection/rate limiting rather than further structural homepage work unless the live design reveals a specific defect.
 
 ## Short remaining roadmap
-1. Production-verify Your Record and finish the rendered homepage visual review.
+1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
 2. Connect verified resource destinations for Articles / Book / Videos / social when available.
 3. Registration abuse protection + rate limiting/search throttling/reserved usernames.
 4. Admin review/removal workflow.
-5. Demo content.
-6. Account deletion/export, Privacy/Terms, launch-day logic.
-7. Accessibility, responsive/polish, final launch testing.
+5. Account deletion/export, Privacy/Terms, launch-day logic.
+6. Accessibility, responsive/polish, final launch testing.
 
 ## End-of-session protocol
 After every substantial build session:
