@@ -643,6 +643,51 @@
     ></div>
   </dialog>
 
+  <dialog id="recordDialog" class="record-dialog">
+    <button
+      id="closeRecordDialog"
+      class="close-button"
+      aria-label="Close"
+      type="button"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">YOUR RECORD</p>
+    <h2>Your meaningful actions.</h2>
+
+    <p class="dialog-copy record-copy">
+      This is your private record of what you have chosen to do. Pending actions appear here even while they are not public.
+    </p>
+
+    <div class="record-stats" aria-label="Your record summary">
+      <div class="record-stat">
+        <strong id="recordPublishedActions">—</strong>
+        <span>Published Actions</span>
+      </div>
+
+      <div class="record-stat">
+        <strong id="recordPublishedDays">—</strong>
+        <span>Days with a Published Action</span>
+      </div>
+    </div>
+
+    <div class="record-history-heading">
+      <h3>Action history</h3>
+      <span>Newest first</span>
+    </div>
+
+    <div id="recordFeed" class="record-feed" aria-live="polite" aria-busy="false">
+      <p class="empty-state">Open Your Record to load your history.</p>
+    </div>
+
+    <div class="dialog-actions record-actions">
+      <button id="recordLogActionButton" class="primary-button" type="button">
+        Log an Action
+      </button>
+    </div>
+  </dialog>
+
   <dialog id="updatesDialog">
     <button
       id="closeUpdatesDialog"
