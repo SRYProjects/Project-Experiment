@@ -236,6 +236,16 @@ Current repository inspection confirms the live implementation contains:
   - recolored the standalone **Follow The Meaningful Project** section to a restrained light editorial palette with navy/teal typography and individually accented icons, removing the harsh dark blue/gold treatment;
   - no submission/auth/database behavior changed.
 - Static validation after this pass: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; four SVG activity icons **present**; Action copy-size override **present**; Community heading/right-rail grid alignment **present**; visible scrollbar styling **present**; Community contrast treatments **present**; Follow palette override **present**; CSS brace balance **passed**.
+- 2026-10-06 refinement from live visual review:
+  - changed **Join Project Meaningful** to a warm sand/ivory card so it separates clearly from the surrounding blue/green **The Idea Is Simple** section;
+  - removed the numeric labels from the three Join benefits; icons now carry the sequence visually;
+  - strengthened differentiation in the Community right rail: Project Activity uses a cool blue-gray treatment, Your Record uses a warm tan/stone treatment, and Discoveries uses a warm neutral treatment with a strong teal top accent;
+  - emphasized **What people noticed** with stronger heading hierarchy, border accent, and shadow while preserving its existing controls/behavior;
+  - equalized the desktop Community columns by stretching both sides to the same grid row height and allowing the Action/Discovery feeds to flex within their columns;
+  - changed the standalone **Follow The Meaningful Project** field from mint/green to a warm light stone/tan background with slightly stronger section contrast;
+  - removed the numeric labels from all five Follow cards; their icons now provide sufficient visual identification;
+  - no JavaScript, auth, submission, moderation, or database behavior changed.
+- Static validation after this refinement: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; Join numbers **removed**; Follow numbers **removed**; equal-height desktop Community rule **present**; Discovery emphasis **present**; right-rail contrast trio **present**; warm Follow section **present**; CSS brace balance **passed**.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -249,17 +259,18 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the 2026-10-06 design-balance pass on `projectmeaningful.app`.**
+**Production-review the latest visual refinement on `projectmeaningful.app`.**
 
 Verify:
-- logged Action text reads at normal body-copy size rather than display size;
-- the Community heading's explanatory paragraph aligns with the right rail beneath it;
-- Action / Project Activity / Your Record / Discoveries areas are clearly distinguishable without looking boxed or noisy;
-- Actions and Discoveries scrollbars are immediately discoverable but visually restrained;
-- **One deliberate action at a time** now creates a clear visual transition from the hero and its four stat icons look like one intentional system;
-- **Follow The Meaningful Project** uses the new lighter, restrained editorial palette consistently across all five separate cards.
+- the **Join Project Meaningful** card stands apart from **The Idea Is Simple** without feeling disconnected from the site;
+- the three Join benefits use icons only, with no numeric labels;
+- Project Activity, Your Record, and Discoveries are visually distinct from one another;
+- the two desktop Community columns terminate on the same baseline;
+- **What people noticed** is noticeably easier to discover without becoming visually dominant;
+- the Follow section now reads as warm light tan/stone rather than another mint-green field;
+- the five Follow cards use icons only, with no numeric labels.
 
-Do not make further structural changes unless production review reveals a specific defect.
+Do not make additional structural changes unless this production review reveals a specific defect.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
