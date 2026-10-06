@@ -23,7 +23,7 @@ Homepage order:
 2. Hero / primary participation invitation
 3. Project activity
 4. Brief experiment premise + **Share Something Meaningful** participation invitation
-5. Community activity: Meaningful Actions remain the full-height left column; the right column contains a shorter Discoveries stream followed by **Follow The Meaningful Project** (Articles, the Book, Videos, the future Application, and project updates)
+5. Community activity: a normally proportioned two-column desktop layout with Meaningful Actions on the left and a compact right rail containing Project Activity, Your Record access, and a shorter Discoveries stream; **Follow The Meaningful Project** sits directly beneath the two columns
 6. Footer
 
 Primary action: **Share Your Meaningful Action**.
@@ -43,8 +43,8 @@ Primary action: **Share Your Meaningful Action**.
 - Maximum 140 characters, enforced client- and server-side.
 - Categories: Family, Relationships, Health, Work, Learning, Creativity, Service, Faith, Responsibility, Sacrifice, Other.
 - Public feed: newest first; username, category, action, date/time.
-- Homepage feed is fixed-height and independently scrollable with a visible scrollbar. On wide screens, the community presentation should be tall enough to expose roughly 25–30 logged community entries across the two side-by-side streams at a glance, while remaining shorter on tablet/mobile.
-- On wider screens, once Discoveries are fully implemented, present Meaningful Actions and Discoveries as complementary side-by-side public streams; stack them on smaller screens.
+- Homepage feeds are fixed-height and independently scrollable with visible scrollbars. Do not make the Community columns excessively tall merely to expose large numbers of entries at once; keep them at a normal reading scale and use the dedicated archives for deeper browsing.
+- On wider screens, Meaningful Actions is the primary left column. The narrower right rail contains a compact Project Activity summary, Your Record access, and a shorter Discoveries stream. Stack the layout on smaller screens.
 - Category filtering.
 - Username search is exact and case-insensitive.
 - Clear “No results found” state.
@@ -190,7 +190,7 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Dark/abstract/moody hero direction suggesting deliberate choice versus autopilot; geometric/structured visual language is preferred over generic gradients or stock imagery.
 - Avoid mountains, meditation, stock wellness imagery, aspirational lifestyle clichés, featured-member/social-status hierarchy, and unnecessary animation.
 - Public streams should feel live through real timestamps/content, compact entry density, clear hierarchy, and inviting visual personality rather than gimmicks.
-- Meaningful Actions and Discoveries are the visual and functional center of the homepage. They should be larger than surrounding content, use readable type, and remain side-by-side on wider screens while stacking responsively on smaller screens.
+- Meaningful Actions is the primary visual anchor of the Community area; Discoveries remains prominent but intentionally more compact inside the right rail. Use readable type, normal reading widths, and responsive stacking on smaller screens.
 - Do not place decorative icons beside the Actions/Discoveries section headings unless they communicate real information. Keep iconography inside individual logged entries, where it aids scanning.
 - Each community stream must contain an obvious in-window participation button: **Log an Action** and **Log a Discovery**.
 - The hero should use a full-width abstract/background treatment rather than a separate decorative object beside the question.
@@ -202,7 +202,7 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The site should not be uniformly dark, but the hero should remain dark, dramatic, and high-contrast with white type.
-- **Follow The Meaningful Project** lives inside the right column of **The Community in Motion**, directly beneath a shorter Discoveries stream. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. Meaningful Actions remains the full-height left column. The Experiment and Community are not repeated there.
+- **Follow The Meaningful Project** sits directly beneath the two-column Community composition as one compact horizontal ecosystem section on wider screens. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. The Experiment and Community are not repeated there.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
 
