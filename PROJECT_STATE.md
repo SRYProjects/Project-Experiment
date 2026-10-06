@@ -1,6 +1,6 @@
 # Project Experiment — Project State
 
-Last updated: 2026-10-04  
+Last updated: 2026-10-06  
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -115,7 +115,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
 - Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are now implemented in code; production verification is required.
 - Homepage has been substantially redesigned around a distinctive abstract hero, compact activity strip, denser side-by-side community streams, an Explore Project Meaningful resource band, and a clearer Book / Experiment / Application / Community architecture. Production visual verification is required.
-- Your Record; nav currently shows a placeholder alert.
+- Your Record is implemented in code as a private authenticated modal with published-action count, distinct published-action days, newest-first action history, and visible Pending/Rejected states. Production verification is required.
 - Registration Turnstile.
 - Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
 - Reserved username enforcement.
@@ -174,6 +174,15 @@ Current repository inspection confirms the live implementation contains:
   - The final **Project Meaningful** architecture section was also rebuilt as a dark green/navy companion section, with higher-contrast typography and visual cues for Book / Experiment / Application / Community.
   - Existing Actions/Discoveries card design and behavior were intentionally preserved.
 - The supplied Meaningful logos and book artwork were reviewed. They are intentionally not forced into the current homepage layout yet; the Book artwork is reserved for the real Book resource destination, and the logo assets remain available for later brand integration if the production review shows they improve rather than clutter the site.
+- 2026-10-06 homepage continuation review: the final 2026-10-05 visual consolidation was re-inspected in current `main`. Code-level checks confirmed the approved dark hero, pronounced activity band, partner-inspired Join block, open community treatment, dark Explore section, dark Project architecture section, responsive rules, unique DOM IDs, and intact JavaScript hooks. A rendered production visual check could not be performed from the available network tools because `projectmeaningful.app` was not reachable from this environment; this remains a manual/live verification item rather than a code defect.
+- 2026-10-06 **Your Record** build completed and committed to `main`:
+  - replaced the placeholder nav alert with a private authenticated modal;
+  - added summary metrics for total published Meaningful Actions and distinct Eastern-Time days with a published action;
+  - added newest-first private action history including pending content that is not public, with explicit Published / Pending / Rejected status treatment;
+  - added a direct **Log an Action** continuation CTA;
+  - added authenticated `GET /api/record` in the Worker, verifying the bearer token through Supabase Auth before querying only the authenticated user's non-demo actions;
+  - no database migration was required.
+- Your Record validation after the build: homepage JavaScript syntax **passed**; Worker JavaScript syntax **passed**; duplicate HTML IDs **none**; JavaScript-referenced DOM IDs missing **none**; CSS brace balance **passed**; live Supabase project status **ACTIVE_HEALTHY**; read-only aggregate query confirmed the fields and Eastern-Time date semantics used by the record summary.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -184,37 +193,42 @@ Production deployment is live at **projectmeaningful.app**. The latest code chan
 On 2026-09-29 the live Supabase public schema was inspected through read-only catalog queries. The resulting baseline was committed to `supabase/schema.sql`. No production database objects were changed during this capture.
 
 ## Exact next step
-**Begin the next conversation by production-reviewing the final 2026-10-05 homepage visual consolidation before adding new functionality.**
+**Production-test the newly built Your Record flow on `projectmeaningful.app` after Cloudflare deploys the latest `main` commits.**
 
-Verify on **projectmeaningful.app** after Cloudflare deploys the latest `main` commits:
-- Join Project Meaningful matches the intended partner-inspired hierarchy: large headline, readable numbered benefits, visible gold icons, and prominent Join CTA;
-- the activity/stat band under the hero is materially more pronounced and the far-left statement is no longer undersized;
-- Actions and Discoveries remain unchanged functionally and visually except for previously approved refinements;
-- Explore Project Meaningful now feels visually related to the hero rather than like a pale utility section;
-- the final Project Meaningful architecture section also carries the dark brand language cleanly;
-- desktop/tablet/mobile layouts remain balanced with no overflow or contrast regression;
-- all existing auth, Action submission, Discovery submission, filters/search, archives, and View My Action / View My Discovery behavior still work.
+Verify while signed in:
+- **Your Record** opens from the header without a placeholder alert;
+- the published-action count matches the participant's published actions;
+- the distinct-day count reflects days with a published action using Eastern Time;
+- the private history is newest-first and shows the participant's own actions only;
+- pending actions appear privately with a visible **Pending** status and remain absent from public feeds/counts;
+- **Log an Action** closes Your Record and opens a fresh action form;
+- closing by X, Escape, and backdrop works;
+- an expired/invalid session returns the participant to the returning-user sign-in flow rather than exposing record data;
+- desktop/mobile layout has no overflow or unreadable status/meta treatment.
 
-Automated/static status at handoff:
-- homepage JavaScript syntax check: **passed**;
+Also finish the rendered production review of the 2026-10-05 homepage consolidation, which could not be directly viewed from this environment even though the current code-level review passed.
+
+Automated/static status after the Your Record build:
+- homepage JavaScript syntax: **passed**;
+- Worker JavaScript syntax: **passed**;
 - duplicate HTML IDs: **none**;
-- JavaScript-referenced DOM IDs missing after redesign: **none**;
-- Join benefit rows present: **3**;
-- Explore resource visual cues present: **4**;
-- Project architecture visual cues present: **4**;
-- no backend/database changes were made in this final visual pass.
+- JavaScript-referenced DOM IDs missing: **none**;
+- CSS brace balance: **passed**;
+- authenticated `/api/record` route present and filtered by server-verified user ID;
+- Eastern-Time day-key logic present;
+- Supabase Project Experiment status: **ACTIVE_HEALTHY**;
+- no database schema change was required.
 
-If production review passes, the next functional build priority remains **Your Record**, unless the visual review reveals a higher-priority correction.
+If production verification passes, continue with the next remaining V1 priority rather than revisiting Your Record.
 
 ## Short remaining roadmap
-1. Production-review the final homepage visual consolidation and confirm no functional regressions.
-2. Your Record.
-3. Connect verified resource destinations for Articles / Book / Videos / social when available.
-4. Registration abuse protection + rate limiting/search throttling/reserved usernames.
-5. Admin review/removal workflow.
-6. Demo content.
-7. Account deletion/export, Privacy/Terms, launch-day logic.
-8. Accessibility, responsive/polish, final launch testing.
+1. Production-verify Your Record and finish the rendered homepage visual review.
+2. Connect verified resource destinations for Articles / Book / Videos / social when available.
+3. Registration abuse protection + rate limiting/search throttling/reserved usernames.
+4. Admin review/removal workflow.
+5. Demo content.
+6. Account deletion/export, Privacy/Terms, launch-day logic.
+7. Accessibility, responsive/polish, final launch testing.
 
 ## End-of-session protocol
 After every substantial build session:
