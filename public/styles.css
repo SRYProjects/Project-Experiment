@@ -3260,3 +3260,47 @@ footer {
 .archive-feed {
   border-top-color: var(--line);
 }
+
+/* 2026-10-08: reduce Action viewport, align Community feed bottoms, green Follow background */
+@media (min-width: 1101px) {
+  .public-streams {
+    align-items: stretch;
+    grid-auto-rows: 900px;
+  }
+
+  #actions.stream-panel,
+  .community-right-rail {
+    height: 900px;
+    min-height: 0;
+  }
+
+  #actionsFeed {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: scroll;
+  }
+
+  .community-right-rail {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #discoveries.community-rail-card {
+    min-height: 0;
+    flex: 1 1 auto;
+    padding-bottom: 24px;
+  }
+
+  #discoveriesFeed {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: scroll;
+  }
+}
+
+/* Only the Stay Connected section background changes here. */
+.standalone-follow-section {
+  background: #dce6e1;
+}
