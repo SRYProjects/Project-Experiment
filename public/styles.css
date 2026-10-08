@@ -3304,3 +3304,60 @@ footer {
 .standalone-follow-section {
   background: #dce6e1;
 }
+
+/* 2026-10-08: five-Discovery preview, aligned feed bottoms, dark-green Follow */
+@media (min-width: 1101px) {
+  .public-streams {
+    align-items: stretch;
+    grid-auto-rows: 1140px;
+  }
+
+  #actions.stream-panel,
+  .community-right-rail {
+    height: 1140px;
+    min-height: 0;
+  }
+
+  #actions.stream-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #actionsFeed {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: scroll;
+  }
+
+  .community-right-rail {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #discoveries.community-rail-card {
+    min-height: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #discoveriesFeed {
+    height: auto;
+    min-height: 470px;
+    flex: 1 1 auto;
+    overflow-y: scroll;
+  }
+}
+
+/* Stay Connected: use the established dark green; cards remain unchanged. */
+.standalone-follow-section {
+  color: #fff;
+  background: #214b50;
+}
+
+.standalone-follow-section .explore-heading .eyebrow,
+.standalone-follow-section .explore-heading h2,
+.standalone-follow-section .explore-heading > p {
+  color: #fff;
+}
