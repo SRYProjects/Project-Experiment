@@ -789,42 +789,14 @@ signInForm.addEventListener(
 ------------------------- */
 
 async function ensureProfile(user) {
-  const {
-    data: existingProfile,
-    error: readError
-  } = await supabase
-    .from("profiles")
-    .select("id, username")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (readError) {
-    console.error(
-      "Profile lookup failed:",
-      readError
-    );
-
-    return;
-  }
-
-  if (existingProfile) {
-    localStorage.removeItem(
-      "meaningful_pending_username"
-    );
-
-    return;
-  }
-
   const pendingUsername =
     localStorage.getItem(
       "meaningful_pending_username"
     ) ||
-    user.user_metadata?.requested_username;
+    user.user_metadata?.requested_username ||
+    "";
 
-  if (
-    !pendingUsername ||
-    !currentSession?.access_token
-  ) {
+  if (!currentSession?.access_token) {
     return;
   }
 
@@ -852,6 +824,16 @@ async function ensureProfile(user) {
       await response.json();
 
     if (!response.ok) {
+      if (
+        response.status === 400 &&
+        !pendingUsername
+      ) {
+        console.warn(
+          "Authenticated account has no Project Meaningful profile."
+        );
+        return;
+      }
+
       console.error(
         "Profile creation failed:",
         result.error
