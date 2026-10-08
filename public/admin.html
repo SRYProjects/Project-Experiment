@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex,nofollow">
   <title>Project Meaningful Admin</title>
-  <link rel="stylesheet" href="/styles.css?v=admin-moderation-20261008-1">
+  <link rel="stylesheet" href="/styles.css?v=admin-mfa-fix-20261008-2">
 </head>
 
 <body class="admin-page">
@@ -50,17 +50,40 @@
       </div>
 
       <div id="adminMfaEnroll" class="hidden">
-        <p>Admin access requires an authenticator app. Scan this code, then enter the six-digit code it generates.</p>
+        <p>
+          Add a <strong>time-based (TOTP)</strong> account in your authenticator app.
+          Scan the QR code below. If your app will not create the account from the QR code,
+          use the manual setup key instead.
+        </p>
+
         <div class="admin-mfa-setup">
           <img id="adminMfaQr" alt="Authenticator QR code">
-          <div>
-            <strong>Manual setup key</strong>
+
+          <div class="admin-mfa-manual">
+            <strong>Manual setup</strong>
+            <span>Account: Project Meaningful Admin</span>
+            <span>Type: Time-based / TOTP</span>
+
             <code id="adminMfaSecret"></code>
+
+            <div class="admin-mfa-helper-actions">
+              <button id="adminMfaCopyKey" class="secondary-button" type="button">
+                Copy Setup Key
+              </button>
+
+              <a id="adminMfaOpenLink" class="secondary-button hidden" href="#">
+                Open in Authenticator App
+              </a>
+
+              <button id="adminMfaRegenerate" class="secondary-button" type="button">
+                Generate New Setup Code
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <form id="adminMfaForm">
+      <form id="adminMfaForm" class="admin-mfa-form">
         <label>
           Authenticator code
           <input
@@ -70,6 +93,7 @@
             autocomplete="one-time-code"
             pattern="[0-9]{6}"
             maxlength="6"
+            placeholder="123456"
             required
           >
         </label>
@@ -113,6 +137,6 @@
     <div id="adminMessage" class="message hidden" role="status"></div>
   </main>
 
-  <script type="module" src="/admin.js?v=admin-moderation-20261008-1"></script>
+  <script type="module" src="/admin.js?v=admin-mfa-fix-20261008-2"></script>
 </body>
 </html>
