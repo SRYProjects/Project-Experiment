@@ -269,6 +269,12 @@ Current repository inspection confirms the live implementation contains:
   - the Discoveries card/feed flexes within the same 900px right rail so the Actions and Discoveries windows terminate on the same desktop baseline;
   - the existing 20-item rendered homepage caps remain unchanged;
   - **Stay Connected / Follow The Meaningful Project** received one color-only change: its section background is now muted light green `#dce6e1`; card colors, typography, layout, and behavior were not changed.
+- 2026-10-08 Discovery-preview / Follow correction:
+  - increased the desktop Community row from 900px to **1140px** so the Discoveries preview can expose at least roughly five compact entries while retaining its visible scrollbar;
+  - Actions and the complete right rail remain the exact same 1140px desktop height; both feed windows flex to their column bottoms so their lower edges align;
+  - Discoveries has a 470px minimum desktop feed viewport to prevent the preview from collapsing too short;
+  - removed all **Example** badges from the homepage Actions and Discoveries preview cards only; the underlying demo flag/data is unchanged and demo rows remain excluded from real statistics;
+  - changed **Stay Connected / Follow The Meaningful Project** from light green to established dark green `#214b50`; its section eyebrow/headline/intro copy is white; resource card styling and behavior were not changed.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -282,14 +288,15 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review only the latest Community-window alignment and Stay Connected background on `projectmeaningful.app`.**
+**Production-review only the latest Community preview and Stay Connected corrections on `projectmeaningful.app`.**
 
 Verify:
-- roughly 10 Action entries are visible in the desktop Actions window before scrolling;
-- additional loaded Actions remain accessible through the scrollbar;
-- the bottom of the Actions window aligns with the bottom of the Discoveries window;
-- Discoveries remains scrollable;
-- the Stay Connected section background is muted green, with no other design changes to that section.
+- at least five Discoveries are visible in the desktop preview before scrolling, with the scrollbar clearly visible;
+- the Actions feed extends to the exact same bottom baseline as the Discoveries feed/right rail;
+- Actions remains scrollable;
+- no **Example** badges appear inside the homepage Actions or Discoveries windows;
+- Stay Connected uses dark green `#214b50` and its section heading copy is white;
+- Stay Connected resource-card colors/layout are otherwise unchanged.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
