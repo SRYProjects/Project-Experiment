@@ -630,3 +630,229 @@ revoke all on function public.consume_rate_limit(text, text, integer, integer)
 grant execute on function public.consume_rate_limit(text, text, integer, integer)
   to service_role;
 
+-- Applied migration: 20261008194500_lock_down_direct_writes.sql
+-- Force all profile/content writes through the Cloudflare Worker.
+-- Public/authenticated clients retain read access where required by V1.
+
+revoke insert, update, delete
+on table public.profiles
+from anon, authenticated;
+
+revoke insert, update, delete
+on table public.meaningful_actions
+from anon, authenticated;
+
+revoke insert, update, delete
+on table public.discoveries
+from anon, authenticated;
+
+
+-- Applied migration: 20261008195500_security_grant_cleanup.sql
+-- Tighten public API grants and bound rate-limit data retention.
+
+revoke all privileges on table public.profiles
+  from anon, authenticated;
+grant select on table public.profiles
+  to anon, authenticated;
+
+revoke all privileges on table public.meaningful_actions
+  from anon, authenticated;
+grant select on table public.meaningful_actions
+  to anon, authenticated;
+
+revoke all privileges on table public.discoveries
+  from anon, authenticated;
+grant select on table public.discoveries
+  to anon, authenticated;
+
+create or replace function public.consume_rate_limit(
+  p_scope text,
+  p_key_hash text,
+  p_limit integer,
+  p_window_seconds integer
+)
+returns table(
+  allowed boolean,
+  remaining integer,
+  retry_after_seconds integer
+)
+language plpgsql
+volatile
+security definer
+set search_path to ''
+as $function$
+declare
+  v_now timestamptz := clock_timestamp();
+  v_window_start timestamptz;
+  v_count integer;
+  v_retry integer;
+begin
+  if p_scope is null
+     or char_length(p_scope) < 1
+     or char_length(p_scope) > 80 then
+    raise exception 'Invalid rate-limit scope.';
+  end if;
+
+  if p_key_hash is null
+     or p_key_hash !~ '^[a-f0-9]{64}$' then
+    raise exception 'Invalid rate-limit key.';
+  end if;
+
+  if p_limit < 1 or p_limit > 10000 then
+    raise exception 'Invalid rate-limit maximum.';
+  end if;
+
+  if p_window_seconds < 1
+     or p_window_seconds > 86400 then
+    raise exception 'Invalid rate-limit window.';
+  end if;
+
+  v_window_start :=
+    to_timestamp(
+      floor(
+        extract(epoch from v_now) /
+        p_window_seconds
+      ) * p_window_seconds
+    );
+
+  insert into public.abuse_rate_limits (
+    scope,
+    key_hash,
+    window_start,
+    request_count,
+    updated_at
+  )
+  values (
+    p_scope,
+    p_key_hash,
+    v_window_start,
+    1,
+    v_now
+  )
+  on conflict (scope, key_hash, window_start)
+  do update
+  set
+    request_count =
+      public.abuse_rate_limits.request_count + 1,
+    updated_at = excluded.updated_at
+  returning request_count into v_count;
+
+  delete from public.abuse_rate_limits
+  where updated_at < v_now - interval '2 days';
+
+  v_retry :=
+    greatest(
+      1,
+      ceil(
+        extract(
+          epoch from (
+            v_window_start +
+            make_interval(secs => p_window_seconds) -
+            v_now
+          )
+        )
+      )::integer
+    );
+
+  return query
+  select
+    (v_count <= p_limit),
+    greatest(p_limit - v_count, 0),
+    v_retry;
+end;
+$function$;
+
+revoke all on function public.consume_rate_limit(text, text, integer, integer)
+  from public, anon, authenticated;
+grant execute on function public.consume_rate_limit(text, text, integer, integer)
+  to service_role;
+
+
+-- Applied migration: 20261008200500_admin_security_hardening.sql
+-- Harden admin tables before exposing the moderation API.
+
+revoke all privileges on table public.admin_users
+  from anon, authenticated;
+
+revoke all privileges on table public.admin_audit_log
+  from anon, authenticated;
+
+create or replace function public.prevent_admin_audit_mutation()
+returns trigger
+language plpgsql
+security definer
+set search_path to ''
+as $function$
+begin
+  raise exception 'Admin audit log is append-only.';
+end;
+$function$;
+
+create trigger prevent_admin_audit_update
+before update on public.admin_audit_log
+for each row execute function public.prevent_admin_audit_mutation();
+
+create trigger prevent_admin_audit_delete
+before delete on public.admin_audit_log
+for each row execute function public.prevent_admin_audit_mutation();
+
+revoke all on function public.prevent_admin_audit_mutation()
+  from public, anon, authenticated;
+grant execute on function public.prevent_admin_audit_mutation()
+  to service_role;
+
+
+-- Applied migration: 20261008202000_worker_data_boundary.sql
+-- Make the Worker the only application data-access path and allow
+-- its service-role moderation updates through the existing admin triggers.
+
+revoke all privileges on table public.profiles
+  from anon, authenticated;
+
+revoke all privileges on table public.meaningful_actions
+  from anon, authenticated;
+
+revoke all privileges on table public.discoveries
+  from anon, authenticated;
+
+create or replace function public.require_admin_for_action_update()
+returns trigger
+language plpgsql
+security definer
+set search_path to ''
+as $function$
+begin
+  if coalesce(auth.role(), '') <> 'service_role'
+     and not public.is_admin() then
+    raise exception 'Only administrators may modify existing actions.';
+  end if;
+
+  return new;
+end;
+$function$;
+
+create or replace function public.require_admin_for_discovery_update()
+returns trigger
+language plpgsql
+security definer
+set search_path to ''
+as $function$
+begin
+  if coalesce(auth.role(), '') <> 'service_role'
+     and not public.is_admin() then
+    raise exception 'Only administrators may modify existing discoveries.';
+  end if;
+
+  return new;
+end;
+$function$;
+
+revoke all on function public.require_admin_for_action_update()
+  from public, anon, authenticated;
+grant execute on function public.require_admin_for_action_update()
+  to service_role;
+
+revoke all on function public.require_admin_for_discovery_update()
+  from public, anon, authenticated;
+grant execute on function public.require_admin_for_discovery_update()
+  to service_role;
