@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Project Meaningful Admin</title>
+  <link rel="stylesheet" href="/styles.css?v=admin-moderation-20261008-1">
+</head>
+
+<body class="admin-page">
+  <header class="site-header admin-header">
+    <a class="brand" href="/">PROJECT MEANINGFUL</a>
+    <span>ADMIN</span>
+    <button id="adminSignOutButton" class="nav-button hidden" type="button">Sign Out</button>
+  </header>
+
+  <main class="admin-shell">
+    <section class="admin-intro">
+      <p class="eyebrow">PRIVATE ADMIN</p>
+      <h1>Moderation</h1>
+      <p>Review pending submissions and remove published content when necessary.</p>
+    </section>
+
+    <section id="adminAuthPanel" class="admin-panel">
+      <h2>Sign in</h2>
+      <p>Use an allowlisted Project Meaningful admin account.</p>
+
+      <form id="adminSignInForm">
+        <label>
+          Email
+          <input id="adminEmail" type="email" autocomplete="email" required>
+        </label>
+
+        <button class="primary-button" type="submit">Send Secure Sign-In Link</button>
+      </form>
+    </section>
+
+    <section id="adminDeniedPanel" class="admin-panel hidden">
+      <h2>Access unavailable</h2>
+      <p id="adminDeniedMessage">This account is not authorized for Project Meaningful administration.</p>
+    </section>
+
+    <section id="adminMfaPanel" class="admin-panel hidden">
+      <p class="eyebrow">MULTI-FACTOR AUTHENTICATION</p>
+      <h2>Verify your admin session</h2>
+
+      <div id="adminMfaExisting" class="hidden">
+        <p>Enter the current six-digit code from your authenticator app.</p>
+      </div>
+
+      <div id="adminMfaEnroll" class="hidden">
+        <p>Admin access requires an authenticator app. Scan this code, then enter the six-digit code it generates.</p>
+        <div class="admin-mfa-setup">
+          <img id="adminMfaQr" alt="Authenticator QR code">
+          <div>
+            <strong>Manual setup key</strong>
+            <code id="adminMfaSecret"></code>
+          </div>
+        </div>
+      </div>
+
+      <form id="adminMfaForm">
+        <label>
+          Authenticator code
+          <input
+            id="adminMfaCode"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            pattern="[0-9]{6}"
+            maxlength="6"
+            required
+          >
+        </label>
+        <button class="primary-button" type="submit">Verify and Continue</button>
+      </form>
+    </section>
+
+    <section id="adminModerationPanel" class="admin-panel hidden">
+      <div class="admin-toolbar">
+        <div>
+          <p class="eyebrow">CONTENT</p>
+          <h2>Moderation queue</h2>
+        </div>
+
+        <div class="admin-filters">
+          <label>
+            Type
+            <select id="adminContentType">
+              <option value="action">Meaningful Actions</option>
+              <option value="discovery">Discoveries</option>
+            </select>
+          </label>
+
+          <label>
+            Status
+            <select id="adminContentStatus">
+              <option value="pending">Pending</option>
+              <option value="published">Published</option>
+            </select>
+          </label>
+
+          <button id="adminRefreshButton" class="secondary-button" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div id="adminContentList" class="admin-content-list" aria-live="polite">
+        <p class="empty-state">Loading…</p>
+      </div>
+    </section>
+
+    <div id="adminMessage" class="message hidden" role="status"></div>
+  </main>
+
+  <script type="module" src="/admin.js?v=admin-moderation-20261008-1"></script>
+</body>
+</html>
