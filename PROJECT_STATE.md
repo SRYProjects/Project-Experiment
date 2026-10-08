@@ -339,20 +339,17 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Activate and production-test the security/admin work.**
+**Retest first-admin TOTP enrollment after the MFA usability correction.**
 
-1. Sign in to `/admin.html` with the newly allowlisted admin account and complete first-time TOTP MFA enrollment.
-2. Production-test:
-   - new registration → Turnstile → magic link → profile creation;
-   - reserved/taken username rejection;
-   - returning-user magic-link flow and generic account response;
-   - Action/Discovery submission after the Worker-only data boundary;
-   - auth/submission/search 429 behavior without weakening normal use;
-   - `/admin.html` allowlist denial for a non-admin;
-   - first-admin TOTP enrollment, subsequent MFA challenge, AAL2 enforcement;
-   - pending publish/reject and published-content removal;
-   - audit-log entry creation and append-only protection.
-3. If those pass, continue to account deletion/export + Privacy/Terms and then launch-date mechanics.
+1. Reload `https://projectmeaningful.app/admin.html`.
+2. Sign in with the allowlisted admin account if needed.
+3. Add the newly generated factor as a **time-based/TOTP** account in the authenticator:
+   - scan the QR code, or
+   - use **Open in Authenticator App**, or
+   - copy the manual setup key.
+4. Confirm the authenticator now generates a six-digit code and that **Verify and Continue** reaches the moderation console.
+5. If setup still fails, use **Generate New Setup Code** once and repeat with the newly generated factor.
+6. After MFA passes, continue the moderation/security production tests already listed.
 
 ## Short remaining roadmap
 1. Activate first admin + production-test abuse/security, moderation, Your Record, feeds/archives, and submission flows.
