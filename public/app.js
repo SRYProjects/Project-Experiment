@@ -486,6 +486,7 @@ function openDiscovery() {
 
   clearAuthMessage();
   authDialog.showModal();
+  ensureRegistrationTurnstile();
 }
 
 /* -------------------------
@@ -1727,6 +1728,7 @@ actionForm.addEventListener(
       actionDialog.close();
 
       authDialog.showModal();
+      ensureRegistrationTurnstile();
 
       return;
     }
@@ -1922,6 +1924,7 @@ discoveryForm.addEventListener(
     if (!currentSession?.access_token) {
       discoveryDialog.close();
       authDialog.showModal();
+      ensureRegistrationTurnstile();
       return;
     }
 
