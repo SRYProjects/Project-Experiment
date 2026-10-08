@@ -646,20 +646,6 @@ async function createProfileForUser(
       ? body.username.trim()
       : "";
 
-  if (
-    !/^[A-Za-z0-9_]{3,30}$/.test(
-      username
-    )
-  ) {
-    return json(
-      {
-        error:
-          "Choose a valid username."
-      },
-      400
-    );
-  }
-
   const existingParams =
     new URLSearchParams({
       select: "id,username",
@@ -694,6 +680,20 @@ async function createProfileForUser(
       success: true,
       profile: existingRows[0]
     });
+  }
+
+  if (
+    !/^[A-Za-z0-9_]{3,30}$/.test(
+      username
+    )
+  ) {
+    return json(
+      {
+        error:
+          "Choose a valid username."
+      },
+      400
+    );
   }
 
   if (
