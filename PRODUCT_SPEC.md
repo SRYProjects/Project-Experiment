@@ -198,11 +198,11 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Project activity statistics should be presented as a clearly readable summary band, not as small secondary metadata. The strip is number-led: no decorative stat icons, centered figures, and larger values than labels.
 - The transition between stats and community should include a clear **Join Project Meaningful** invitation with concrete participation benefits. Do not label this as a subscription until the application actually stores explicit consent.
 - The community area should feel open rather than boxed: individual entries provide the primary card/border structure; the Actions and Discoveries stream containers themselves should recede.
-- Use a white/open community field with selective blue/green accents so the live content feels active and central, not muted.
-- Primary blue participation buttons should use modest rounded corners rather than sharp rectangles.
+- Use a warm ivory/stone community field with restrained teal/navy accents so the live content feels active and central without looking clinical or fragmented.
+- Primary participation buttons use the site's muted-teal anchor color with modest rounded corners rather than sharp rectangles.
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
-- Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The hero, Project Activity strip, and **The Idea Is Simple** section must read as one coordinated navy/teal family with tonal variation rather than three unrelated color systems. The hero remains dark, dramatic, and high-contrast with white type.
+- The authoritative site palette is **deep slate navy + muted teal + warm ivory/stone + restrained brass**. Use one dominant anchor hue, neutral surfaces, and restrained accent variation rather than unrelated section-by-section palettes. Current core values: ink/navy `#183042`, teal `#2f6f68`, warm paper `#f7f4ee`, warm stone `#eee9df`, and restrained brass `#b58a3a`. The hero remains dark, dramatic, and high-contrast with white type; lighter sections use warm neutrals rather than mint-heavy backgrounds.
 - **Follow The Meaningful Project** is a separate standalone section after the Community section. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. On wider screens, these appear as five visually separate cards with visible spacing rather than one divided rectangle. The Experiment and Community are not repeated there.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
