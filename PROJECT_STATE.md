@@ -116,10 +116,8 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are implemented in code. The 2026-10-06 dialog/Turnstile lifecycle fix requires production verification.
 - Homepage now uses a distinctive abstract hero, a larger dark blue/green/gold project-activity band, a normally proportioned Community section with a compact right rail, and one consolidated **Follow The Meaningful Project** section beneath the Community columns. Production visual verification is required.
 - Your Record is implemented in code as a private authenticated modal with published-action count, distinct published-action days, newest-first action history, and visible Pending/Rejected states. Production verification is required.
-- Registration Turnstile.
-- Per-account/per-IP rate limits, search throttling, and finalized auth-email limits.
-- Reserved username enforcement.
-- Admin review/removal UI and MFA/allowlist completion as applicable.
+- Abuse/security controls are implemented in code and production database; end-to-end production verification remains.
+- Admin moderation UI/API + TOTP MFA enforcement are implemented; **admin activation is pending because `admin_users` currently contains no allowlisted account**. Do not guess which account should receive admin access.
 - Demo content is now implemented: 15 fictional Example participant handles, 55 Example actions, and 15 Example discoveries. Production feed/search/archive verification is required.
 - Account deletion/export UX and Privacy/Terms.
 - Final project launch date / dynamic Day N; until launch is set, the interface now says **Not launched** rather than showing a false Day 1.
@@ -128,14 +126,12 @@ Recent live test examples included Work (“Finished proposal for new clients”
 
 ## Known risks / technical debt
 - Current moderation does not auto-reject; non-`safe` and moderation errors become pending.
-- Audit log append-only protection currently depends on application/RLS boundaries; privileged/direct database access can bypass RLS. Stronger DB-level protection may be warranted before admin tooling.
-- Reserved usernames are not yet enforced.
 - Username-change policy is unresolved.
-- Example content now uses dedicated `demo_username` fields on actions/discoveries rather than fake auth/profile rows; real rows remain auth-backed. The identity constraints must be preserved in future schema work.
-- Turnstile is on Meaningful Action submission but not registration.
-- Rate limiting is not yet implemented.
-- Current Supabase table grants are broad for API roles; RLS is the operative row-access boundary. Preserve and audit RLS carefully whenever schema/policies change.
-- Security-definer/helper functions currently have EXECUTE granted to the standard API roles. Their definitions were captured exactly from production; privilege tightening can be considered separately rather than silently changing the verified baseline.
+- Example content uses dedicated `demo_username` fields on actions/discoveries rather than fake auth/profile rows; real rows remain auth-backed. Preserve the identity constraints in future schema work.
+- Browser roles now have **no direct table privileges** on application/admin/security tables; public and authenticated data paths run through the Worker, except the intentionally public aggregate `project_stats()` RPC.
+- Supabase security advisor still flags `project_stats()` because it is a public SECURITY DEFINER function. This is intentional: it returns only approved aggregate real-participation counts.
+- Supabase also reports leaked-password protection disabled; this project uses passwordless magic-link authentication rather than passwords.
+- Service-role operations remain privileged by design; Worker secret handling and API authorization are therefore critical boundaries.
 - “View My Action” targeting is implemented by returned action ID and feed card `data-action-id`, but the targeting behavior still requires production verification.
 
 ## Recent meaningful repository work
@@ -307,6 +303,30 @@ Current repository inspection confirms the live implementation contains:
   - retained white content surfaces, deep navy text/depth, and restrained gold accents;
   - no layout, typography scale, spacing, controls, interaction, or data behavior changed.
 
+- 2026-10-08 security/abuse implementation:
+  - added registration Turnstile with server verification;
+  - routed new/returning magic-link requests through `POST /api/auth/request`;
+  - added application-level auth throttling (8/IP/15m; 3/email/15m), submission throttling (12/account/hour; 40/account/day; 30/IP/hour), and username-search throttling (30/IP/minute);
+  - rate-limit keys are HMAC-SHA256 digests; raw email/IP values are not stored;
+  - added `reserved_usernames` and database trigger enforcement; current system/brand names plus all 15 fictional demo handles are reserved;
+  - added Worker-only `POST /api/profile`; browser code no longer reads/writes the profiles table directly;
+  - revoked browser-role privileges on profiles/actions/discoveries/admin/security tables and removed obsolete browser-facing RLS policies; RLS remains enabled as deny-by-default defense;
+  - bounded rate-limit-state retention to approximately two days;
+  - current security-advisor warnings are limited to intentionally public `project_stats()`, service-only tables having RLS with no policies (deny-all for client roles), and password-leak protection that is irrelevant to this passwordless implementation.
+- 2026-10-08 admin moderation implementation:
+  - added private `/admin.html` and `public/admin.js`;
+  - added Worker endpoints `/api/admin/status`, `/api/admin/content`, and `/api/admin/moderate`;
+  - server requires an authenticated user, explicit `admin_users` allowlist membership, and JWT AAL2 for moderation operations;
+  - admin UI enrolls/challenges Supabase TOTP MFA when needed;
+  - pending Actions/Discoveries can be published or rejected; published items can be removed from public feeds by setting rejected;
+  - demo content is excluded from moderation views;
+  - moderation changes append audit events; DB triggers make `admin_audit_log` append-only;
+  - service-role moderation updates were explicitly allowed through the existing update-protection triggers while browser direct writes remain revoked;
+  - **no admin user is currently allowlisted**, so live admin testing/activation requires the project owner to identify which existing account should become the first admin.
+- 2026-10-08 statistics clarity:
+  - live database verification confirmed 6 real published Actions / 1 real participant while 55 demo Actions and 15 demo Discoveries remain excluded from real statistics;
+  - homepage now states that launch examples appear in feeds while Project Activity counts real participation only.
+
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
 ## Deployment status
@@ -319,22 +339,28 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the steel blue-gray refinement on `projectmeaningful.app`.**
+**Activate and production-test the security/admin work.**
 
-Verify:
-- #0066cc still reads as the dominant brand/action color;
-- steel blue-gray (#d6e0e8 family) has more visual weight than the former pale blue;
-- section differentiation is stronger without becoming dark or monochromatic;
-- white cards/content surfaces remain crisp against the new steel-blue-gray backgrounds;
-- no layout or functional behavior changed.
+1. Identify the existing Supabase account that should become the first Project Experiment admin; `admin_users` is intentionally still empty and no account should be guessed.
+2. Insert that authenticated user's UUID into `admin_users`.
+3. Production-test:
+   - new registration → Turnstile → magic link → profile creation;
+   - reserved/taken username rejection;
+   - returning-user magic-link flow and generic account response;
+   - Action/Discovery submission after the Worker-only data boundary;
+   - auth/submission/search 429 behavior without weakening normal use;
+   - `/admin.html` allowlist denial for a non-admin;
+   - first-admin TOTP enrollment, subsequent MFA challenge, AAL2 enforcement;
+   - pending publish/reject and published-content removal;
+   - audit-log entry creation and append-only protection.
+4. If those pass, continue to account deletion/export + Privacy/Terms and then launch-date mechanics.
 
 ## Short remaining roadmap
-1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
-2. Connect verified resource destinations for Articles / Book / Videos / social when available.
-3. Registration abuse protection + rate limiting/search throttling/reserved usernames.
-4. Admin review/removal workflow.
-5. Account deletion/export, Privacy/Terms, launch-day logic.
-6. Accessibility, responsive/polish, final launch testing.
+1. Activate first admin + production-test abuse/security, moderation, Your Record, feeds/archives, and submission flows.
+2. Account deletion/export + Privacy/Terms.
+3. Set launch date / Day N and decide when to retire demo content.
+4. Connect verified resource destinations for Articles / Book / Videos / social when available.
+5. Accessibility, responsive/polish, final launch regression testing.
 
 ## End-of-session protocol
 After every substantial build session:
