@@ -132,15 +132,30 @@ Current implementation intentionally treats explicit AI `safe` as published and 
 ## Abuse controls
 V1 requires:
 - verified email;
-- Cloudflare Turnstile on registration/public submissions;
-- per-account and per-IP rate limiting;
-- search throttling;
-- auth-provider and application-level auth email rate limits.
+- Cloudflare Turnstile on new-participant registration and public submissions;
+- reserved username enforcement at both the Worker and database boundary;
+- HMAC-hashed rate-limit identifiers so raw IP addresses/email addresses are not stored in the rate-limit table;
+- Worker-enforced rate limits:
+  - authentication: **8 requests per IP / 15 minutes**;
+  - authentication: **3 requests per email / 15 minutes**;
+  - submissions: **12 per account / hour**;
+  - submissions: **40 per account / day**;
+  - submissions: **30 per IP / hour**;
+  - exact-username search: **30 per IP / minute**;
+- Supabase Auth's own provider limits remain an additional upstream boundary;
+- rate-limit records are retained for at most approximately two days and then removed opportunistically.
 
-Exact thresholds remain to be set.
+These are V1 operating thresholds. Tune them from production evidence rather than loosening them preemptively.
+
+Application data access is Worker-first: browser roles do not receive direct table privileges for profiles, actions, discoveries, admin allowlists, audit logs, reserved usernames, or rate-limit state. The intentionally public `project_stats()` aggregate RPC remains callable by the browser because it exposes only approved real-participation totals.
 
 ## Admin
-Private admin access requires Supabase account + explicit allowlist/role + MFA. Admin actions should be auditable. Audit log is intended to be append-only at the database/application level.
+Private moderation lives at `/admin.html` and is not linked from public navigation. Access requires:
+- a valid Supabase account;
+- explicit membership in `admin_users`;
+- **AAL2** session assurance through Supabase TOTP MFA.
+
+The admin workflow can review pending Meaningful Actions/Discoveries, publish or reject pending content, and remove already-published content by changing it to rejected. Demo content is excluded. Moderation changes are written to `admin_audit_log`, which is append-only through database triggers. All moderation reads/writes occur through the Worker service boundary.
 
 ## Explicit exclusions
 V1 does **not** include:
@@ -224,8 +239,7 @@ Later decisions supersede earlier proposals:
 ## Unresolved / not yet locked
 Do not infer answers to these:
 - Final production launch date used to calculate “Day N.”
-- Exact abuse/rate-limit thresholds.
-- Final reserved-username list and username-change policy.
+- Username-change policy.
 - Exact account export UX.
 - Whether/when current moderation will support automatic rejection distinct from pending.
 - Detailed Privacy/Terms copy.
