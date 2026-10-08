@@ -282,6 +282,12 @@ Current repository inspection confirms the live implementation contains:
   - added overflow containment to the right rail and Discoveries card so feed content cannot escape its card;
   - increased the shared desktop Community height to **1240px** to preserve a five-or-more Discovery preview while keeping Actions and the right rail on the same bottom baseline;
   - Actions and Discoveries remain independently scrollable.
+- 2026-10-08 hierarchy refinement:
+  - moved **The Idea Is Simple** from above **The Community in Motion** to immediately below it; the section itself and its participation behavior were otherwise preserved;
+  - made the hero **Share Your Meaningful Action** CTA a lighter seafoam treatment with dark text so it stands out clearly from the dark hero;
+  - changed the Discoveries feed viewport itself to white/ivory with a visible border and rounded edge so users immediately recognize it as a contained scrollable window;
+  - changed **Stay Connected / Follow The Meaningful Project** from dark green to a warm light stone background with dark heading copy so it contrasts with the now-adjacent darker Idea section;
+  - no Community data, submission, auth, moderation, or archive behavior changed.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -295,15 +301,15 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-check the corrected Community overflow on `projectmeaningful.app`.**
+**Production-review only the latest homepage hierarchy refinement on `projectmeaningful.app`.**
 
 Verify:
-- Discoveries content stays fully inside the Discoveries card;
-- at least five Discovery entries are visible before scrolling on desktop;
-- the Discoveries scrollbar remains visible and functional;
-- Actions remains scrollable;
-- Actions and the complete right rail terminate on the same bottom baseline;
-- the dark-green Stay Connected section begins cleanly below both columns with no overlap.
+- the hero CTA is visibly lighter and more prominent against the dark hero;
+- **The Community in Motion** now appears before **The Idea Is Simple**;
+- **The Idea Is Simple** appears immediately after Community and before Stay Connected;
+- the Discoveries feed is visibly white/ivory and clearly reads as a scrollable window;
+- Stay Connected uses the new warm light stone background and contrasts cleanly with the darker Idea section above it;
+- all existing Community and participation behavior remains intact.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
