@@ -22,8 +22,8 @@ Homepage order:
 1. Header
 2. Hero / primary participation invitation
 3. Project activity
-4. Brief experiment premise + **Share Something Meaningful** participation invitation
-5. Community activity: a normally proportioned two-column desktop layout with Meaningful Actions on the left and a compact right rail containing Project Activity, Your Record access, and a shorter Discoveries stream
+4. Community activity: a normally proportioned two-column desktop layout with Meaningful Actions on the left and a compact right rail containing Project Activity, Your Record access, and a shorter Discoveries stream
+5. Brief experiment premise + **Share Something Meaningful** participation invitation
 6. **Follow The Meaningful Project** as its own standalone section
 7. Footer
 
@@ -203,7 +203,7 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - The authoritative site palette is **deep slate navy + muted teal + warm ivory/stone + restrained brass**. Use one dominant anchor hue, neutral surfaces, and restrained accent variation rather than unrelated section-by-section palettes. Current core values: ink/navy `#183042`, teal `#2f6f68`, warm paper `#f7f4ee`, warm stone `#eee9df`, and restrained brass `#b58a3a`. The hero remains dark, dramatic, and high-contrast with white type; lighter sections use warm neutrals rather than mint-heavy backgrounds.
-- **Follow The Meaningful Project** is a separate standalone section after the Community section. It uses the established dark green `#214b50` with white section-heading copy and includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. On wider screens, these appear as five visually separate cards with visible spacing rather than one divided rectangle. The Experiment and Community are not repeated there.
+- **Follow The Meaningful Project** is a separate standalone section after **The Idea Is Simple**. Because The Idea Is Simple uses the darker teal/green field, Follow uses a warm light stone background with dark editorial type for clear section contrast. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. On wider screens, these appear as five visually separate cards with visible spacing rather than one divided rectangle. The Experiment and Community are not repeated there.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
 
