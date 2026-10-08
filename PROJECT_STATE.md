@@ -117,7 +117,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Homepage now uses a distinctive abstract hero, a larger dark blue/green/gold project-activity band, a normally proportioned Community section with a compact right rail, and one consolidated **Follow The Meaningful Project** section beneath the Community columns. Production visual verification is required.
 - Your Record is implemented in code as a private authenticated modal with published-action count, distinct published-action days, newest-first action history, and visible Pending/Rejected states. Production verification is required.
 - Abuse/security controls are implemented in code and production database; end-to-end production verification remains.
-- Admin moderation UI/API + TOTP MFA enforcement are implemented; **admin activation is pending because `admin_users` currently contains no allowlisted account**. Do not guess which account should receive admin access.
+- Admin moderation UI/API + TOTP MFA enforcement are implemented; **one admin account is now allowlisted**. Production MFA/moderation testing remains.
 - Demo content is now implemented: 15 fictional Example participant handles, 55 Example actions, and 15 Example discoveries. Production feed/search/archive verification is required.
 - Account deletion/export UX and Privacy/Terms.
 - Final project launch date / dynamic Day N; until launch is set, the interface now says **Not launched** rather than showing a false Day 1.
@@ -322,7 +322,7 @@ Current repository inspection confirms the live implementation contains:
   - demo content is excluded from moderation views;
   - moderation changes append audit events; DB triggers make `admin_audit_log` append-only;
   - service-role moderation updates were explicitly allowed through the existing update-protection triggers while browser direct writes remain revoked;
-  - **no admin user is currently allowlisted**, so live admin testing/activation requires the project owner to identify which existing account should become the first admin.
+  - **one existing participant account is now allowlisted as the first admin**; live admin testing still requires sign-in and first-time TOTP MFA enrollment.
 - 2026-10-08 statistics clarity:
   - live database verification confirmed 6 real published Actions / 1 real participant while 55 demo Actions and 15 demo Discoveries remain excluded from real statistics;
   - homepage now states that launch examples appear in feeds while Project Activity counts real participation only.
@@ -341,9 +341,8 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 ## Exact next step
 **Activate and production-test the security/admin work.**
 
-1. Identify the existing Supabase account that should become the first Project Experiment admin; `admin_users` is intentionally still empty and no account should be guessed.
-2. Insert that authenticated user's UUID into `admin_users`.
-3. Production-test:
+1. Sign in to `/admin.html` with the newly allowlisted admin account and complete first-time TOTP MFA enrollment.
+2. Production-test:
    - new registration → Turnstile → magic link → profile creation;
    - reserved/taken username rejection;
    - returning-user magic-link flow and generic account response;
@@ -353,7 +352,7 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
    - first-admin TOTP enrollment, subsequent MFA challenge, AAL2 enforcement;
    - pending publish/reject and published-content removal;
    - audit-log entry creation and append-only protection.
-4. If those pass, continue to account deletion/export + Privacy/Terms and then launch-date mechanics.
+3. If those pass, continue to account deletion/export + Privacy/Terms and then launch-date mechanics.
 
 ## Short remaining roadmap
 1. Activate first admin + production-test abuse/security, moderation, Your Record, feeds/archives, and submission flows.
