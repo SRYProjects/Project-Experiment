@@ -3361,3 +3361,52 @@ footer {
 .standalone-follow-section .explore-heading > p {
   color: #fff;
 }
+
+/* 2026-10-08: correct Discovery overflow while preserving five-entry preview and alignment */
+@media (min-width: 1101px) {
+  .public-streams {
+    align-items: stretch;
+    grid-auto-rows: 1240px;
+  }
+
+  #actions.stream-panel,
+  .community-right-rail {
+    height: 1240px;
+    min-height: 0;
+  }
+
+  #actions.stream-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #actionsFeed {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 0;
+    overflow-y: scroll;
+  }
+
+  .community-right-rail {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 20px;
+    overflow: hidden;
+  }
+
+  #discoveries.community-rail-card {
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #discoveriesFeed {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 0;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+  }
+}
