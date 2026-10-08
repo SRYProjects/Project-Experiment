@@ -255,6 +255,14 @@ Current repository inspection confirms the live implementation contains:
   - the full public datasets are still loaded before client filtering, so homepage category/username filtering continues to search the loaded dataset rather than only the visible 20;
   - no submission, authentication, moderation, database, or archive behavior changed.
 - Static validation after this correction: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; activity icons **removed**; centered/enlarged stat values **present**; coordinated top palette **present**; Actions fixed scroll **present**; Discoveries fixed scroll **present**; homepage Action cap **20**; homepage Discovery cap **20**; CSS brace balance **passed**.
+- 2026-10-08 researched site-wide palette redesign:
+  - replaced the accumulated mix of bright blue, green, mint, dark blue, and gold treatments with one controlled editorial palette: **deep slate navy (#183042), muted teal (#2f6f68), warm ivory/paper (#f7f4ee / #fffdf9), warm stone (#eee9df), and restrained brass (#b58a3a)**;
+  - research basis: use one anchor hue, a neutral base, restrained accent color, and planned tints/shades rather than competing unrelated hues; maintain WCAG-readable foreground/background contrast;
+  - updated root color tokens and applied the system across header/navigation, primary buttons, hero, Project Activity, The Idea Is Simple, Join card, Community field, Actions panel, right-rail cards, scrollbars, Follow section, inputs/dialogs, archives, and footer;
+  - retained category-specific Action colors because those colors carry real scanning/category information rather than decorative page theming;
+  - restored desktop Community baseline alignment: the left Actions panel stretches to the same row height as the complete right rail, and its feed flexes within the panel while remaining scrollable and capped at 20 rendered homepage items;
+  - no JavaScript behavior, auth, moderation, data model, or archive behavior changed in this palette pass.
+- Static validation after this palette pass: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; new palette variables **present**; desktop Community alignment rule **present**; Actions remains scrollable; 20-item homepage caps **retained**; site-wide section palette overrides **present**; CSS brace balance **passed**.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -268,17 +276,18 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the 2026-10-08 top-section/community-feed correction on `projectmeaningful.app`.**
+**Production-review the 2026-10-08 site-wide palette redesign and Community alignment on `projectmeaningful.app`.**
 
 Verify:
-- Hero, Project Activity, and **The Idea Is Simple** remain separate sections but now clearly belong to one navy/teal visual system;
-- Project Activity contains no icons; values are centered and noticeably larger than their labels;
-- the **Not launched** value still fits cleanly;
-- Meaningful Actions and Discoveries both show visible scrollbars again;
-- the homepage exposes no more than 20 filtered Actions and 20 filtered Discoveries, while archive pages still provide deeper browsing;
-- Community filters/search still behave correctly.
+- the site now reads as one coherent editorial system built around deep slate navy, muted teal, warm ivory/stone, and restrained brass;
+- no section reintroduces the former bright-blue / mint-green patchwork feeling;
+- text and controls remain clearly legible against their backgrounds;
+- the Actions panel bottom aligns with the bottom of the complete right rail on desktop;
+- Actions remains scrollable and capped at 20 rendered homepage items;
+- Discoveries remains scrollable and capped at 20 rendered homepage items;
+- category colors still scan clearly without overpowering the site palette.
 
-Do not make unrelated page changes during this verification.
+Do not introduce additional colors unless they serve real information or state.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
