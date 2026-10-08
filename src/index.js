@@ -474,17 +474,6 @@ async function requestAuthLink(
     );
   }
 
-  const limited =
-    await enforceAuthRateLimits(
-      request,
-      email,
-      env
-    );
-
-  if (limited) {
-    return limited;
-  }
-
   let username = "";
 
   if (mode === "new") {
@@ -557,6 +546,17 @@ async function requestAuthLink(
     }
   }
 
+  const limited =
+    await enforceAuthRateLimits(
+      request,
+      email,
+      env
+    );
+
+  if (limited) {
+    return limited;
+  }
+
   const redirectPath =
     body.redirectPath === "/admin.html"
       ? "/admin.html"
@@ -595,6 +595,12 @@ async function requestAuthLink(
       "Supabase OTP request failed:",
       detail
     );
+
+    if (mode === "existing") {
+      return json({
+        success: true
+      });
+    }
 
     return json(
       {
