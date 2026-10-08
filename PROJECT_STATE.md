@@ -300,6 +300,12 @@ Current repository inspection confirms the live implementation contains:
   - palette now uses deep navy (#0b2540) for depth, #0066cc as the primary brand/action anchor, #004f9f for darker interaction states, pale blue fields for section separation, white content surfaces, and restrained gold (#d89a2b) only as a secondary accent;
   - applied consistently across header/navigation, hero, Project Activity, Community/right rail, Discoveries, The Idea Is Simple, Join card, Stay Connected, forms/dialogs, primary buttons, and footer;
   - preserved the prior Join-copy wrap fix and all functional behavior.
+- 2026-10-08 steel-blue-gray refinement:
+  - retained #0066cc as the primary brand/action anchor;
+  - replaced the weak pale-blue supporting fields with a stronger **steel blue-gray family centered on #d6e0e8**;
+  - applied steel-blue-gray variants to Project Activity, Community background/rail cards, Join card, Stay Connected, and secondary dialog surfaces;
+  - retained white content surfaces, deep navy text/depth, and restrained gold accents;
+  - no layout, typography scale, spacing, controls, interaction, or data behavior changed.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -313,14 +319,14 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the blue-led palette on `projectmeaningful.app`.**
+**Production-review the steel blue-gray refinement on `projectmeaningful.app`.**
 
 Verify:
-- #0066cc clearly reads as the site's primary brand/action color;
-- deep navy and pale-blue tints provide enough variation that the site does not feel monochromatic;
-- white content surfaces preserve readability;
-- restrained gold is used only as a secondary accent;
-- existing layout, spacing, hierarchy, scroll behavior, section order, and interaction behavior remain unchanged.
+- #0066cc still reads as the dominant brand/action color;
+- steel blue-gray (#d6e0e8 family) has more visual weight than the former pale blue;
+- section differentiation is stronger without becoming dark or monochromatic;
+- white cards/content surfaces remain crisp against the new steel-blue-gray backgrounds;
+- no layout or functional behavior changed.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
