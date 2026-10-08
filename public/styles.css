@@ -4453,3 +4453,11 @@ dialog {
   }
 }
 
+.community-data-note {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
