@@ -34,6 +34,12 @@ const mfaQr =
   document.querySelector("#adminMfaQr");
 const mfaSecret =
   document.querySelector("#adminMfaSecret");
+const mfaCopyKey =
+  document.querySelector("#adminMfaCopyKey");
+const mfaOpenLink =
+  document.querySelector("#adminMfaOpenLink");
+const mfaRegenerate =
+  document.querySelector("#adminMfaRegenerate");
 const mfaForm =
   document.querySelector("#adminMfaForm");
 const mfaCode =
@@ -141,20 +147,9 @@ async function verifyMfaCode(code) {
     );
   }
 
-  const challenge =
-    await supabase.auth.mfa.challenge({
-      factorId: mfaFactorId
-    });
-
-  if (challenge.error) {
-    throw challenge.error;
-  }
-
   const verification =
-    await supabase.auth.mfa.verify({
+    await supabase.auth.mfa.challengeAndVerify({
       factorId: mfaFactorId,
-      challengeId:
-        challenge.data.id,
       code
     });
 
@@ -164,6 +159,86 @@ async function verifyMfaCode(code) {
 
   await supabase.auth.refreshSession();
   await loadSession();
+}
+
+async function clearUnverifiedTotpFactors() {
+  const factors =
+    await supabase.auth.mfa.listFactors();
+
+  if (factors.error) {
+    throw factors.error;
+  }
+
+  const totpFactors =
+    Array.isArray(factors.data?.totp)
+      ? factors.data.totp
+      : [];
+
+  for (const factor of totpFactors) {
+    if (factor.status !== "verified") {
+      const result =
+        await supabase.auth.mfa.unenroll({
+          factorId: factor.id
+        });
+
+      if (result.error) {
+        throw result.error;
+      }
+    }
+  }
+
+  return totpFactors;
+}
+
+async function enrollNewTotp() {
+  clearMessage();
+
+  await clearUnverifiedTotpFactors();
+
+  const enrollment =
+    await supabase.auth.mfa.enroll({
+      factorType: "totp",
+      issuer:
+        "Project Meaningful",
+      friendlyName:
+        "Project Meaningful Admin"
+    });
+
+  if (enrollment.error) {
+    throw enrollment.error;
+  }
+
+  mfaFactorId =
+    enrollment.data.id;
+
+  const totp =
+    enrollment.data.totp;
+
+  mfaQr.src =
+    totp.qr_code;
+
+  mfaSecret.textContent =
+    totp.secret;
+
+  if (totp.uri) {
+    mfaOpenLink.href =
+      totp.uri;
+    mfaOpenLink.classList.remove(
+      "hidden"
+    );
+  } else {
+    mfaOpenLink.classList.add(
+      "hidden"
+    );
+    mfaOpenLink.removeAttribute(
+      "href"
+    );
+  }
+
+  mfaExisting.classList.add("hidden");
+  mfaEnroll.classList.remove("hidden");
+  mfaCode.value = "";
+  mfaCode.focus();
 }
 
 async function prepareMfa() {
@@ -196,38 +271,7 @@ async function prepareMfa() {
     return;
   }
 
-  for (const factor of totpFactors) {
-    if (factor.status !== "verified") {
-      await supabase.auth.mfa.unenroll({
-        factorId: factor.id
-      });
-    }
-  }
-
-  const enrollment =
-    await supabase.auth.mfa.enroll({
-      factorType: "totp",
-      friendlyName:
-        "Project Meaningful Admin"
-    });
-
-  if (enrollment.error) {
-    throw enrollment.error;
-  }
-
-  mfaFactorId =
-    enrollment.data.id;
-
-  mfaQr.src =
-    enrollment.data.totp.qr_code;
-
-  mfaSecret.textContent =
-    enrollment.data.totp.secret;
-
-  mfaExisting.classList.add("hidden");
-  mfaEnroll.classList.remove("hidden");
-  mfaCode.value = "";
-  mfaCode.focus();
+  await enrollNewTotp();
 }
 
 function formatDate(value) {
@@ -585,6 +629,63 @@ signInForm.addEventListener(
 
       showMessage(
         "Unable to request a sign-in link."
+      );
+    }
+  }
+);
+
+mfaCopyKey.addEventListener(
+  "click",
+  async () => {
+    const secret =
+      mfaSecret.textContent.trim();
+
+    if (!secret) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(
+        secret
+      );
+
+      showMessage(
+        "Setup key copied.",
+        true
+      );
+    } catch (error) {
+      console.error(
+        "Copy setup key failed:",
+        error
+      );
+
+      showMessage(
+        "Copy was blocked by the browser. Select the setup key and copy it manually."
+      );
+    }
+  }
+);
+
+mfaRegenerate.addEventListener(
+  "click",
+  async () => {
+    clearMessage();
+
+    try {
+      await enrollNewTotp();
+
+      showMessage(
+        "A new setup code was generated. Add this new code to your authenticator app; the previous unverified code is no longer valid.",
+        true
+      );
+    } catch (error) {
+      console.error(
+        "MFA regeneration failed:",
+        error
+      );
+
+      showMessage(
+        "Unable to generate a new authenticator setup code."
       );
     }
   }
