@@ -263,6 +263,12 @@ Current repository inspection confirms the live implementation contains:
   - restored desktop Community baseline alignment: the left Actions panel stretches to the same row height as the complete right rail, and its feed flexes within the panel while remaining scrollable and capped at 20 rendered homepage items;
   - no JavaScript behavior, auth, moderation, data model, or archive behavior changed in this palette pass.
 - Static validation after this palette pass: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; new palette variables **present**; desktop Community alignment rule **present**; Actions remains scrollable; 20-item homepage caps **retained**; site-wide section palette overrides **present**; CSS brace balance **passed**.
+- 2026-10-08 Community-window refinement:
+  - desktop Community columns now share a fixed 900px row/column height;
+  - the Actions feed flexes within that height, producing a viewport sized for roughly 10 compact Action entries at once while preserving scrolling through the remaining loaded homepage entries;
+  - the Discoveries card/feed flexes within the same 900px right rail so the Actions and Discoveries windows terminate on the same desktop baseline;
+  - the existing 20-item rendered homepage caps remain unchanged;
+  - **Stay Connected / Follow The Meaningful Project** received one color-only change: its section background is now muted light green `#dce6e1`; card colors, typography, layout, and behavior were not changed.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -276,18 +282,14 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the 2026-10-08 site-wide palette redesign and Community alignment on `projectmeaningful.app`.**
+**Production-review only the latest Community-window alignment and Stay Connected background on `projectmeaningful.app`.**
 
 Verify:
-- the site now reads as one coherent editorial system built around deep slate navy, muted teal, warm ivory/stone, and restrained brass;
-- no section reintroduces the former bright-blue / mint-green patchwork feeling;
-- text and controls remain clearly legible against their backgrounds;
-- the Actions panel bottom aligns with the bottom of the complete right rail on desktop;
-- Actions remains scrollable and capped at 20 rendered homepage items;
-- Discoveries remains scrollable and capped at 20 rendered homepage items;
-- category colors still scan clearly without overpowering the site palette.
-
-Do not introduce additional colors unless they serve real information or state.
+- roughly 10 Action entries are visible in the desktop Actions window before scrolling;
+- additional loaded Actions remain accessible through the scrollbar;
+- the bottom of the Actions window aligns with the bottom of the Discoveries window;
+- Discoveries remains scrollable;
+- the Stay Connected section background is muted green, with no other design changes to that section.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
