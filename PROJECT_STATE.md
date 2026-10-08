@@ -288,6 +288,12 @@ Current repository inspection confirms the live implementation contains:
   - changed the Discoveries feed viewport itself to white/ivory with a visible border and rounded edge so users immediately recognize it as a contained scrollable window;
   - changed **Stay Connected / Follow The Meaningful Project** from dark green to a warm light stone background with dark heading copy so it contrasts with the now-adjacent darker Idea section;
   - no Community data, submission, auth, moderation, or archive behavior changed.
+- 2026-10-08 energized color refinement:
+  - preserved all page structure, spacing, copy, controls, and behavior;
+  - replaced the more subdued slate/stone palette with a higher-energy but coherent **midnight navy / saturated teal / warm ivory / brass-gold** system;
+  - strengthened hero teal depth, Project Activity contrast, Community accents, right-rail tonal differentiation, Idea-section saturation, Join-card warmth, and Stay Connected warmth without introducing new layout changes;
+  - reduced Join-benefit body copy from 1.18rem to **1.08rem** so the first benefit no longer leaves a single orphan word on a second line at the current desktop card width;
+  - no functional code changed.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -301,15 +307,13 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review only the latest homepage hierarchy refinement on `projectmeaningful.app`.**
+**Production-review the energized color refinement on `projectmeaningful.app`.**
 
 Verify:
-- the hero CTA is visibly lighter and more prominent against the dark hero;
-- **The Community in Motion** now appears before **The Idea Is Simple**;
-- **The Idea Is Simple** appears immediately after Community and before Stay Connected;
-- the Discoveries feed is visibly white/ivory and clearly reads as a scrollable window;
-- Stay Connected uses the new warm light stone background and contrasts cleanly with the darker Idea section above it;
-- all existing Community and participation behavior remains intact.
+- the Join Project Meaningful benefit text no longer leaves a single orphan word on a second line;
+- the site feels more energetic through stronger navy/teal/gold contrast while retaining the same layout and hierarchy;
+- category colors remain legible and compatible with the revised palette;
+- no spacing, section order, controls, or behavior changed unintentionally.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
