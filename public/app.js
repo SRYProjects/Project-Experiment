@@ -911,10 +911,13 @@ function renderPublicDiscoveries() {
           .toLocaleLowerCase() === username
     );
 
+  const visibleDiscoveries =
+    discoveries.slice(0, 20);
+
   discoveriesFeed.replaceChildren();
 
   if (
-    discoveries.length === 0
+    visibleDiscoveries.length === 0
   ) {
     const empty =
       document.createElement("p");
@@ -934,7 +937,7 @@ function renderPublicDiscoveries() {
 
   for (
     const discovery
-    of discoveries
+    of visibleDiscoveries
   ) {
     fragment.append(
       createDiscoveryCard(discovery)
@@ -1413,9 +1416,12 @@ function renderPublicActions() {
       );
     });
 
+  const visibleActions =
+    actions.slice(0, 20);
+
   actionsFeed.replaceChildren();
 
-  if (actions.length === 0) {
+  if (visibleActions.length === 0) {
     const empty =
       document.createElement("p");
 
@@ -1431,7 +1437,7 @@ function renderPublicActions() {
   const fragment =
     document.createDocumentFragment();
 
-  for (const action of actions) {
+  for (const action of visibleActions) {
     fragment.append(
       createActionCard(action)
     );
