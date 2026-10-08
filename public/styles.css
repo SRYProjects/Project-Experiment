@@ -4182,3 +4182,96 @@ footer {
   color: rgba(255,255,255,.76);
   background: #0b2540;
 }
+
+/* 2026-10-08: replace weak pale blue with stronger steel blue-gray family */
+:root {
+  --paper: #f6f8fa;
+  --paper-deep: #d6e0e8;
+  --line: #c5d0d9;
+}
+
+/* Project Activity */
+.activity {
+  background: #d6e0e8;
+  border-top-color: #bcc9d3;
+  border-bottom-color: #bcc9d3;
+}
+
+.activity > div {
+  border-right-color: #bcc9d3;
+}
+
+.activity-stat,
+.activity-stat:nth-child(3),
+.activity-stat:nth-child(4),
+.activity-stat:nth-child(5) {
+  background: #f7f9fb;
+}
+
+.activity-stat:nth-child(3) {
+  background: #e7edf2;
+}
+
+.activity-stat:nth-child(4) {
+  background: #dce5ec;
+}
+
+.activity-stat:nth-child(5) {
+  background: #e2e8ed;
+}
+
+/* Community surfaces */
+.community-section {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(0,102,204,.07), transparent 23%),
+    linear-gradient(180deg, #f7f9fa 0%, #e4eaef 100%);
+  border-bottom-color: #c8d2da;
+}
+
+.activity-summary-card {
+  border-color: #b8c9d5;
+  background: linear-gradient(145deg, #dce5eb 0%, #f5f7f9 100%);
+}
+
+.record-summary-card {
+  border-color: #c3ced6;
+  background: linear-gradient(145deg, #e3e8ec 0%, #f7f9fa 100%);
+}
+
+#discoveries.community-rail-card {
+  border-color: #bdcad4;
+  border-top-color: #0066cc;
+  background: linear-gradient(180deg, #f7f9fa 0%, #e0e7ec 100%);
+}
+
+/* Idea / Join */
+.join-project {
+  background:
+    radial-gradient(circle at 86% 16%, rgba(0,102,204,.09), transparent 31%),
+    linear-gradient(145deg, #f8fafb 0%, #dce5ec 100%);
+  border-color: #b9c9d5;
+}
+
+/* Stay Connected */
+.standalone-follow-section {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(0,102,204,.09), transparent 27%),
+    linear-gradient(180deg, #d6e0e8 0%, #c5d1da 100%);
+  border-top-color: #b5c3ce;
+  border-bottom-color: #b5c3ce;
+}
+
+.standalone-follow-section .resource-card,
+.standalone-follow-section.follow-section .resource-card {
+  border-color: #becbd5;
+  background: #fff;
+}
+
+.standalone-follow-section .resource-card:nth-child(even) {
+  background: #f3f6f8;
+}
+
+/* Dialog and secondary surfaces */
+dialog {
+  background: #f5f7f9;
+}
