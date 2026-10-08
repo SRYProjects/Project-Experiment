@@ -294,6 +294,12 @@ Current repository inspection confirms the live implementation contains:
   - strengthened hero teal depth, Project Activity contrast, Community accents, right-rail tonal differentiation, Idea-section saturation, Join-card warmth, and Stay Connected warmth without introducing new layout changes;
   - reduced Join-benefit body copy from 1.18rem to **1.08rem** so the first benefit no longer leaves a single orphan word on a second line at the current desktop card width;
   - no functional code changed.
+- 2026-10-08 blue-led palette revision:
+  - preserved the current layout, section order, typography scale, spacing, controls, and behavior;
+  - replaced the teal-led palette with a Project Meaningful blue system centered on **#0066cc**;
+  - palette now uses deep navy (#0b2540) for depth, #0066cc as the primary brand/action anchor, #004f9f for darker interaction states, pale blue fields for section separation, white content surfaces, and restrained gold (#d89a2b) only as a secondary accent;
+  - applied consistently across header/navigation, hero, Project Activity, Community/right rail, Discoveries, The Idea Is Simple, Join card, Stay Connected, forms/dialogs, primary buttons, and footer;
+  - preserved the prior Join-copy wrap fix and all functional behavior.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -307,13 +313,14 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the energized color refinement on `projectmeaningful.app`.**
+**Production-review the blue-led palette on `projectmeaningful.app`.**
 
 Verify:
-- the Join Project Meaningful benefit text no longer leaves a single orphan word on a second line;
-- the site feels more energetic through stronger navy/teal/gold contrast while retaining the same layout and hierarchy;
-- category colors remain legible and compatible with the revised palette;
-- no spacing, section order, controls, or behavior changed unintentionally.
+- #0066cc clearly reads as the site's primary brand/action color;
+- deep navy and pale-blue tints provide enough variation that the site does not feel monochromatic;
+- white content surfaces preserve readability;
+- restrained gold is used only as a secondary accent;
+- existing layout, spacing, hierarchy, scroll behavior, section order, and interaction behavior remain unchanged.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
