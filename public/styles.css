@@ -4461,3 +4461,81 @@ dialog {
   font-weight: 700;
   line-height: 1.45;
 }
+
+/* 2026-10-08: admin MFA usability correction */
+.admin-mfa-manual {
+  display: grid;
+  gap: 6px;
+  max-width: 430px;
+}
+
+.admin-mfa-manual > span {
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+.admin-mfa-manual code {
+  margin: 8px 0 4px;
+  padding: 8px 10px;
+  border: 1px solid #cad6e0;
+  border-radius: 7px;
+  background: #f5f8fa;
+  font-size: .82rem;
+  letter-spacing: .035em;
+}
+
+.admin-mfa-helper-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.admin-mfa-helper-actions .secondary-button,
+.admin-mfa-helper-actions a.secondary-button {
+  width: auto;
+  min-height: 36px;
+  padding: 8px 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: .82rem;
+}
+
+#adminMfaPanel .admin-mfa-form {
+  width: min(100%, 360px);
+  gap: 12px;
+  margin-top: 22px;
+}
+
+#adminMfaPanel .admin-mfa-form label {
+  width: 180px;
+}
+
+#adminMfaPanel #adminMfaCode {
+  width: 180px;
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  letter-spacing: .18em;
+}
+
+#adminMfaPanel .admin-mfa-form .primary-button {
+  width: auto;
+  min-height: 40px;
+  justify-self: start;
+  padding: 9px 16px;
+}
+
+@media (max-width: 760px) {
+  #adminMfaPanel .admin-mfa-form,
+  #adminMfaPanel .admin-mfa-form label,
+  #adminMfaPanel #adminMfaCode {
+    width: 100%;
+  }
+
+  #adminMfaPanel .admin-mfa-form .primary-button {
+    width: auto;
+  }
+}
