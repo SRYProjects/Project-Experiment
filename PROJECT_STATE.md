@@ -125,7 +125,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 - Accessibility/polish pass.
 
 ## Known risks / technical debt
-- Current moderation does not auto-reject; non-`safe` and moderation errors become pending.
+- Moderation does not auto-reject. Automatic publication now requires both generic safety clearance and Project Meaningful publication suitability; obvious profanity, any policy uncertainty, and moderation errors become pending.
 - Username-change policy is unresolved.
 - Example content uses dedicated `demo_username` fields on actions/discoveries rather than fake auth/profile rows; real rows remain auth-backed. Preserve the identity constraints in future schema work.
 - Browser roles now have **no direct table privileges** on application/admin/security tables; public and authenticated data paths run through the Worker, except the intentionally public aggregate `project_stats()` RPC.
@@ -326,6 +326,13 @@ Current repository inspection confirms the live implementation contains:
 - 2026-10-08 statistics clarity:
   - live database verification confirmed 6 real published Actions / 1 real participant while 55 demo Actions and 15 demo Discoveries remain excluded from real statistics;
   - homepage now states that launch examples appear in feeds while Project Activity counts real participation only.
+- 2026-10-08 Project Meaningful-specific publication moderation:
+  - production admin/MFA login was successfully tested;
+  - a deliberately provocative Action test exposed that generic Llama Guard safety clearance was too permissive for the desired public-community standard;
+  - automatic publication now requires: no deterministic profanity hold, generic Llama Guard `safe`, and a second Project Meaningful classifier returning exactly `PUBLISH`;
+  - the second classifier uses active Cloudflare Workers AI model `@cf/meta/llama-3.1-8b-instruct-fast` and holds profanity/obscenity, hostile/degrading attacks, hate/dehumanization, threats/violence encouragement, self-harm encouragement, explicit sexual content/exploitation, private identifying information/doxxing, spam/promotion/solicitation, substantially off-purpose content, and uncertain cases;
+  - civil discussion of controversial, political, religious, or difficult subjects is not automatically held merely because of the topic;
+  - model/service failure remains fail-closed to `pending`; V1 still never auto-rejects.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -339,17 +346,14 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Retest first-admin TOTP enrollment after the MFA usability correction.**
+**Production-test the revised Project Meaningful moderation standard.**
 
-1. Reload `https://projectmeaningful.app/admin.html`.
-2. Sign in with the allowlisted admin account if needed.
-3. Add the newly generated factor as a **time-based/TOTP** account in the authenticator:
-   - scan the QR code, or
-   - use **Open in Authenticator App**, or
-   - copy the manual setup key.
-4. Confirm the authenticator now generates a six-digit code and that **Verify and Continue** reaches the moderation console.
-5. If setup still fails, use **Generate New Setup Code** once and repeat with the newly generated factor.
-6. After MFA passes, continue the moderation/security production tests already listed.
+1. Submit a normal, clearly appropriate Action and confirm it publishes immediately.
+2. Submit a controlled Action containing mild profanity/hostile wording and confirm it goes to **Pending**, not the public feed.
+3. In `/admin.html`, confirm the Pending item appears and can be published or rejected.
+4. Repeat the safe/pending check once for a Discovery.
+5. Verify moderation actions continue to create audit-log events.
+6. If these pass, the security/admin/moderation phase is complete; proceed to account deletion/export + Privacy/Terms.
 
 ## Short remaining roadmap
 1. Activate first admin + production-test abuse/security, moderation, Your Record, feeds/archives, and submission flows.
