@@ -230,6 +230,7 @@ let lastPublishedActionId = null;
 let publicDiscoveries = [];
 let lastPublishedDiscoveryId = null;
 let discoveryTurnstileWidgetId = null;
+let registrationTurnstileWidgetId = null;
 
 /* -------------------------
    MESSAGES
@@ -381,6 +382,61 @@ function ensureDiscoveryTurnstile(attempt = 0) {
   });
 }
 
+function resetRegistrationTurnstile() {
+  if (
+    window.turnstile &&
+    registrationTurnstileWidgetId !== null
+  ) {
+    try {
+      window.turnstile.reset(
+        registrationTurnstileWidgetId
+      );
+    } catch (error) {
+      console.warn(
+        "Registration verification reset unavailable:",
+        error
+      );
+    }
+  }
+}
+
+function ensureRegistrationTurnstile(attempt = 0) {
+  if (!window.turnstile) {
+    if (attempt < 20) {
+      window.setTimeout(
+        () => ensureRegistrationTurnstile(attempt + 1),
+        250
+      );
+    }
+
+    return;
+  }
+
+  window.turnstile.ready(() => {
+    try {
+      if (registrationTurnstileWidgetId === null) {
+        registrationTurnstileWidgetId =
+          window.turnstile.render(
+            "#registrationTurnstile",
+            {
+              sitekey:
+                "0x4AAAAAAFFXWD-I0BinHjw3",
+              action:
+                "meaningful_registration"
+            }
+          );
+      } else {
+        resetRegistrationTurnstile();
+      }
+    } catch (error) {
+      console.error(
+        "Registration verification failed to initialize:",
+        error
+      );
+    }
+  });
+}
+
 function prepareNewDiscovery() {
   discoveryForm.reset();
   discoveryCharacterCount.textContent = "0";
@@ -418,6 +474,7 @@ function openParticipation() {
 
   clearAuthMessage();
   authDialog.showModal();
+  ensureRegistrationTurnstile();
 }
 
 function openDiscovery() {
@@ -545,6 +602,7 @@ newUserButton.addEventListener(
 
     existingForm.classList.add("hidden");
     authForm.classList.remove("hidden");
+    ensureRegistrationTurnstile();
   }
 );
 
@@ -579,26 +637,75 @@ joinForm.addEventListener(
       return;
     }
 
+    const turnstileToken =
+      window.turnstile &&
+      registrationTurnstileWidgetId !== null
+        ? window.turnstile.getResponse(
+            registrationTurnstileWidgetId
+          )
+        : "";
+
+    if (!turnstileToken) {
+      showAuthMessage(
+        "Please complete the verification."
+      );
+
+      return;
+    }
+
     localStorage.setItem(
       "meaningful_pending_username",
       username
     );
 
-    const { error } =
-      await supabase.auth.signInWithOtp({
-        email,
-
-        options: {
-          emailRedirectTo:
-            "https://projectmeaningful.app",
-
-          data: {
-            requested_username: username
+    try {
+      const response =
+        await fetch(
+          "/api/auth/request",
+          {
+            method: "POST",
+            headers: {
+              "content-type":
+                "application/json"
+            },
+            body:
+              JSON.stringify({
+                mode: "new",
+                username,
+                email,
+                turnstileToken
+              })
           }
-        }
-      });
+        );
 
-    if (error) {
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        localStorage.removeItem(
+          "meaningful_pending_username"
+        );
+
+        showAuthMessage(
+          result.error ||
+            "We couldn't send the sign-in link. Please try again."
+        );
+
+        resetRegistrationTurnstile();
+        return;
+      }
+
+      showAuthMessage(
+        "Check your email for your secure Project Meaningful sign-in link."
+      );
+
+      resetRegistrationTurnstile();
+    } catch (error) {
+      console.error(
+        "Registration request failed:",
+        error
+      );
+
       localStorage.removeItem(
         "meaningful_pending_username"
       );
@@ -607,12 +714,8 @@ joinForm.addEventListener(
         "We couldn't send the sign-in link. Please try again."
       );
 
-      return;
+      resetRegistrationTurnstile();
     }
-
-    showAuthMessage(
-      "Check your email for your secure Project Meaningful sign-in link."
-    );
   }
 );
 
@@ -633,16 +736,41 @@ signInForm.addEventListener(
         .value
         .trim();
 
-    await supabase.auth.signInWithOtp({
-      email,
+    try {
+      const response =
+        await fetch(
+          "/api/auth/request",
+          {
+            method: "POST",
+            headers: {
+              "content-type":
+                "application/json"
+            },
+            body:
+              JSON.stringify({
+                mode: "existing",
+                email
+              })
+          }
+        );
 
-      options: {
-        emailRedirectTo:
-          "https://projectmeaningful.app",
+      const result =
+        await response.json();
 
-        shouldCreateUser: false
+      if (response.status === 429) {
+        showAuthMessage(
+          result.error ||
+            "Please wait before requesting another sign-in link."
+        );
+
+        return;
       }
-    });
+    } catch (error) {
+      console.error(
+        "Sign-in request failed:",
+        error
+      );
+    }
 
     /*
       Same response regardless of whether
@@ -692,36 +820,66 @@ async function ensureProfile(user) {
     ) ||
     user.user_metadata?.requested_username;
 
-  if (!pendingUsername) {
+  if (
+    !pendingUsername ||
+    !currentSession?.access_token
+  ) {
     return;
   }
 
-  const { error: insertError } =
-    await supabase
-      .from("profiles")
-      .insert({
-        id: user.id,
-        username: pendingUsername
-      });
-
-  if (insertError) {
-    console.error(
-      "Profile creation failed:",
-      insertError
-    );
-
-    if (insertError.code === "23505") {
-      alert(
-        "That username is already in use. Please choose another username."
+  try {
+    const response =
+      await fetch(
+        "/api/profile",
+        {
+          method: "POST",
+          headers: {
+            "content-type":
+              "application/json",
+            Authorization:
+              `Bearer ${currentSession.access_token}`
+          },
+          body:
+            JSON.stringify({
+              username:
+                pendingUsername
+            })
+        }
       );
+
+    const result =
+      await response.json();
+
+    if (!response.ok) {
+      console.error(
+        "Profile creation failed:",
+        result.error
+      );
+
+      if (response.status === 409) {
+        localStorage.removeItem(
+          "meaningful_pending_username"
+        );
+
+        alert(
+          "That username is no longer available. Please sign in again and choose another username."
+        );
+
+        await supabase.auth.signOut();
+      }
+
+      return;
     }
 
-    return;
+    localStorage.removeItem(
+      "meaningful_pending_username"
+    );
+  } catch (error) {
+    console.error(
+      "Profile creation failed:",
+      error
+    );
   }
-
-  localStorage.removeItem(
-    "meaningful_pending_username"
-  );
 }
 
 /* -------------------------
