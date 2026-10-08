@@ -2697,3 +2697,153 @@ footer {
     min-height: 300px;
   }
 }
+
+/* 2026-10-08: unify hero/activity/idea palette; center stats; restore finite scroll feeds */
+
+.hero {
+  background:
+    radial-gradient(circle at 84% 24%, rgba(25,88,126,.34), transparent 30%),
+    radial-gradient(circle at 72% 88%, rgba(31,101,84,.22), transparent 28%),
+    linear-gradient(118deg, #101817 0%, #172622 48%, #182533 100%);
+}
+
+.activity {
+  color: #fff;
+  background: #15323c;
+  border-top: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  box-shadow: none;
+}
+
+.activity > div {
+  min-height: 146px;
+  border-right: 1px solid rgba(255,255,255,.10);
+}
+
+.activity-intro {
+  color: #fff;
+  background: linear-gradient(135deg, #163846 0%, #176058 100%);
+}
+
+.activity-intro strong {
+  color: #fff;
+}
+
+.activity-intro span {
+  color: rgba(255,255,255,.74);
+}
+
+.activity-stat,
+.activity-stat:nth-child(3),
+.activity-stat:nth-child(4),
+.activity-stat:nth-child(5) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+
+.activity-stat {
+  background: #1b3542;
+}
+
+.activity-stat:nth-child(3) {
+  background: #203f47;
+}
+
+.activity-stat:nth-child(4) {
+  background: #214b49;
+}
+
+.activity-stat:nth-child(5) {
+  background: #263b49;
+}
+
+.activity-stat strong {
+  margin: 0;
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.2rem, 4.15vw, 4.7rem);
+  font-weight: 400;
+  line-height: .88;
+  text-align: center;
+}
+
+.activity-stat > span:last-child {
+  margin: 0;
+  color: rgba(255,255,255,.68);
+  font-size: .75rem;
+  letter-spacing: .1em;
+  text-align: center;
+}
+
+#experimentDay {
+  max-width: 220px;
+  font-size: clamp(2rem, 2.7vw, 3rem);
+  line-height: .98;
+}
+
+.experiment-intro {
+  background:
+    radial-gradient(circle at 88% 14%, rgba(185,145,60,.10), transparent 26%),
+    linear-gradient(118deg, #153950 0%, #17636a 60%, #176c61 115%);
+}
+
+.experiment-intro .eyebrow {
+  color: rgba(255,255,255,.76);
+}
+
+#actionsFeed,
+#discoveriesFeed {
+  flex: 0 0 auto;
+  overflow-y: scroll;
+  scrollbar-width: auto;
+}
+
+#actionsFeed {
+  height: 680px;
+  min-height: 0;
+}
+
+#discoveriesFeed {
+  height: 360px;
+  min-height: 0;
+}
+
+@media (min-width: 1101px) {
+  #actions.stream-panel,
+  .community-right-rail {
+    min-height: 0;
+  }
+
+  .public-streams {
+    grid-auto-rows: auto;
+    align-items: start;
+  }
+}
+
+@media (max-width: 1100px) {
+  #actionsFeed {
+    height: 620px;
+    min-height: 0;
+  }
+
+  #discoveriesFeed {
+    height: 340px;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  #actionsFeed {
+    height: 520px;
+    min-height: 0;
+  }
+
+  #discoveriesFeed {
+    height: 320px;
+    min-height: 0;
+  }
+}
