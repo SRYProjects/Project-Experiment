@@ -1,6 +1,6 @@
 # Project Experiment â€” Project State
 
-Last updated: 2026-10-06  
+Last updated: 2026-10-08  
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -246,6 +246,15 @@ Current repository inspection confirms the live implementation contains:
   - removed the numeric labels from all five Follow cards; their icons now provide sufficient visual identification;
   - no JavaScript, auth, submission, moderation, or database behavior changed.
 - Static validation after this refinement: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; Join numbers **removed**; Follow numbers **removed**; equal-height desktop Community rule **present**; Discovery emphasis **present**; right-rail contrast trio **present**; warm Follow section **present**; CSS brace balance **passed**.
+- 2026-10-08 top-section/community-feed correction:
+  - kept the Hero, **One deliberate action at a time**, and **The Idea Is Simple** as three distinct sections but unified them into one coordinated deep navy/teal palette so they read as one site rather than patched-together components;
+  - removed all four Project Activity icons;
+  - centered the four Project Activity values/labels and materially increased the value size; **Not launched** remains scaled to fit cleanly;
+  - restored fixed-height, always-scrollable homepage windows for Meaningful Actions and Discoveries with the existing visible scrollbar treatment;
+  - homepage rendering is now capped at the first **20 filtered Actions** and first **20 filtered Discoveries**, while the dedicated archives remain the full browsing surfaces;
+  - the full public datasets are still loaded before client filtering, so homepage category/username filtering continues to search the loaded dataset rather than only the visible 20;
+  - no submission, authentication, moderation, database, or archive behavior changed.
+- Static validation after this correction: homepage JS syntax **passed**; duplicate IDs **none**; JavaScript-referenced DOM IDs missing **none**; activity icons **removed**; centered/enlarged stat values **present**; coordinated top palette **present**; Actions fixed scroll **present**; Discoveries fixed scroll **present**; homepage Action cap **20**; homepage Discovery cap **20**; CSS brace balance **passed**.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -259,18 +268,17 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-review the latest visual refinement on `projectmeaningful.app`.**
+**Production-review the 2026-10-08 top-section/community-feed correction on `projectmeaningful.app`.**
 
 Verify:
-- the **Join Project Meaningful** card stands apart from **The Idea Is Simple** without feeling disconnected from the site;
-- the three Join benefits use icons only, with no numeric labels;
-- Project Activity, Your Record, and Discoveries are visually distinct from one another;
-- the two desktop Community columns terminate on the same baseline;
-- **What people noticed** is noticeably easier to discover without becoming visually dominant;
-- the Follow section now reads as warm light tan/stone rather than another mint-green field;
-- the five Follow cards use icons only, with no numeric labels.
+- Hero, Project Activity, and **The Idea Is Simple** remain separate sections but now clearly belong to one navy/teal visual system;
+- Project Activity contains no icons; values are centered and noticeably larger than their labels;
+- the **Not launched** value still fits cleanly;
+- Meaningful Actions and Discoveries both show visible scrollbars again;
+- the homepage exposes no more than 20 filtered Actions and 20 filtered Discoveries, while archive pages still provide deeper browsing;
+- Community filters/search still behave correctly.
 
-Do not make additional structural changes unless this production review reveals a specific defect.
+Do not make unrelated page changes during this verification.
 
 ## Short remaining roadmap
 1. Production-verify the 2026-10-06 design/Example-content refinement plus Your Record.
