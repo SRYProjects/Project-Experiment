@@ -3410,3 +3410,49 @@ footer {
     overscroll-behavior: contain;
   }
 }
+
+/* 2026-10-08: hierarchy refinement after moving The Idea Is Simple below Community */
+
+/* Hero CTA: lighter, high-contrast action against the dark hero */
+#participateButton {
+  border-color: #9ed8cd;
+  background: #9ed8cd;
+  color: #173247;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+
+#participateButton:hover {
+  border-color: #b8e6dd;
+  background: #b8e6dd;
+  color: #102733;
+}
+
+/* Discoveries should read immediately as a scrollable content window */
+#discoveriesFeed {
+  padding: 10px 12px 10px 12px;
+  border: 1px solid #d7d1c6;
+  border-radius: 10px;
+  background: #fffdf9;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+}
+
+/* With The Idea Is Simple now preceding Stay Connected,
+   use a warm light closing field for clear section contrast. */
+.standalone-follow-section {
+  color: var(--ink);
+  background: #e8e0d4;
+  border-top-color: #d1c7b8;
+  border-bottom-color: #d1c7b8;
+}
+
+.standalone-follow-section .explore-heading .eyebrow {
+  color: var(--accent-dark);
+}
+
+.standalone-follow-section .explore-heading h2 {
+  color: var(--ink);
+}
+
+.standalone-follow-section .explore-heading > p {
+  color: var(--muted);
+}
