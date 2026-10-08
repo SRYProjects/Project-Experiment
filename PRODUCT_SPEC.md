@@ -44,7 +44,7 @@ Primary action: **Share Your Meaningful Action**.
 - Maximum 140 characters, enforced client- and server-side.
 - Categories: Family, Relationships, Health, Work, Learning, Creativity, Service, Faith, Responsibility, Sacrifice, Other.
 - Public feed: newest first; username, category, action, date/time.
-- Homepage feeds are fixed-height and independently scrollable with visible scrollbars. Do not make the Community columns excessively tall merely to expose large numbers of entries at once; keep them at a normal reading scale and use the dedicated archives for deeper browsing.
+- Homepage feeds are fixed-height and independently scrollable with clearly visible scrollbars. After filtering, render at most **20 Actions** and **20 Discoveries** on the homepage; use the dedicated archives for deeper browsing.
 - On wider screens, Meaningful Actions is the primary left column. The narrower right rail contains a compact Project Activity summary, Your Record access, and a shorter Discoveries stream. Stack the layout on smaller screens.
 - Category filtering.
 - Username search is exact and case-insensitive.
@@ -195,14 +195,14 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Do not place decorative icons beside the Actions/Discoveries section headings unless they communicate real information. Keep iconography inside individual logged entries, where it aids scanning.
 - Each community stream must contain an obvious in-window participation button: **Log an Action** and **Log a Discovery**.
 - The hero should use a full-width abstract/background treatment rather than a separate decorative object beside the question.
-- Project activity statistics should be presented as a clearly readable summary band, not as small secondary metadata.
+- Project activity statistics should be presented as a clearly readable summary band, not as small secondary metadata. The strip is number-led: no decorative stat icons, centered figures, and larger values than labels.
 - The transition between stats and community should include a clear **Join Project Meaningful** invitation with concrete participation benefits. Do not label this as a subscription until the application actually stores explicit consent.
 - The community area should feel open rather than boxed: individual entries provide the primary card/border structure; the Actions and Discoveries stream containers themselves should recede.
 - Use a white/open community field with selective blue/green accents so the live content feels active and central, not muted.
 - Primary blue participation buttons should use modest rounded corners rather than sharp rectangles.
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
-- Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The site should not be uniformly dark, but the hero should remain dark, dramatic, and high-contrast with white type.
+- Use Project Meaningful blue `#0066cc`, green `#519d2d`, and restrained gold `#e8b007` selectively. The hero, Project Activity strip, and **The Idea Is Simple** section must read as one coordinated navy/teal family with tonal variation rather than three unrelated color systems. The hero remains dark, dramatic, and high-contrast with white type.
 - **Follow The Meaningful Project** is a separate standalone section after the Community section. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. On wider screens, these appear as five visually separate cards with visible spacing rather than one divided rectangle. The Experiment and Community are not repeated there.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
