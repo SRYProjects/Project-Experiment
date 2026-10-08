@@ -868,19 +868,6 @@ function createDiscoveryCard(discovery) {
     date
   );
 
-  if (discovery.isExample) {
-    const example =
-      document.createElement("span");
-
-    example.className =
-      "example-label";
-
-    example.textContent =
-      "Example";
-
-    meta.append(example);
-  }
-
   const text =
     document.createElement("p");
 
@@ -1367,16 +1354,6 @@ function createActionCard(action) {
     username,
     date
   );
-
-  if (action.isExample) {
-    const example =
-      document.createElement("span");
-
-    example.className = "example-label";
-    example.textContent = "Example";
-
-    meta.append(example);
-  }
 
   const text =
     document.createElement("p");
