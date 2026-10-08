@@ -2847,3 +2847,416 @@ footer {
     min-height: 0;
   }
 }
+
+/* 2026-10-08 researched palette system
+   Deep slate navy + muted teal + warm ivory/stone + restrained brass.
+   This final layer intentionally supersedes earlier exploratory color passes.
+*/
+
+:root {
+  --ink: #183042;
+  --muted: #5b6970;
+  --paper: #f7f4ee;
+  --paper-deep: #eee9df;
+  --white: #fffdf9;
+  --line: #d8d1c5;
+  --accent: #2f6f68;
+  --accent-dark: #245852;
+  --green: #6f8665;
+  --gold: #b58a3a;
+  --dark: #142733;
+  --dark-soft: #1f3b45;
+  --sage: #718078;
+  --shadow: 0 18px 42px rgba(24,48,66,.09);
+}
+
+body {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.site-header {
+  color: var(--ink);
+  background: rgba(255,253,249,.97);
+  border-bottom-color: var(--line);
+}
+
+.brand {
+  color: var(--ink);
+}
+
+nav a,
+.nav-button {
+  color: #465a63;
+}
+
+nav a:hover,
+.nav-button:hover {
+  color: var(--accent);
+}
+
+.primary-button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(47,111,104,.18);
+}
+
+.primary-button:hover {
+  border-color: var(--accent-dark);
+  background: var(--accent-dark);
+}
+
+/* HERO */
+.hero {
+  background:
+    radial-gradient(circle at 82% 22%, rgba(47,111,104,.30), transparent 31%),
+    radial-gradient(circle at 69% 87%, rgba(181,138,58,.11), transparent 26%),
+    linear-gradient(118deg, #101d26 0%, #18333d 54%, #1d4746 118%);
+}
+
+.hero::before {
+  opacity: .44;
+  background:
+    radial-gradient(ellipse at 18% 72%, transparent 0 28%, rgba(69,117,130,.17) 28.5% 30%, transparent 30.5% 100%),
+    radial-gradient(ellipse at 84% 30%, transparent 0 34%, rgba(77,126,104,.15) 34.5% 36%, transparent 36.5% 100%),
+    linear-gradient(145deg, transparent 0 60%, rgba(181,138,58,.09) 60.5% 61.5%, transparent 62% 100%);
+}
+
+/* PROJECT ACTIVITY: one neutral family, one anchor */
+.activity {
+  color: var(--ink);
+  background: #ebe6dc;
+  border-top: 1px solid #d7d0c4;
+  border-bottom: 1px solid #d7d0c4;
+}
+
+.activity > div {
+  border-right-color: #d7d0c4;
+}
+
+.activity-intro {
+  color: #fff;
+  background: linear-gradient(135deg, #214b50 0%, #2f6f68 100%);
+}
+
+.activity-intro span {
+  color: rgba(255,255,255,.78);
+}
+
+.activity-stat,
+.activity-stat:nth-child(3),
+.activity-stat:nth-child(4),
+.activity-stat:nth-child(5) {
+  background: #f7f4ee;
+}
+
+.activity-stat:nth-child(3) {
+  background: #f2eee6;
+}
+
+.activity-stat:nth-child(4) {
+  background: #ece8df;
+}
+
+.activity-stat:nth-child(5) {
+  background: #f4f1eb;
+}
+
+.activity-stat strong {
+  color: var(--ink);
+}
+
+.activity-stat > span:last-child {
+  color: #67736f;
+}
+
+/* IDEA */
+.experiment-intro {
+  background:
+    radial-gradient(circle at 88% 14%, rgba(181,138,58,.12), transparent 27%),
+    linear-gradient(118deg, #285c5a 0%, #2f6f68 58%, #315e63 112%);
+}
+
+.experiment-intro .eyebrow {
+  color: rgba(255,255,255,.78);
+}
+
+.join-project {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 86% 16%, rgba(181,138,58,.09), transparent 31%),
+    linear-gradient(145deg, #fffaf0 0%, #f1e8d8 100%);
+  border-color: #d9c9ae;
+  box-shadow: 0 22px 48px rgba(20,39,51,.18);
+}
+
+.join-kicker {
+  color: var(--accent);
+}
+
+.join-benefit .benefit-icon {
+  background: var(--accent);
+}
+
+.join-benefit:nth-child(2) .benefit-icon {
+  background: #3d687c;
+}
+
+.join-benefit:nth-child(3) .benefit-icon {
+  background: #94722d;
+}
+
+.join-benefit p {
+  color: #3f535d;
+}
+
+.join-project-button {
+  background: var(--ink);
+  color: #fff;
+}
+
+.join-project-button:hover {
+  background: var(--accent-dark);
+}
+
+/* COMMUNITY */
+.community-section {
+  background:
+    radial-gradient(circle at 92% 5%, rgba(47,111,104,.045), transparent 23%),
+    linear-gradient(180deg, #f8f6f1 0%, #f2eee7 100%);
+  border-bottom-color: #dcd4c8;
+}
+
+.community-section::before,
+.community-section::after {
+  opacity: .35;
+}
+
+.community-section::before {
+  background: radial-gradient(circle, rgba(47,111,104,.08), transparent 66%);
+}
+
+.community-section::after {
+  background: radial-gradient(circle, rgba(181,138,58,.07), transparent 66%);
+}
+
+#actions.stream-panel {
+  border-color: #d9d4ca;
+  background: #fffdf9;
+  box-shadow: 0 12px 28px rgba(24,48,66,.07);
+}
+
+.stream-kicker,
+.stream-link,
+.discoveries-panel .stream-kicker {
+  color: var(--accent);
+}
+
+.feed {
+  border-color: #ddd7cc;
+  background: #fbfaf6;
+}
+
+.action-card {
+  border-color: #ddd7cc;
+  background: #fffdf9;
+  box-shadow: 0 6px 16px rgba(24,48,66,.045);
+}
+
+/* Right rail uses tonal variants, not different color families */
+.community-rail-card {
+  border-color: #d8d1c5;
+  box-shadow: 0 10px 24px rgba(24,48,66,.065);
+}
+
+.activity-summary-card {
+  border-color: #cfd7d5;
+  background: linear-gradient(145deg, #edf2f0 0%, #f7f7f3 100%);
+}
+
+.activity-summary-card .rail-symbol {
+  color: #fff;
+  background: #3c6670;
+}
+
+.record-summary-card {
+  border-color: #d8cebd;
+  background: linear-gradient(145deg, #f1ece3 0%, #faf7f1 100%);
+}
+
+.record-summary-card .rail-symbol-record {
+  color: #fff;
+  background: #8a7040;
+}
+
+#discoveries.community-rail-card {
+  border-color: #d5cbb9;
+  border-top-color: var(--accent);
+  background: linear-gradient(180deg, #fffaf2 0%, #f5efe5 100%);
+  box-shadow: 0 12px 28px rgba(24,48,66,.08);
+}
+
+#discoveries .stream-kicker {
+  color: var(--accent);
+}
+
+#discoveries .stream-heading h3 {
+  color: var(--ink);
+}
+
+#discoveries .stream-description {
+  color: var(--muted);
+}
+
+/* Align desktop columns: Action panel grows to same bottom as the right rail.
+   The rendered content remains capped at 20 and scrollable. */
+@media (min-width: 1101px) {
+  .public-streams {
+    align-items: stretch;
+    grid-auto-rows: 1fr;
+  }
+
+  #actions.stream-panel {
+    height: 100%;
+    min-height: 0;
+  }
+
+  #actionsFeed {
+    height: auto;
+    min-height: 680px;
+    flex: 1 1 auto;
+  }
+
+  .community-right-rail {
+    height: 100%;
+  }
+}
+
+/* Scrollbar system */
+.feed {
+  scrollbar-color: #66766f #e1ddd4;
+}
+
+.feed::-webkit-scrollbar-track {
+  background: #e1ddd4;
+}
+
+.feed::-webkit-scrollbar-thumb {
+  border-color: #e1ddd4;
+  background: #66766f;
+}
+
+.feed::-webkit-scrollbar-thumb:hover {
+  background: #4e5f58;
+}
+
+#discoveriesFeed {
+  scrollbar-color: #66766f #e5ded1;
+}
+
+#discoveriesFeed::-webkit-scrollbar-track {
+  background: #e5ded1;
+}
+
+#discoveriesFeed::-webkit-scrollbar-thumb {
+  border-color: #e5ded1;
+  background: #66766f;
+}
+
+/* FOLLOW */
+.standalone-follow-section {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 90% 10%, rgba(181,138,58,.055), transparent 27%),
+    linear-gradient(180deg, #ece6dc 0%, #e4ddd1 100%);
+  border-top-color: #d2c9bb;
+  border-bottom-color: #d2c9bb;
+}
+
+.standalone-follow-section .explore-heading .eyebrow {
+  color: var(--accent);
+}
+
+.standalone-follow-section .explore-heading h2 {
+  color: var(--ink);
+}
+
+.standalone-follow-section .explore-heading > p {
+  color: var(--muted);
+}
+
+.standalone-follow-section .resource-card,
+.standalone-follow-section.follow-section .resource-card {
+  border-color: #d5ccbf;
+  background: #fffdf9;
+  box-shadow: 0 12px 26px rgba(24,48,66,.07);
+}
+
+.standalone-follow-section .resource-card:nth-child(even) {
+  background: #f8f4ed;
+}
+
+.standalone-follow-section .resource-icon {
+  background: var(--accent);
+}
+
+.standalone-follow-section .resource-card:nth-child(2) .resource-icon,
+.standalone-follow-section .resource-card:nth-child(4) .resource-icon {
+  background: #3c6670;
+}
+
+.standalone-follow-section .resource-card:nth-child(3) .resource-icon {
+  background: #9b7630;
+}
+
+.standalone-follow-section .resource-card:nth-child(5) .resource-icon {
+  background: #4e5f67;
+}
+
+.standalone-follow-section .resource-card h3 {
+  color: var(--ink);
+}
+
+.standalone-follow-section .resource-card p {
+  color: var(--muted);
+}
+
+.standalone-follow-section .resource-status,
+.standalone-follow-section .resource-button {
+  color: var(--accent-dark);
+}
+
+/* Inputs, dialogs, archives, footer */
+input,
+select,
+textarea {
+  color: var(--ink);
+  background: #fffdf9;
+  border-color: #cfc8bc;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline-color: var(--accent);
+  border-color: var(--accent);
+}
+
+dialog {
+  color: var(--ink);
+  background: #f8f4ed;
+}
+
+footer {
+  color: rgba(255,255,255,.72);
+  background: #172b36;
+}
+
+.archive-page {
+  background: var(--paper);
+}
+
+.archive-feed {
+  border-top-color: var(--line);
+}
