@@ -127,7 +127,14 @@ Moderation states:
 
 V1 automated moderation is pre-publication only. Continuous retroactive automated rescanning is not required. Admin must be able to remove published content manually.
 
-Current implementation intentionally treats explicit AI `safe` as published and anything else/error as pending; it does not yet auto-reject because the current model’s unsafe result is too broad to equate safely with “clearly prohibited.”
+Automatic publication uses a conservative two-stage moderation policy:
+1. deterministic civility screening sends obvious profanity to `pending`;
+2. Cloudflare Llama Guard must classify the text as generically safe;
+3. a Project Meaningful-specific classifier must also return `PUBLISH`.
+
+The Project Meaningful publication classifier sends content to `pending` for profanity/obscenity, hostile or degrading attacks, hate/dehumanization, threats or encouragement of violence, self-harm encouragement, explicit sexual content/exploitation, private identifying information/doxxing, spam/promotion/solicitation, substantially off-purpose content, or ambiguity about whether the entry meets the publication standard. Controversial, political, religious, or difficult subject matter is **not** by itself a reason to hold content; civil descriptions of beliefs, civic activity, disagreement, adversity, and personal experience may publish.
+
+Any moderation-model error, malformed response, or uncertainty fails closed to `pending`. V1 still does **not** automatically assign `rejected`; rejection remains an administrator decision.
 
 ## Abuse controls
 V1 requires:
