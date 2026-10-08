@@ -867,42 +867,150 @@ async function verifyTurnstile(
    MODERATION
 ------------------------- */
 
-async function moderateAction(text, env) {
+function containsCivilityHoldTerm(text) {
+  return /\b(damn|damned|fuck|fucking|fucked|shit|bullshit|bitch|bastard|asshole)\b/i.test(
+    text
+  );
+}
+
+async function genericSafetyCheck(
+  text,
+  env
+) {
+  const result =
+    await env.AI.run(
+      "@cf/meta/llama-guard-3-8b",
+      {
+        messages: [
+          {
+            role: "user",
+            content: text
+          }
+        ],
+
+        max_tokens: 32,
+        temperature: 0
+      }
+    );
+
+  const output =
+    typeof result?.response === "string"
+      ? result.response
+          .trim()
+          .toLowerCase()
+      : "";
+
+  return output.startsWith("safe");
+}
+
+async function projectPublicationCheck(
+  text,
+  contentType,
+  env
+) {
+  const contentDefinition =
+    contentType === "discovery"
+      ? "a short personal observation, realization, or insight that followed from living deliberately"
+      : "a short statement describing something the participant deliberately did or chose to do because it mattered to them";
+
+  const result =
+    await env.AI.run(
+      "@cf/meta/llama-3.1-8b-instruct-fast",
+      {
+        messages: [
+          {
+            role: "system",
+            content:
+              `You are the pre-publication classifier for Project Meaningful, a public intentional-living experiment.
+
+Return exactly one word: PUBLISH or REVIEW.
+
+PUBLISH only when the entry is clearly suitable for immediate public display.
+
+The entry should be ${contentDefinition}.
+
+Send to REVIEW if ANY of these apply:
+- profanity, obscenity, insulting or degrading language;
+- hostile attacks, name-calling, inflammatory accusations, or language whose main purpose is to disparage a person or group;
+- hate or dehumanizing content;
+- threats, encouragement of violence, celebration of serious harm, or dangerous wrongdoing;
+- encouragement or instruction for self-harm;
+- explicit sexual content or sexual exploitation;
+- private identifying information, doxxing, or an apparent attempt to expose another person's private information;
+- spam, advertising, solicitation, promotional copy, or attempts to redirect people elsewhere;
+- content that is substantially off-purpose for Project Meaningful;
+- ambiguity about whether the content meets these standards.
+
+Do not send an entry to REVIEW merely because it discusses a controversial, political, religious, or difficult subject. Civil descriptions of beliefs, civic activity, disagreement, adversity, or personal experience may be published.
+
+When uncertain, return REVIEW. Do not explain your answer.`
+          },
+          {
+            role: "user",
+            content: text
+          }
+        ],
+
+        max_tokens: 8,
+        temperature: 0
+      }
+    );
+
+  const output =
+    typeof result?.response === "string"
+      ? result.response
+          .trim()
+          .toUpperCase()
+      : "";
+
+  return output === "PUBLISH";
+}
+
+async function moderateContent(
+  text,
+  contentType,
+  env
+) {
   try {
-    const result =
-      await env.AI.run(
-        "@cf/meta/llama-guard-3-8b",
-        {
-          messages: [
-            {
-              role: "user",
-              content: text
-            }
-          ],
-
-          max_tokens: 32,
-          temperature: 0
-        }
-      );
-
-    const output =
-      typeof result?.response === "string"
-        ? result.response
-            .trim()
-            .toLowerCase()
-        : "";
-
-    if (output.startsWith("safe")) {
-      return "published";
+    /*
+      The deterministic civility check catches
+      obvious profanity before model classification.
+      It sends content to review rather than rejecting it.
+    */
+    if (containsCivilityHoldTerm(text)) {
+      return "pending";
     }
 
-    return "pending";
+    const genericallySafe =
+      await genericSafetyCheck(
+        text,
+        env
+      );
+
+    if (!genericallySafe) {
+      return "pending";
+    }
+
+    const projectSuitable =
+      await projectPublicationCheck(
+        text,
+        contentType,
+        env
+      );
+
+    return projectSuitable
+      ? "published"
+      : "pending";
   } catch (error) {
     console.error(
       "Moderation failed:",
       error
     );
 
+    /*
+      Moderation must fail closed:
+      service/model errors never cause publication.
+    */
     return "pending";
   }
 }
@@ -1475,8 +1583,9 @@ async function submitAction(request, env) {
   }
 
   const status =
-    await moderateAction(
+    await moderateContent(
       actionText,
+      "action",
       env
     );
 
@@ -1889,8 +1998,9 @@ async function submitDiscovery(
   }
 
   const status =
-    await moderateAction(
+    await moderateContent(
       discoveryText,
+      "discovery",
       env
     );
 
