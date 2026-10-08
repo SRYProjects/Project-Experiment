@@ -403,10 +403,11 @@ async function sendAuthOtp(
   email,
   createUser,
   username,
+  redirectUrl,
   env
 ) {
   return fetch(
-    `${env.SUPABASE_URL}/auth/v1/otp?redirect_to=${encodeURIComponent("https://projectmeaningful.app")}`,
+    `${env.SUPABASE_URL}/auth/v1/otp?redirect_to=${encodeURIComponent(redirectUrl)}`,
     {
       method: "POST",
       headers: {
@@ -556,11 +557,17 @@ async function requestAuthLink(
     }
   }
 
+  const redirectPath =
+    body.redirectPath === "/admin.html"
+      ? "/admin.html"
+      : "/";
+
   const authResponse =
     await sendAuthOtp(
       email,
       mode === "new",
       username,
+      `https://projectmeaningful.app${redirectPath}`,
       env
     );
 
@@ -1897,6 +1904,631 @@ async function submitDiscovery(
   });
 }
 
+
+/* -------------------------
+   ADMIN MODERATION
+------------------------- */
+
+function bearerToken(request) {
+  const authHeader =
+    request.headers.get("Authorization");
+
+  if (!authHeader?.startsWith("Bearer ")) {
+    return "";
+  }
+
+  return authHeader.slice(7);
+}
+
+function decodeJwtPayload(token) {
+  try {
+    const parts = token.split(".");
+
+    if (parts.length < 2) {
+      return {};
+    }
+
+    const normalized =
+      parts[1]
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+
+    const padded =
+      normalized.padEnd(
+        normalized.length +
+          ((4 - normalized.length % 4) % 4),
+        "="
+      );
+
+    return JSON.parse(atob(padded));
+  } catch {
+    return {};
+  }
+}
+
+async function isAllowlistedAdmin(
+  userId,
+  env
+) {
+  const params =
+    new URLSearchParams({
+      select: "user_id",
+      user_id: `eq.${userId}`,
+      limit: "1"
+    });
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/admin_users?${params.toString()}`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      "Admin allowlist lookup failed"
+    );
+  }
+
+  const rows =
+    await response.json();
+
+  return rows.length > 0;
+}
+
+async function adminContext(
+  request,
+  env,
+  requireMfa = true
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return {
+      response:
+        json(
+          {
+            error:
+              "Authentication required."
+          },
+          401
+        )
+    };
+  }
+
+  const allowed =
+    await isAllowlistedAdmin(
+      user.id,
+      env
+    );
+
+  if (!allowed) {
+    return {
+      response:
+        json(
+          {
+            error:
+              "Admin access is not enabled for this account."
+          },
+          403
+        )
+    };
+  }
+
+  const token =
+    bearerToken(request);
+
+  const payload =
+    decodeJwtPayload(token);
+
+  const aal =
+    payload?.aal === "aal2"
+      ? "aal2"
+      : "aal1";
+
+  if (
+    requireMfa &&
+    aal !== "aal2"
+  ) {
+    return {
+      response:
+        json(
+          {
+            error:
+              "Multi-factor authentication is required.",
+            code:
+              "MFA_REQUIRED"
+          },
+          403
+        )
+    };
+  }
+
+  return {
+    user,
+    aal
+  };
+}
+
+async function getAdminStatus(
+  request,
+  env
+) {
+  const context =
+    await adminContext(
+      request,
+      env,
+      false
+    );
+
+  if (context.response) {
+    return context.response;
+  }
+
+  return json({
+    allowed: true,
+    aal: context.aal,
+    mfaRequired:
+      context.aal !== "aal2"
+  });
+}
+
+async function fetchAdminContentRows(
+  type,
+  status,
+  env
+) {
+  const isAction =
+    type === "action";
+
+  const table =
+    isAction
+      ? "meaningful_actions"
+      : "discoveries";
+
+  const select =
+    isAction
+      ? "id,user_id,category,action_text,moderation_status,created_at,moderated_at"
+      : "id,user_id,discovery_text,moderation_status,created_at,moderated_at";
+
+  const params =
+    new URLSearchParams({
+      select,
+      moderation_status:
+        `eq.${status}`,
+      is_demo:
+        "eq.false",
+      order:
+        "created_at.desc",
+      limit:
+        "50"
+    });
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/${table}?${params.toString()}`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Admin content fetch failed:",
+      detail
+    );
+
+    throw new Error(
+      "Admin content fetch failed"
+    );
+  }
+
+  const rows =
+    await response.json();
+
+  const userIds = [
+    ...new Set(
+      rows
+        .map((row) => row.user_id)
+        .filter(Boolean)
+    )
+  ];
+
+  const profiles =
+    await fetchProfilesById(
+      userIds,
+      env
+    );
+
+  const usernameById =
+    new Map(
+      profiles.map(
+        (profile) => [
+          profile.id,
+          profile.username
+        ]
+      )
+    );
+
+  return rows.map(
+    (row) => ({
+      id: row.id,
+      type,
+      username:
+        usernameById.get(
+          row.user_id
+        ) || "Unknown",
+      category:
+        isAction
+          ? row.category
+          : null,
+      text:
+        isAction
+          ? row.action_text
+          : row.discovery_text,
+      status:
+        row.moderation_status,
+      createdAt:
+        row.created_at,
+      moderatedAt:
+        row.moderated_at
+    })
+  );
+}
+
+async function getAdminContent(
+  request,
+  env
+) {
+  const context =
+    await adminContext(
+      request,
+      env,
+      true
+    );
+
+  if (context.response) {
+    return context.response;
+  }
+
+  const url =
+    new URL(request.url);
+
+  const type =
+    url.searchParams.get("type");
+
+  const status =
+    url.searchParams.get("status");
+
+  if (
+    !["action", "discovery"].includes(
+      type
+    )
+  ) {
+    return json(
+      { error: "Invalid content type." },
+      400
+    );
+  }
+
+  if (
+    ![
+      "pending",
+      "published",
+      "rejected"
+    ].includes(status)
+  ) {
+    return json(
+      { error: "Invalid status." },
+      400
+    );
+  }
+
+  const items =
+    await fetchAdminContentRows(
+      type,
+      status,
+      env
+    );
+
+  return json({ items });
+}
+
+async function fetchAdminTarget(
+  type,
+  id,
+  env
+) {
+  const isAction =
+    type === "action";
+
+  const table =
+    isAction
+      ? "meaningful_actions"
+      : "discoveries";
+
+  const params =
+    new URLSearchParams({
+      select:
+        "id,moderation_status,is_demo",
+      id:
+        `eq.${id}`,
+      limit:
+        "1"
+    });
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/${table}?${params.toString()}`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      "Admin target lookup failed"
+    );
+  }
+
+  const rows =
+    await response.json();
+
+  return rows[0] ?? null;
+}
+
+async function updateAdminTarget(
+  type,
+  id,
+  status,
+  env
+) {
+  const table =
+    type === "action"
+      ? "meaningful_actions"
+      : "discoveries";
+
+  const params =
+    new URLSearchParams({
+      id:
+        `eq.${id}`,
+      is_demo:
+        "eq.false"
+    });
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/${table}?${params.toString()}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY,
+          "content-type":
+            "application/json",
+          Prefer:
+            "return=representation"
+        },
+        body:
+          JSON.stringify({
+            moderation_status:
+              status
+          })
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Admin moderation update failed:",
+      detail
+    );
+
+    throw new Error(
+      "Admin moderation update failed"
+    );
+  }
+
+  const rows =
+    await response.json();
+
+  return rows[0] ?? null;
+}
+
+async function appendAdminAudit(
+  adminUserId,
+  type,
+  id,
+  previousStatus,
+  nextStatus,
+  env
+) {
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/admin_audit_log`,
+      {
+        method: "POST",
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY,
+          "content-type":
+            "application/json"
+        },
+        body:
+          JSON.stringify({
+            admin_user_id:
+              adminUserId,
+            event_type:
+              "moderation_status_changed",
+            target_type:
+              type === "action"
+                ? "meaningful_action"
+                : "discovery",
+            target_id:
+              String(id),
+            details: {
+              previousStatus,
+              nextStatus
+            }
+          })
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Admin audit insert failed:",
+      detail
+    );
+
+    throw new Error(
+      "Admin audit insert failed"
+    );
+  }
+}
+
+async function moderateAdminContent(
+  request,
+  env
+) {
+  const context =
+    await adminContext(
+      request,
+      env,
+      true
+    );
+
+  if (context.response) {
+    return context.response;
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json(
+      { error: "Invalid request." },
+      400
+    );
+  }
+
+  const type =
+    body.type;
+
+  const id =
+    Number.parseInt(
+      body.id,
+      10
+    );
+
+  const status =
+    body.status;
+
+  if (
+    !["action", "discovery"].includes(
+      type
+    ) ||
+    !Number.isInteger(id) ||
+    id < 1 ||
+    !["published", "rejected"].includes(
+      status
+    )
+  ) {
+    return json(
+      { error: "Invalid moderation request." },
+      400
+    );
+  }
+
+  const target =
+    await fetchAdminTarget(
+      type,
+      id,
+      env
+    );
+
+  if (
+    !target ||
+    target.is_demo === true
+  ) {
+    return json(
+      { error: "Content not found." },
+      404
+    );
+  }
+
+  if (
+    target.moderation_status ===
+    status
+  ) {
+    return json({
+      success: true,
+      item: target
+    });
+  }
+
+  const updated =
+    await updateAdminTarget(
+      type,
+      id,
+      status,
+      env
+    );
+
+  if (!updated) {
+    return json(
+      { error: "Content not found." },
+      404
+    );
+  }
+
+  await appendAdminAudit(
+    context.user.id,
+    type,
+    id,
+    target.moderation_status,
+    status,
+    env
+  );
+
+  return json({
+    success: true,
+    item: updated
+  });
+}
+
 /* -------------------------
    WORKER
 ------------------------- */
@@ -1907,6 +2539,36 @@ export default {
       new URL(request.url);
 
     try {
+      if (
+        url.pathname === "/api/admin/status" &&
+        request.method === "GET"
+      ) {
+        return await getAdminStatus(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/admin/content" &&
+        request.method === "GET"
+      ) {
+        return await getAdminContent(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/admin/moderate" &&
+        request.method === "POST"
+      ) {
+        return await moderateAdminContent(
+          request,
+          env
+        );
+      }
+
       if (
         url.pathname === "/api/auth/request" &&
         request.method === "POST"
