@@ -333,6 +333,11 @@ Current repository inspection confirms the live implementation contains:
   - the second classifier uses active Cloudflare Workers AI model `@cf/meta/llama-3.1-8b-instruct-fast` and holds profanity/obscenity, hostile/degrading attacks, hate/dehumanization, threats/violence encouragement, self-harm encouragement, explicit sexual content/exploitation, private identifying information/doxxing, spam/promotion/solicitation, substantially off-purpose content, and uncertain cases;
   - civil discussion of controversial, political, religious, or difficult subjects is not automatically held merely because of the topic;
   - model/service failure remains fail-closed to `pending`; V1 still never auto-rejects.
+- 2026-10-08 production moderation retest passed:
+  - normal appropriate content published automatically;
+  - controlled hostile/profane content was held as Pending;
+  - admin review workflow successfully surfaced the held content and moderation behavior worked as intended;
+  - this completes the core security/admin/moderation production proof for V1.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -346,14 +351,14 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-test the revised Project Meaningful moderation standard.**
+**Implement account export/deletion and Privacy/Terms.**
 
-1. Submit a normal, clearly appropriate Action and confirm it publishes immediately.
-2. Submit a controlled Action containing mild profanity/hostile wording and confirm it goes to **Pending**, not the public feed.
-3. In `/admin.html`, confirm the Pending item appears and can be published or rejected.
-4. Repeat the safe/pending check once for a Discovery.
-5. Verify moderation actions continue to create audit-log events.
-6. If these pass, the security/admin/moderation phase is complete; proceed to account deletion/export + Privacy/Terms.
+1. Add a simple authenticated **Download My Data** action to Your Record.
+2. Add a deliberate **Delete My Account** flow that deletes the authenticated user and their associated Actions/Discoveries, then signs the browser out.
+3. Do not test deletion using the only current admin account; use a disposable test account so Project Experiment administration is not accidentally removed.
+4. Add plain-language Privacy and Terms pages covering public submissions, private email/account identity, moderation, deletion behavior, demo content, and the fact that Project Meaningful is a public experiment.
+5. Before finalizing legal-page identity/contact language, obtain the correct legal entity/contact email rather than guessing.
+6. After this, set the launch date / Day N and decide when to retire demo content.
 
 ## Short remaining roadmap
 1. Activate first admin + production-test abuse/security, moderation, Your Record, feeds/archives, and submission flows.
