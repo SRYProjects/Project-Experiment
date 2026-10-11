@@ -1352,7 +1352,7 @@ async function fetchUserActions(
     const params =
       new URLSearchParams({
         select:
-          "id,category,action_text,moderation_status,created_at",
+          "id,category,action_text,moderation_status,created_at,moderated_at",
         user_id:
           `eq.${userId}`,
         is_demo:
@@ -1467,6 +1467,421 @@ async function getUserRecord(
         createdAt:
           row.created_at
       }))
+  });
+}
+
+/* -------------------------
+   ACCOUNT EXPORT / DELETION
+------------------------- */
+
+async function fetchUserProfileById(
+  userId,
+  env
+) {
+  const params =
+    new URLSearchParams({
+      select:
+        "id,username,created_at",
+      id:
+        `eq.${userId}`,
+      is_demo:
+        "eq.false",
+      limit:
+        "1"
+    });
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/profiles?${params.toString()}`,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+
+  if (!response.ok) {
+    throw new Error(
+      "Profile export lookup failed"
+    );
+  }
+
+  const rows =
+    await response.json();
+
+  return rows[0] ?? null;
+}
+
+async function fetchUserDiscoveries(
+  userId,
+  env
+) {
+  const rows = [];
+  const pageSize = 1000;
+  let offset = 0;
+
+  while (true) {
+    const params =
+      new URLSearchParams({
+        select:
+          "id,discovery_text,moderation_status,created_at,moderated_at",
+        user_id:
+          `eq.${userId}`,
+        is_demo:
+          "eq.false",
+        order:
+          "created_at.desc",
+        limit:
+          String(pageSize),
+        offset:
+          String(offset)
+      });
+
+    const response =
+      await fetch(
+        `${env.SUPABASE_URL}/rest/v1/discoveries?${params.toString()}`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${env.SUPABASE_SECRET_KEY}`,
+            apikey:
+              env.SUPABASE_SECRET_KEY
+          }
+        }
+      );
+
+    if (!response.ok) {
+      throw new Error(
+        "Discovery export fetch failed"
+      );
+    }
+
+    const page =
+      await response.json();
+
+    rows.push(...page);
+
+    if (page.length < pageSize) {
+      break;
+    }
+
+    offset += pageSize;
+  }
+
+  return rows;
+}
+
+async function getAccountExport(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json(
+      {
+        error:
+          "Authentication required."
+      },
+      401
+    );
+  }
+
+  const [
+    profile,
+    actions,
+    discoveries
+  ] =
+    await Promise.all([
+      fetchUserProfileById(
+        user.id,
+        env
+      ),
+      fetchUserActions(
+        user.id,
+        env
+      ),
+      fetchUserDiscoveries(
+        user.id,
+        env
+      )
+    ]);
+
+  const payload = {
+    exportedAt:
+      new Date().toISOString(),
+
+    account: {
+      accountId:
+        user.id,
+      email:
+        user.email ?? null,
+      username:
+        profile?.username ?? null,
+      accountCreatedAt:
+        user.created_at ?? null,
+      profileCreatedAt:
+        profile?.created_at ?? null
+    },
+
+    meaningfulActions:
+      actions.map((row) => ({
+        id: row.id,
+        category: row.category,
+        text: row.action_text,
+        status:
+          row.moderation_status,
+        createdAt:
+          row.created_at,
+        moderatedAt:
+          row.moderated_at ?? null
+      })),
+
+    discoveries:
+      discoveries.map((row) => ({
+        id: row.id,
+        text:
+          row.discovery_text,
+        status:
+          row.moderation_status,
+        createdAt:
+          row.created_at,
+        moderatedAt:
+          row.moderated_at ?? null
+      }))
+  };
+
+  return new Response(
+    JSON.stringify(
+      payload,
+      null,
+      2
+    ),
+    {
+      status: 200,
+      headers: {
+        "content-type":
+          "application/json; charset=utf-8",
+        "content-disposition":
+          'attachment; filename="project-meaningful-data.json"',
+        "cache-control":
+          "no-store"
+      }
+    }
+  );
+}
+
+async function anonymizeAdminAuditActor(
+  userId,
+  env
+) {
+  const params =
+    new URLSearchParams({
+      admin_user_id:
+        `eq.${userId}`
+    });
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/admin_audit_log?${params.toString()}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY,
+          "content-type":
+            "application/json",
+          Prefer:
+            "return=minimal"
+        },
+        body:
+          JSON.stringify({
+            admin_user_id:
+              null
+          })
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Admin audit de-identification failed:",
+      detail
+    );
+
+    throw new Error(
+      "Account deletion preparation failed"
+    );
+  }
+}
+
+async function removeRateLimitKey(
+  rawKey,
+  env
+) {
+  if (!rawKey) {
+    return;
+  }
+
+  const keyHash =
+    await hashRateLimitKey(
+      rawKey,
+      env
+    );
+
+  const params =
+    new URLSearchParams({
+      key_hash:
+        `eq.${keyHash}`
+    });
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/abuse_rate_limits?${params.toString()}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY,
+          Prefer:
+            "return=minimal"
+        }
+      }
+    );
+
+  if (!response.ok) {
+    console.warn(
+      "Rate-limit cleanup did not complete."
+    );
+  }
+}
+
+async function deleteAccount(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json(
+      {
+        error:
+          "Authentication required."
+      },
+      401
+    );
+  }
+
+  let body;
+
+  try {
+    body =
+      await request.json();
+  } catch {
+    return json(
+      {
+        error:
+          "Invalid request."
+      },
+      400
+    );
+  }
+
+  if (
+    body.confirmation !== "DELETE"
+  ) {
+    return json(
+      {
+        error:
+          "Type DELETE to confirm account deletion."
+      },
+      400
+    );
+  }
+
+  const limited =
+    await consumeRateLimit(
+      env,
+      "account-delete:user:1h",
+      user.id,
+      3,
+      3600
+    );
+
+  if (!limited.allowed) {
+    return rateLimitResponse(
+      "Too many account-deletion attempts. Please wait before trying again.",
+      limited.retryAfter
+    );
+  }
+
+  await anonymizeAdminAuditActor(
+    user.id,
+    env
+  );
+
+  const deleteResponse =
+    await fetch(
+      `${env.SUPABASE_URL}/auth/v1/admin/users/${encodeURIComponent(user.id)}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY
+        }
+      }
+    );
+
+  if (!deleteResponse.ok) {
+    const detail =
+      await deleteResponse.text();
+
+    console.error(
+      "Supabase account deletion failed:",
+      detail
+    );
+
+    return json(
+      {
+        error:
+          "We couldn't delete the account. Please try again or contact pr@meaningfulventuresinc.com."
+      },
+      502
+    );
+  }
+
+  await Promise.allSettled([
+    removeRateLimitKey(
+      user.id,
+      env
+    ),
+    removeRateLimitKey(
+      user.email || "",
+      env
+    )
+  ]);
+
+  return json({
+    success: true
   });
 }
 
@@ -2700,6 +3115,26 @@ export default {
         request.method === "POST"
       ) {
         return await createProfileForUser(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/account/export" &&
+        request.method === "GET"
+      ) {
+        return await getAccountExport(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/account" &&
+        request.method === "DELETE"
+      ) {
+        return await deleteAccount(
           request,
           env
         );
