@@ -1,6 +1,6 @@
 # Project Experiment — Project State
 
-Last updated: 2026-10-08  
+Last updated: 2026-10-11  
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -338,6 +338,15 @@ Current repository inspection confirms the live implementation contains:
   - controlled hostile/profane content was held as Pending;
   - admin review workflow successfully surfaced the held content and moderation behavior worked as intended;
   - this completes the core security/admin/moderation production proof for V1.
+- 2026-10-11 account/privacy implementation:
+  - locked operator identity as **Meaningful Ventures, Inc.** with contact **pr@meaningfulventuresinc.com**;
+  - added authenticated JSON export at `GET /api/account/export`, surfaced as **Download My Data** in Your Record;
+  - added explicit account-deletion flow at `DELETE /api/account`; user must type `DELETE` before the destructive action is enabled;
+  - account deletion uses Supabase Auth's service-role deletion path; existing profile → Action/Discovery cascades remove participant submissions;
+  - applied migration `20261011123500 account_deletion_audit_anonymization` so an administrator's account identifier can be removed from otherwise append-only moderation audit history before account deletion;
+  - deletion also attempts to remove current account/email rate-limit hashes; other short-lived abuse-prevention hashes age out within approximately two days;
+  - added `/privacy.html` and `/terms.html` plus footer links on the homepage and both public archives;
+  - production deletion must be tested only with a disposable non-admin account; do **not** use the sole current admin account for the destructive test.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
@@ -351,21 +360,23 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Implement account export/deletion and Privacy/Terms.**
+**Production-test account export/deletion and legal pages.**
 
-1. Add a simple authenticated **Download My Data** action to Your Record.
-2. Add a deliberate **Delete My Account** flow that deletes the authenticated user and their associated Actions/Discoveries, then signs the browser out.
-3. Do not test deletion using the only current admin account; use a disposable test account so Project Experiment administration is not accidentally removed.
-4. Add plain-language Privacy and Terms pages covering public submissions, private email/account identity, moderation, deletion behavior, demo content, and the fact that Project Meaningful is a public experiment.
-5. Before finalizing legal-page identity/contact language, obtain the correct legal entity/contact email rather than guessing.
-6. After this, set the launch date / Day N and decide when to retire demo content.
+1. With the current admin account, test **Download My Data** only; verify the JSON contains the expected account data, Actions, Discoveries, timestamps, and moderation statuses.
+2. Review `/privacy.html` and `/terms.html` for rendered readability and operator/contact accuracy.
+3. Create/use a disposable non-admin participant account for the destructive test.
+4. On that disposable account, submit at least one Action and one Discovery, then use **Delete My Account** and confirm:
+   - the account can no longer authenticate;
+   - its profile, Action, and Discovery are gone;
+   - public counts/feeds update accordingly.
+5. Do **not** delete the current sole admin account during testing.
+6. If these pass, set the production launch date / Day N and decide when demo content should be retired.
 
 ## Short remaining roadmap
-1. Activate first admin + production-test abuse/security, moderation, Your Record, feeds/archives, and submission flows.
-2. Account deletion/export + Privacy/Terms.
-3. Set launch date / Day N and decide when to retire demo content.
-4. Connect verified resource destinations for Articles / Book / Videos / social when available.
-5. Accessibility, responsive/polish, final launch regression testing.
+1. Production-test account export/deletion + Privacy/Terms.
+2. Set launch date / Day N and decide when to retire demo content.
+3. Connect verified resource destinations for Articles / Book / Videos / social when available.
+4. Accessibility, responsive/polish, final launch regression testing.
 
 ## End-of-session protocol
 After every substantial build session:
