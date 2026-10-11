@@ -86,8 +86,11 @@ Pending content is visible to its author, not public, and excluded from public c
 - Email and account identity data remain private.
 - No public Meaningful Gap; that concept was removed from V1 because it is too sensitive.
 - No user-uploaded images in V1.
-- Account deletion defaults to deleting the user and associated submissions. If anonymization is ever offered, it must be an explicit choice.
-- Provide a simple export/request mechanism and disclose deletion behavior in Privacy/Terms.
+- Account deletion deletes the authentication account, profile, and associated Meaningful Actions/Discoveries. If anonymization of participant content is ever offered instead, it must be an explicit choice.
+- Signed-in participants can download a **JSON data export** from Your Record containing account information, Actions, Discoveries, timestamps, and moderation status.
+- Privacy and Terms are public pages operated under **Meaningful Ventures, Inc.**; contact email: **pr@meaningfulventuresinc.com**.
+- If an administrator deletes their account, moderation audit events are retained but the administrator account identifier is removed from those audit events.
+- Short-lived keyed-hash abuse-prevention records may persist for approximately two days and are disclosed in Privacy.
 
 ## Retention / return mechanism
 **Your Record is the return mechanism.** V1 does not use streaks or gamification.
@@ -247,6 +250,4 @@ Later decisions supersede earlier proposals:
 Do not infer answers to these:
 - Final production launch date used to calculate “Day N.”
 - Username-change policy.
-- Exact account export UX.
 - Whether/when current moderation will support automatic rejection distinct from pending.
-- Detailed Privacy/Terms copy.
