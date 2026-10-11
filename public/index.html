@@ -686,6 +686,70 @@
         Log an Action
       </button>
     </div>
+
+    <div class="record-account-tools">
+      <div>
+        <h3>Your account</h3>
+        <p>Download a copy of your Project Meaningful data or permanently delete your account.</p>
+      </div>
+
+      <div class="record-account-actions">
+        <button id="downloadDataButton" class="secondary-button" type="button">
+          Download My Data
+        </button>
+
+        <button id="deleteAccountButton" class="danger-button" type="button">
+          Delete My Account
+        </button>
+      </div>
+
+      <div id="accountToolsMessage" class="message hidden" role="status"></div>
+    </div>
+  </dialog>
+
+  <dialog id="deleteAccountDialog" class="delete-account-dialog">
+    <button
+      id="closeDeleteAccountDialog"
+      class="close-button"
+      aria-label="Close"
+      type="button"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">DELETE ACCOUNT</p>
+    <h2>This cannot be undone.</h2>
+
+    <p class="dialog-copy">
+      Deleting your account permanently removes your Project Meaningful account, public username, Meaningful Actions, and Discoveries. Your contributions will disappear from the public experiment.
+    </p>
+
+    <p class="dialog-copy">
+      To confirm, type <strong>DELETE</strong> below.
+    </p>
+
+    <label class="delete-confirmation-label">
+      Confirmation
+      <input
+        id="deleteAccountConfirmation"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="DELETE"
+      >
+    </label>
+
+    <div id="deleteAccountMessage" class="message hidden" role="status"></div>
+
+    <div class="dialog-actions">
+      <button id="cancelDeleteAccountButton" class="secondary-button" type="button">
+        Cancel
+      </button>
+
+      <button id="confirmDeleteAccountButton" class="danger-button" type="button" disabled>
+        Permanently Delete Account
+      </button>
+    </div>
   </dialog>
 
   <dialog id="updatesDialog">
@@ -716,11 +780,15 @@
 
   <footer>
     <span>Project Meaningful</span>
-    <span>
-      Project activity uses Eastern Time (America/New_York).
+
+    <span class="footer-links">
+      <span>Project activity uses Eastern Time (America/New_York).</span>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="mailto:pr@meaningfulventuresinc.com">Contact</a>
     </span>
   </footer>
 
-  <script type="module" src="/app.js?v=security-controls-20261008-2"></script>
+  <script type="module" src="/app.js?v=account-controls-20261011-1"></script>
 </body>
 </html>
