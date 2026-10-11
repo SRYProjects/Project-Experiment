@@ -63,6 +63,33 @@ const recordFeed =
 const recordLogActionButton =
   document.querySelector("#recordLogActionButton");
 
+const downloadDataButton =
+  document.querySelector("#downloadDataButton");
+
+const deleteAccountButton =
+  document.querySelector("#deleteAccountButton");
+
+const accountToolsMessage =
+  document.querySelector("#accountToolsMessage");
+
+const deleteAccountDialog =
+  document.querySelector("#deleteAccountDialog");
+
+const closeDeleteAccountDialog =
+  document.querySelector("#closeDeleteAccountDialog");
+
+const cancelDeleteAccountButton =
+  document.querySelector("#cancelDeleteAccountButton");
+
+const deleteAccountConfirmation =
+  document.querySelector("#deleteAccountConfirmation");
+
+const confirmDeleteAccountButton =
+  document.querySelector("#confirmDeleteAccountButton");
+
+const deleteAccountMessage =
+  document.querySelector("#deleteAccountMessage");
+
 const communityRecordButton =
   document.querySelector("#communityRecordButton");
 
@@ -1377,6 +1404,265 @@ recordLogActionButton.addEventListener(
   () => {
     recordDialog.close();
     openParticipation();
+  }
+);
+
+function setAccountToolsMessage(
+  text,
+  success = false
+) {
+  accountToolsMessage.textContent = text;
+  accountToolsMessage.className =
+    text
+      ? success
+        ? "message success"
+        : "message"
+      : "message hidden";
+}
+
+function setDeleteAccountMessage(text) {
+  deleteAccountMessage.textContent =
+    text;
+
+  deleteAccountMessage.className =
+    text
+      ? "message"
+      : "message hidden";
+}
+
+downloadDataButton.addEventListener(
+  "click",
+  async () => {
+    if (!currentSession?.access_token) {
+      recordDialog.close();
+      openReturningParticipantAuth();
+      return;
+    }
+
+    setAccountToolsMessage("");
+    downloadDataButton.disabled = true;
+
+    const originalLabel =
+      downloadDataButton.textContent;
+
+    downloadDataButton.textContent =
+      "Preparing…";
+
+    try {
+      const response =
+        await fetch(
+          "/api/account/export",
+          {
+            headers: {
+              Authorization:
+                `Bearer ${currentSession.access_token}`
+            }
+          }
+        );
+
+      if (response.status === 401) {
+        currentSession = null;
+        setAuthenticatedUI(false);
+        recordDialog.close();
+        openReturningParticipantAuth();
+        return;
+      }
+
+      if (!response.ok) {
+        const result =
+          await response.json();
+
+        throw new Error(
+          result.error ||
+            "Data export failed"
+        );
+      }
+
+      const blob =
+        await response.blob();
+
+      const url =
+        URL.createObjectURL(blob);
+
+      const link =
+        document.createElement("a");
+
+      const date =
+        new Date()
+          .toISOString()
+          .slice(0, 10);
+
+      link.href = url;
+      link.download =
+        `project-meaningful-data-${date}.json`;
+
+      document.body.append(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+
+      setAccountToolsMessage(
+        "Your data file was downloaded.",
+        true
+      );
+    } catch (error) {
+      console.error(
+        "Account export failed:",
+        error
+      );
+
+      setAccountToolsMessage(
+        "We couldn't prepare your data file. Please try again."
+      );
+    } finally {
+      downloadDataButton.disabled = false;
+      downloadDataButton.textContent =
+        originalLabel;
+    }
+  }
+);
+
+deleteAccountButton.addEventListener(
+  "click",
+  () => {
+    recordDialog.close();
+
+    deleteAccountConfirmation.value =
+      "";
+    confirmDeleteAccountButton.disabled =
+      true;
+    setDeleteAccountMessage("");
+
+    deleteAccountDialog.showModal();
+    deleteAccountConfirmation.focus();
+  }
+);
+
+deleteAccountConfirmation.addEventListener(
+  "input",
+  () => {
+    confirmDeleteAccountButton.disabled =
+      deleteAccountConfirmation.value !==
+      "DELETE";
+  }
+);
+
+function closeAccountDeletion() {
+  deleteAccountDialog.close();
+  deleteAccountConfirmation.value = "";
+  confirmDeleteAccountButton.disabled =
+    true;
+  setDeleteAccountMessage("");
+}
+
+closeDeleteAccountDialog.addEventListener(
+  "click",
+  closeAccountDeletion
+);
+
+cancelDeleteAccountButton.addEventListener(
+  "click",
+  closeAccountDeletion
+);
+
+deleteAccountDialog.addEventListener(
+  "click",
+  (event) => {
+    if (
+      event.target ===
+      deleteAccountDialog
+    ) {
+      closeAccountDeletion();
+    }
+  }
+);
+
+confirmDeleteAccountButton.addEventListener(
+  "click",
+  async () => {
+    if (
+      deleteAccountConfirmation.value !==
+      "DELETE"
+    ) {
+      return;
+    }
+
+    if (!currentSession?.access_token) {
+      closeAccountDeletion();
+      openReturningParticipantAuth();
+      return;
+    }
+
+    confirmDeleteAccountButton.disabled =
+      true;
+    setDeleteAccountMessage(
+      "Deleting your account…"
+    );
+
+    try {
+      const response =
+        await fetch(
+          "/api/account",
+          {
+            method: "DELETE",
+            headers: {
+              Authorization:
+                `Bearer ${currentSession.access_token}`,
+              "content-type":
+                "application/json"
+            },
+            body:
+              JSON.stringify({
+                confirmation:
+                  "DELETE"
+              })
+          }
+        );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ||
+            "Account deletion failed"
+        );
+      }
+
+      try {
+        await supabase.auth.signOut();
+      } catch (error) {
+        console.warn(
+          "Local sign-out after deletion failed:",
+          error
+        );
+      }
+
+      currentSession = null;
+      setAuthenticatedUI(false);
+
+      deleteAccountDialog.close();
+
+      alert(
+        "Your Project Meaningful account and contributions have been deleted."
+      );
+
+      window.location.assign("/");
+    } catch (error) {
+      console.error(
+        "Account deletion failed:",
+        error
+      );
+
+      setDeleteAccountMessage(
+        error.message ||
+          "We couldn't delete your account. Please try again."
+      );
+
+      confirmDeleteAccountButton.disabled =
+        false;
+    }
   }
 );
 
