@@ -347,6 +347,9 @@ Current repository inspection confirms the live implementation contains:
   - deletion also attempts to remove current account/email rate-limit hashes; other short-lived abuse-prevention hashes age out within approximately two days;
   - added `/privacy.html` and `/terms.html` plus footer links on the homepage and both public archives;
   - production deletion must be tested only with a disposable non-admin account; do **not** use the sole current admin account for the destructive test.
+  - account/privacy static validation passed: Worker and homepage JavaScript syntax; no duplicate homepage IDs; no missing JavaScript-referenced DOM IDs; export/delete routes present; legal-page operator/contact links present; CSS brace balance passed.
+  - production database verification confirmed the admin audit actor column is nullable and the service-role-only de-identification path works inside a rollback test; rollback restored the existing audit rows unchanged.
+  - production foreign keys confirm auth user → profile → Actions/Discoveries and admin allowlist use ON DELETE CASCADE; full destructive account deletion still requires the disposable-account end-to-end test.
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
