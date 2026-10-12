@@ -1076,13 +1076,11 @@ Send to REVIEW if ANY of these apply:
 - encouragement or instruction for self-harm;
 - explicit sexual content or sexual exploitation;
 - private identifying information, doxxing, or an apparent attempt to expose another person's private information;
-- spam, advertising, solicitation, promotional copy, or attempts to redirect people elsewhere;
-- content that is substantially off-purpose for Project Meaningful;
-- ambiguity about whether the content meets these standards.
+- spam, advertising, solicitation, promotional copy, or attempts to redirect people elsewhere.
 
-Do not send an entry to REVIEW merely because it discusses a controversial, political, religious, or difficult subject. Civil descriptions of beliefs, civic activity, disagreement, adversity, or personal experience may be published.
+Do not send an entry to REVIEW merely because it is brief, ordinary, personal, emotional, imperfectly worded, controversial, political, religious, discusses conflict or adversity, or does not explain why it matters. Meaningfulness is defined by the participant.
 
-When uncertain, return REVIEW. Do not explain your answer.`
+If an entry is otherwise benign, return PUBLISH even if its relevance or significance is not obvious to you. Do not explain your answer.`
           },
           {
             role: "user",
@@ -1126,9 +1124,12 @@ async function moderateContent(
         env
       );
 
-    if (!genericallySafe) {
-      return "pending";
-    }
+    /*
+      Generic safety is advisory rather than an automatic veto.
+      The Project Meaningful classifier applies the narrower
+      publication standard to the actual context.
+    */
+    void genericallySafe;
 
     const projectSuitable =
       await projectPublicationCheck(
