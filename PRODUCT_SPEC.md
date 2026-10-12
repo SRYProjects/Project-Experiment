@@ -78,6 +78,9 @@ Pending content is visible to its author, not public, and excluded from public c
 - Auth responses must not reveal whether an email is registered.
 - Sessions persist on the same browser/device; a new browser/device requires authentication.
 - Expired sessions must prompt reauthentication rather than fail silently.
+- Signed-out visitors see a persistent **Sign In** control in the top navigation; authenticated participants instead see **Your Record** and **Sign Out**.
+- Username-format and username-availability errors in the new-participant flow appear directly beneath the username field.
+- Profile creation after a magic-link callback must tolerate duplicate session events without ending a successful session.
 - Explicit Sign Out.
 - Reserved/admin/system impersonation usernames must be prevented before launch.
 
