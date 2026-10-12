@@ -616,6 +616,96 @@ async function requestAuthLink(
   });
 }
 
+async function sendNewParticipantNotification(
+  profile,
+  user,
+  env
+) {
+  const apiKey =
+    typeof env.RESEND_API_KEY === "string"
+      ? env.RESEND_API_KEY.trim()
+      : "";
+
+  const to =
+    typeof env.ACCOUNT_NOTIFICATION_TO === "string"
+      ? env.ACCOUNT_NOTIFICATION_TO.trim()
+      : "";
+
+  const from =
+    typeof env.ACCOUNT_NOTIFICATION_FROM === "string"
+      ? env.ACCOUNT_NOTIFICATION_FROM.trim()
+      : "";
+
+  if (!apiKey || !to || !from) {
+    console.warn(
+      "New-participant email notification is not configured."
+    );
+    return;
+  }
+
+  const username =
+    typeof profile?.username === "string"
+      ? profile.username
+      : "";
+
+  const email =
+    typeof user?.email === "string"
+      ? user.email
+      : "";
+
+  const joinedAt =
+    profile?.created_at ||
+    new Date().toISOString();
+
+  try {
+    const response =
+      await fetch(
+        "https://api.resend.com/emails",
+        {
+          method: "POST",
+          headers: {
+            Authorization:
+              `Bearer ${apiKey}`,
+            "content-type":
+              "application/json"
+          },
+          body:
+            JSON.stringify({
+              from,
+              to: [to],
+              subject:
+                `New Project Meaningful participant: @${username}`,
+              text:
+                [
+                  "A new Project Meaningful participant completed account creation.",
+                  "",
+                  `Username: @${username}`,
+                  `Email: ${email}`,
+                  `Joined: ${joinedAt}`,
+                  "",
+                  "View the participant directory in the Project Meaningful Admin dashboard."
+                ].join("\n")
+            })
+        }
+      );
+
+    if (!response.ok) {
+      const detail =
+        await response.text();
+
+      console.error(
+        "New-participant notification failed:",
+        detail
+      );
+    }
+  } catch (error) {
+    console.error(
+      "New-participant notification failed:",
+      error
+    );
+  }
+}
+
 async function createProfileForUser(
   request,
   env
@@ -788,10 +878,18 @@ async function createProfileForUser(
   const rows =
     await insertResponse.json();
 
+  const profile =
+    rows?.[0] ?? null;
+
+  await sendNewParticipantNotification(
+    profile,
+    user,
+    env
+  );
+
   return json({
     success: true,
-    profile:
-      rows?.[0] ?? null
+    profile
   });
 }
 
@@ -2614,6 +2712,93 @@ async function getAdminStatus(
   });
 }
 
+async function getAdminParticipants(
+  request,
+  env
+) {
+  const context =
+    await adminContext(
+      request,
+      env,
+      true
+    );
+
+  if (context.response) {
+    return context.response;
+  }
+
+  const response =
+    await fetch(
+      `${env.SUPABASE_URL}/rest/v1/rpc/admin_participant_directory`,
+      {
+        method: "POST",
+        headers: {
+          Authorization:
+            `Bearer ${env.SUPABASE_SECRET_KEY}`,
+          apikey:
+            env.SUPABASE_SECRET_KEY,
+          "content-type":
+            "application/json"
+        },
+        body:
+          "{}"
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Admin participant directory failed:",
+      detail
+    );
+
+    return json(
+      {
+        error:
+          "Unable to load participants."
+      },
+      502
+    );
+  }
+
+  const rows =
+    await response.json();
+
+  const participants =
+    Array.isArray(rows)
+      ? rows.map((row) => ({
+          userId:
+            row.user_id,
+          username:
+            row.username,
+          email:
+            row.email,
+          accountCreatedAt:
+            row.account_created_at,
+          profileCreatedAt:
+            row.profile_created_at,
+          emailConfirmedAt:
+            row.email_confirmed_at,
+          actionCount:
+            Number(row.action_count) || 0,
+          discoveryCount:
+            Number(row.discovery_count) || 0,
+          isAdmin:
+            row.is_admin === true
+        }))
+      : [];
+
+  return json({
+    summary: {
+      registeredParticipants:
+        participants.length
+    },
+    participants
+  });
+}
+
 async function fetchAdminContentRows(
   type,
   status,
@@ -3075,6 +3260,16 @@ export default {
         request.method === "GET"
       ) {
         return await getAdminStatus(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/admin/participants" &&
+        request.method === "GET"
+      ) {
+        return await getAdminParticipants(
           request,
           env
         );
