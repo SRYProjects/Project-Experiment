@@ -167,6 +167,10 @@ Private moderation lives at `/admin.html` and is not linked from public navigati
 
 The admin workflow can review pending Meaningful Actions/Discoveries, publish or reject pending content, and remove already-published content by changing it to rejected. Demo content is excluded. Moderation changes are written to `admin_audit_log`, which is append-only through database triggers. All moderation reads/writes occur through the Worker service boundary.
 
+The Admin dashboard also includes a **Participants view** available only after the same allowlist + AAL2 checks. It shows confirmed participant profiles newest-first with public username, private email, join time, Action count, Discovery count, and admin status. Email addresses are never exposed publicly.
+
+When a participant completes account creation and their profile is first created, the Worker may send a non-blocking **new participant notification** to **pr@meaningfulventuresinc.com** through Resend. The notification is informational only and must never determine whether account creation succeeds. It includes username, private email, and join timestamp. The Worker requires a server-side `RESEND_API_KEY`; the sender address must be on a Resend-verified domain.
+
 ## Explicit exclusions
 V1 does **not** include:
 - comments;
