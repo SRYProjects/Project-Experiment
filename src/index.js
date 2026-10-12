@@ -861,6 +861,47 @@ async function createProfileForUser(
       detail.includes("23505") ||
       detail.includes("23514")
     ) {
+      /*
+        Supabase auth callbacks can emit overlapping session
+        events. If another request created this authenticated
+        user's profile first, the duplicate request is success.
+      */
+      const retryParams =
+        new URLSearchParams({
+          select:
+            "id,username,created_at",
+          id:
+            `eq.${user.id}`,
+          limit:
+            "1"
+        });
+
+      const retryResponse =
+        await fetch(
+          `${env.SUPABASE_URL}/rest/v1/profiles?${retryParams.toString()}`,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${env.SUPABASE_SECRET_KEY}`,
+              apikey:
+                env.SUPABASE_SECRET_KEY
+            }
+          }
+        );
+
+      if (retryResponse.ok) {
+        const retryRows =
+          await retryResponse.json();
+
+        if (retryRows[0]) {
+          return json({
+            success: true,
+            profile:
+              retryRows[0]
+          });
+        }
+      }
+
       return json(
         {
           error:
