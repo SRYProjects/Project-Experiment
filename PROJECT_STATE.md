@@ -371,6 +371,13 @@ Current repository inspection confirms the live implementation contains:
   - the client no longer ends the session solely because profile creation reports a username conflict;
   - added a top-navigation **Sign In** button shown only while signed out;
   - username-format and username-availability messages now render directly beneath the username field with a visible error treatment.
+- 2026-10-12 moderation relevance gate softened:
+  - production testing produced two consecutive Pending Actions, including the clearly benign statement **"I sacrificed a chocolate bar for ice cream"**;
+  - the moderation wall was therefore too strict for the experiment;
+  - removed generic Llama Guard as an automatic veto and retained it as an advisory safety signal;
+  - removed "off-purpose" and generic ambiguity as standalone reasons to hold content;
+  - the Project Meaningful classifier is now explicitly instructed that brief, ordinary, personal, emotional, imperfectly worded, or unexplained-significance content should publish when otherwise benign;
+  - locked product principle: **Meaningfulness is defined by the participant**, not by the moderation model.
 - 2026-10-12 session persistence / notification transport verification:
   - production logs show the disposable participant completed a fresh magic-link sign-in at 2026-10-12 15:29 UTC and no logout followed; repeated profile lookups after authentication remained successful, confirming the earlier profile-race logout defect is corrected in production;
   - the disposable participant remains a confirmed non-admin profile, suitable for the destructive account-deletion test;
@@ -401,21 +408,14 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Complete the destructive account test, then reuse that identity to verify the automatic admin notification.**
+**Retest the softened moderation wall.**
 
-1. While signed in as the current disposable non-admin participant:
-   - submit one clearly appropriate Meaningful Action;
-   - submit one clearly appropriate Discovery;
-   - confirm both appear in **Your Record**.
-2. Use **Your Record → Delete My Account**, type **DELETE**, and complete deletion.
-3. Verify after deletion:
-   - the browser is signed out;
-   - the disposable participant disappears from **Admin → Participants**;
-   - its Action and Discovery disappear from public/private views;
-   - the deleted account cannot sign in.
-4. Then register again with the same disposable email/username (or another disposable identity). Because the prior auth user/profile should be gone, this creates a fresh participant profile.
-5. Confirm the automatic new-participant notification reaches **pr@meaningfulventuresinc.com** from **notifications@projectmeaningful.app**.
-6. Confirm the recreated participant appears in **Admin → Participants**.
+1. Wait for the latest Cloudflare deployment to show **Ready**, then hard-refresh `projectmeaningful.app`.
+2. While signed in as the disposable participant, submit the benign Action **"I sacrificed a chocolate bar for ice cream"** or an equivalent ordinary Action.
+3. Confirm it publishes immediately rather than going to Pending.
+4. Submit one ordinary Discovery and confirm it publishes.
+5. Confirm both appear in **Your Record**.
+6. Then continue the disposable-account deletion test and the automatic new-participant notification test.
 7. If these pass, the account/admin/notification phase is complete; set the launch date / Day N and decide when demo content should be retired.
 
 ## Short remaining roadmap
