@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Project Meaningful — a public experiment in living according to what matters.">
   <title>Project Meaningful</title>
-  <link rel="stylesheet" href="/styles.css?v=steel-blue-gray-20261008-10">
+  <link rel="stylesheet" href="/styles.css?v=auth-email-state-20261011-1">
 
   <script
     src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
@@ -633,6 +633,42 @@
     </div>
 
     <div
+      id="authEmailSentState"
+      class="auth-email-sent hidden"
+      aria-live="polite"
+    >
+      <div class="auth-email-sent-icon" aria-hidden="true">✉</div>
+
+      <p class="eyebrow">EMAIL SENT</p>
+      <h2>Check your inbox.</h2>
+
+      <p id="authEmailSentIntro" class="auth-email-sent-intro">
+        We sent your secure Project Meaningful sign-in link to:
+      </p>
+
+      <strong id="authEmailSentAddress" class="auth-email-sent-address"></strong>
+
+      <div class="auth-email-next-step">
+        <strong>Next step</strong>
+        <span>Open the email and click the secure sign-in link to continue.</span>
+      </div>
+
+      <p class="auth-email-sent-help">
+        It may take a minute. If you do not see it, check your spam or junk folder.
+      </p>
+
+      <div class="dialog-actions auth-email-sent-actions">
+        <button id="authUseDifferentEmailButton" class="secondary-button" type="button">
+          Use a different email
+        </button>
+
+        <button id="authEmailSentCloseButton" class="primary-button" type="button">
+          Got it
+        </button>
+      </div>
+    </div>
+
+    <div
       id="authMessage"
       class="message hidden"
       role="status"
@@ -785,6 +821,6 @@
     </span>
   </footer>
 
-  <script type="module" src="/app.js?v=turnstile-explicit-20261011-1"></script>
+  <script type="module" src="/app.js?v=auth-email-state-20261011-1"></script>
 </body>
 </html>
