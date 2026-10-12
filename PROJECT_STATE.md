@@ -348,6 +348,13 @@ Current repository inspection confirms the live implementation contains:
   - added non-blocking Resend notification code after first profile creation; recipient is **pr@meaningfulventuresinc.com** and sender is configured as **Project Meaningful <notifications@projectmeaningful.app>**;
   - account creation does not fail if notification sending fails or is not configured;
   - Cloudflare Worker secret `RESEND_API_KEY` has now been added by the project owner; Resend confirms **projectmeaningful.app** is the verified sending domain, and **notifications@projectmeaningful.app** is the configured sender. Notification email now requires only a production account-creation test.
+- 2026-10-11 Turnstile explicit-rendering correction:
+  - production retest reached the new visible-feedback path but reported **Verification is still loading**, proving the registration submit handler was now running;
+  - Cloudflare deployment screenshot confirmed the latest commits were active/Ready, so deployment lag was ruled out;
+  - root cause identified in client integration: registration and Discovery called `turnstile.render()` programmatically while the page loaded the Turnstile script in implicit mode;
+  - standardized registration, Action, and Discovery on Cloudflare's documented explicit rendering mode using `api.js?render=explicit`;
+  - all three forms now keep independent widget IDs, independent reset behavior, and explicit load/error feedback;
+  - Action rendering now occurs after its dialog is opened, matching the other dynamic dialog flows.
 - 2026-10-11 account/privacy implementation:
   - locked operator identity as **Meaningful Ventures, Inc.** with contact **pr@meaningfulventuresinc.com**;
   - added authenticated JSON export at `GET /api/account/export`, surfaced as **Download My Data** in Your Record;
@@ -373,21 +380,19 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-test new-participant creation, notification email, and deletion.**
+**Retest registration after the Turnstile rendering correction.**
 
-1. Create one disposable participant with a new username/email:
-   - every click must produce visible feedback;
+1. Wait for the latest Cloudflare deployment to show **Ready**.
+2. Hard-refresh `projectmeaningful.app`.
+3. Open **Join the experiment** and confirm the Turnstile verification loads in the registration form.
+4. Create the disposable participant:
    - success must show **Email sent**;
-   - the Supabase magic-link email must arrive;
-   - after the link is opened and profile creation completes, the participant must appear in **Admin → Participants**.
-2. Confirm a new-participant notification is delivered to **pr@meaningfulventuresinc.com** from **Project Meaningful <notifications@projectmeaningful.app>**.
-3. On that disposable participant, submit at least one Action and one Discovery, then use **Delete My Account** and confirm:
-   - the account can no longer authenticate;
-   - its profile, Action, and Discovery are gone;
-   - Admin → Participants no longer lists it;
-   - public counts/feeds update accordingly.
-4. Do **not** delete the current sole admin account during testing.
-5. If these pass, set the production launch date / Day N and decide when demo content should be retired.
+   - the magic-link email must arrive;
+   - after authentication/profile creation, the account must appear in **Admin → Participants**;
+   - the new-participant notification must reach **pr@meaningfulventuresinc.com** from **notifications@projectmeaningful.app**.
+5. Use that disposable account to complete the Action + Discovery + Delete My Account production test.
+6. Do **not** delete the current sole admin account.
+7. If these pass, set the launch date / Day N and decide when demo content should be retired.
 
 ## Short remaining roadmap
 1. Production-test account export/deletion + Privacy/Terms.
