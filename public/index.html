@@ -8,8 +8,7 @@
   <link rel="stylesheet" href="/styles.css?v=steel-blue-gray-20261008-10">
 
   <script
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    async
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
     defer>
   </script>
 </head>
@@ -392,11 +391,7 @@
           <span id="actionCharacterCount">0</span>/140
         </div>
 
-        <div
-          class="cf-turnstile"
-          data-sitekey="0x4AAAAAAFFXWD-I0BinHjw3"
-          data-action="meaningful_action"
-        ></div>
+        <div id="actionTurnstile"></div>
 
         <button
           id="submitActionButton"
@@ -790,6 +785,6 @@
     </span>
   </footer>
 
-  <script type="module" src="/app.js?v=registration-feedback-20261011-1"></script>
+  <script type="module" src="/app.js?v=turnstile-explicit-20261011-1"></script>
 </body>
 </html>
