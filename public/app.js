@@ -265,6 +265,7 @@ let publicActions = [];
 let lastPublishedActionId = null;
 let publicDiscoveries = [];
 let lastPublishedDiscoveryId = null;
+let actionTurnstileWidgetId = null;
 let discoveryTurnstileWidgetId = null;
 let registrationTurnstileWidgetId = null;
 
@@ -330,6 +331,92 @@ function showActionPendingState() {
   actionPendingState.classList.remove("hidden");
 }
 
+function waitForTurnstile(
+  onReady,
+  onFailure,
+  attempt = 0
+) {
+  if (window.turnstile) {
+    onReady();
+    return;
+  }
+
+  if (attempt >= 40) {
+    onFailure?.();
+    return;
+  }
+
+  window.setTimeout(
+    () =>
+      waitForTurnstile(
+        onReady,
+        onFailure,
+        attempt + 1
+      ),
+    250
+  );
+}
+
+function resetActionTurnstile() {
+  if (
+    window.turnstile &&
+    actionTurnstileWidgetId !== null
+  ) {
+    try {
+      window.turnstile.reset(
+        actionTurnstileWidgetId
+      );
+    } catch (error) {
+      console.warn(
+        "Action verification reset unavailable:",
+        error
+      );
+    }
+  }
+}
+
+function ensureActionTurnstile() {
+  waitForTurnstile(
+    () => {
+      try {
+        if (actionTurnstileWidgetId === null) {
+          actionTurnstileWidgetId =
+            window.turnstile.render(
+              "#actionTurnstile",
+              {
+                sitekey:
+                  "0x4AAAAAAFFXWD-I0BinHjw3",
+                action:
+                  "meaningful_action",
+                "error-callback": () => {
+                  showActionMessage(
+                    "Verification could not be completed. Please try again."
+                  );
+                }
+              }
+            );
+        } else {
+          resetActionTurnstile();
+        }
+      } catch (error) {
+        console.error(
+          "Action verification failed to initialize:",
+          error
+        );
+
+        showActionMessage(
+          "Verification could not load. Please refresh the page and try again."
+        );
+      }
+    },
+    () => {
+      showActionMessage(
+        "Verification could not load. Please refresh the page and try again."
+      );
+    }
+  );
+}
+
 function resetActionForm() {
   actionForm.reset();
 
@@ -337,21 +424,13 @@ function resetActionForm() {
 
   clearActionMessage();
 
-  if (window.turnstile) {
-    try {
-      window.turnstile.reset();
-    } catch (error) {
-      console.warn(
-        "Turnstile reset unavailable:",
-        error
-      );
-    }
-  }
+  resetActionTurnstile();
 }
 
 function prepareNewAction() {
   resetActionForm();
   showActionEntryState();
+  ensureActionTurnstile();
 
   window.setTimeout(() => {
     actionCategory.focus();
@@ -381,47 +460,59 @@ function resetDiscoveryTurnstile() {
     window.turnstile &&
     discoveryTurnstileWidgetId !== null
   ) {
-    window.turnstile.reset(
-      discoveryTurnstileWidgetId
-    );
-  }
-}
-
-function ensureDiscoveryTurnstile(attempt = 0) {
-  if (!window.turnstile) {
-    if (attempt < 20) {
-      window.setTimeout(
-        () => ensureDiscoveryTurnstile(attempt + 1),
-        250
-      );
-    }
-
-    return;
-  }
-
-  window.turnstile.ready(() => {
     try {
-      if (discoveryTurnstileWidgetId === null) {
-        discoveryTurnstileWidgetId =
-          window.turnstile.render(
-            "#discoveryTurnstile",
-            {
-              sitekey:
-                "0x4AAAAAAFFXWD-I0BinHjw3",
-              action:
-                "meaningful_discovery"
-            }
-          );
-      } else {
-        resetDiscoveryTurnstile();
-      }
+      window.turnstile.reset(
+        discoveryTurnstileWidgetId
+      );
     } catch (error) {
-      console.error(
-        "Discovery verification failed to initialize:",
+      console.warn(
+        "Discovery verification reset unavailable:",
         error
       );
     }
-  });
+  }
+}
+
+function ensureDiscoveryTurnstile() {
+  waitForTurnstile(
+    () => {
+      try {
+        if (discoveryTurnstileWidgetId === null) {
+          discoveryTurnstileWidgetId =
+            window.turnstile.render(
+              "#discoveryTurnstile",
+              {
+                sitekey:
+                  "0x4AAAAAAFFXWD-I0BinHjw3",
+                action:
+                  "meaningful_discovery",
+                "error-callback": () => {
+                  showDiscoveryMessage(
+                    "Verification could not be completed. Please try again."
+                  );
+                }
+              }
+            );
+        } else {
+          resetDiscoveryTurnstile();
+        }
+      } catch (error) {
+        console.error(
+          "Discovery verification failed to initialize:",
+          error
+        );
+
+        showDiscoveryMessage(
+          "Verification could not load. Please refresh the page and try again."
+        );
+      }
+    },
+    () => {
+      showDiscoveryMessage(
+        "Verification could not load. Please refresh the page and try again."
+      );
+    }
+  );
 }
 
 function resetRegistrationTurnstile() {
@@ -442,41 +533,46 @@ function resetRegistrationTurnstile() {
   }
 }
 
-function ensureRegistrationTurnstile(attempt = 0) {
-  if (!window.turnstile) {
-    if (attempt < 20) {
-      window.setTimeout(
-        () => ensureRegistrationTurnstile(attempt + 1),
-        250
-      );
-    }
+function ensureRegistrationTurnstile() {
+  waitForTurnstile(
+    () => {
+      try {
+        if (registrationTurnstileWidgetId === null) {
+          registrationTurnstileWidgetId =
+            window.turnstile.render(
+              "#registrationTurnstile",
+              {
+                sitekey:
+                  "0x4AAAAAAFFXWD-I0BinHjw3",
+                action:
+                  "meaningful_registration",
+                "error-callback": () => {
+                  showAuthMessage(
+                    "Verification could not be completed. Please try again."
+                  );
+                }
+              }
+            );
+        } else {
+          resetRegistrationTurnstile();
+        }
+      } catch (error) {
+        console.error(
+          "Registration verification failed to initialize:",
+          error
+        );
 
-    return;
-  }
-
-  window.turnstile.ready(() => {
-    try {
-      if (registrationTurnstileWidgetId === null) {
-        registrationTurnstileWidgetId =
-          window.turnstile.render(
-            "#registrationTurnstile",
-            {
-              sitekey:
-                "0x4AAAAAAFFXWD-I0BinHjw3",
-              action:
-                "meaningful_registration"
-            }
-          );
-      } else {
-        resetRegistrationTurnstile();
+        showAuthMessage(
+          "Verification could not load. Please refresh the page and try again."
+        );
       }
-    } catch (error) {
-      console.error(
-        "Registration verification failed to initialize:",
-        error
+    },
+    () => {
+      showAuthMessage(
+        "Verification could not load. Please refresh the page and try again."
       );
     }
-  });
+  );
 }
 
 function prepareNewDiscovery() {
@@ -509,8 +605,8 @@ function setAuthenticatedUI(authenticated) {
 
 function openParticipation() {
   if (currentSession?.user) {
-    prepareNewAction();
     actionDialog.showModal();
+    prepareNewAction();
     return;
   }
 
@@ -2089,9 +2185,12 @@ actionForm.addEventListener(
     }
 
     const turnstileToken =
-      document.querySelector(
-        '#actionForm input[name="cf-turnstile-response"]'
-      )?.value;
+      window.turnstile &&
+      actionTurnstileWidgetId !== null
+        ? window.turnstile.getResponse(
+            actionTurnstileWidgetId
+          )
+        : "";
 
     if (!turnstileToken) {
       showActionMessage(
@@ -2275,9 +2374,12 @@ discoveryForm.addEventListener(
     }
 
     const turnstileToken =
-      document.querySelector(
-        '#discoveryForm input[name="cf-turnstile-response"]'
-      )?.value;
+      window.turnstile &&
+      discoveryTurnstileWidgetId !== null
+        ? window.turnstile.getResponse(
+            discoveryTurnstileWidgetId
+          )
+        : "";
 
     if (!turnstileToken) {
       showDiscoveryMessage(
