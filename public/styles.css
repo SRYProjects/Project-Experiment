@@ -4833,3 +4833,123 @@ footer a {
     flex-direction: column;
   }
 }
+
+/* -------------------------
+   AUTH EMAIL SENT STATE
+------------------------- */
+
+.auth-email-sent {
+  margin-top: 4px;
+  padding: 30px;
+  border: 2px solid var(--accent);
+  border-radius: 16px;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 18px 44px rgba(11, 37, 64, .24);
+}
+
+.auth-email-sent .eyebrow {
+  margin-top: 18px;
+  color: #8ec8ff;
+}
+
+.auth-email-sent h2 {
+  margin: 5px 0 14px;
+  color: #fff;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+}
+
+.auth-email-sent-icon {
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.6rem;
+  box-shadow: 0 8px 20px rgba(0, 102, 204, .35);
+}
+
+.auth-email-sent-intro {
+  margin: 0;
+  color: #dceafa;
+  line-height: 1.55;
+}
+
+.auth-email-sent-address {
+  margin-top: 10px;
+  padding: 12px 14px;
+  display: block;
+  overflow-wrap: anywhere;
+  border: 1px solid rgba(255, 255, 255, .26);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.auth-email-next-step {
+  margin-top: 20px;
+  padding: 16px;
+  display: grid;
+  gap: 5px;
+  border-left: 4px solid #8ec8ff;
+  background: rgba(255, 255, 255, .08);
+}
+
+.auth-email-next-step strong {
+  color: #fff;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.auth-email-next-step span {
+  color: #fff;
+  line-height: 1.5;
+}
+
+.auth-email-sent-help {
+  margin: 16px 0 0;
+  color: #c4d8ea;
+  font-size: .86rem;
+  line-height: 1.5;
+}
+
+.auth-email-sent-actions {
+  margin-top: 22px;
+  align-items: center;
+}
+
+.auth-email-sent-actions .secondary-button {
+  border-color: rgba(255, 255, 255, .48);
+  color: #fff;
+  background: transparent;
+}
+
+.auth-email-sent-actions .secondary-button:hover {
+  background: rgba(255, 255, 255, .09);
+}
+
+.auth-email-sent-actions .primary-button {
+  background: #fff;
+  color: var(--accent-dark);
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .auth-email-sent {
+    padding: 24px 20px;
+  }
+
+  .auth-email-sent-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .auth-email-sent-actions button {
+    width: 100%;
+  }
+}
