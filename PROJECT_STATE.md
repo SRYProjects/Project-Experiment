@@ -338,6 +338,16 @@ Current repository inspection confirms the live implementation contains:
   - controlled hostile/profane content was held as Pending;
   - admin review workflow successfully surfaced the held content and moderation behavior worked as intended;
   - this completes the core security/admin/moderation production proof for V1.
+- 2026-10-11 registration/admin participant follow-up:
+  - disposable-account test exposed a silent new-participant failure: no success/error message appeared and no email arrived;
+  - live Supabase Auth/edge logs showed the failed attempt never reached Supabase and no new auth user was created, so this was not an email-delivery failure;
+  - new-participant form now uses application-controlled validation (`novalidate`) instead of allowing browser-native validation to block the JavaScript submit handler silently;
+  - username/email/Turnstile failures now always produce explicit in-dialog feedback; the submit button shows **Sending…** and success explicitly says **Email sent**;
+  - added service-role-only `admin_participant_directory()` RPC and an AAL2-protected **Participants** Admin view with username, private email, joined time, Action/Discovery counts, and admin badge;
+  - live database check confirmed the participant directory currently returns the one existing confirmed participant and does not expose through browser roles;
+  - added non-blocking Resend notification code after first profile creation; recipient is **pr@meaningfulventuresinc.com** and sender is configured as **Project Meaningful <notifications@meaningfulventuresinc.com>**;
+  - account creation does not fail if notification sending fails or is not configured;
+  - **manual infrastructure step remains:** add Cloudflare Worker secret `RESEND_API_KEY` and confirm `meaningfulventuresinc.com` is a verified Resend sending domain before notification email can be production-tested.
 - 2026-10-11 account/privacy implementation:
   - locked operator identity as **Meaningful Ventures, Inc.** with contact **pr@meaningfulventuresinc.com**;
   - added authenticated JSON export at `GET /api/account/export`, surfaced as **Download My Data** in Your Record;
@@ -363,16 +373,17 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-test account export/deletion and legal pages.**
+**Retest new-participant creation, then activate/test account notifications.**
 
-1. With the current admin account, test **Download My Data** only; verify the JSON contains the expected account data, Actions, Discoveries, timestamps, and moderation statuses.
-2. Review `/privacy.html` and `/terms.html` for rendered readability and operator/contact accuracy.
-3. Create/use a disposable non-admin participant account for the destructive test.
-4. On that disposable account, submit at least one Action and one Discovery, then use **Delete My Account** and confirm:
-   - the account can no longer authenticate;
-   - its profile, Action, and Discovery are gone;
-   - public counts/feeds update accordingly.
-5. Do **not** delete the current sole admin account during testing.
+1. Retest the disposable participant flow with a new username/email:
+   - every click must now produce visible feedback;
+   - a successful request must show **Email sent**;
+   - the Supabase magic-link email must arrive;
+   - after the link is opened and profile creation completes, the participant must appear in **Admin → Participants**.
+2. If registration succeeds, use the disposable account to finish the existing account-deletion production test.
+3. Add Cloudflare Worker secret **`RESEND_API_KEY`** using the Resend API key already intended for transactional email, without committing it to GitHub.
+4. Confirm **meaningfulventuresinc.com** is a verified Resend sending domain for **notifications@meaningfulventuresinc.com**. If the verified sender differs, update only `ACCOUNT_NOTIFICATION_FROM`.
+5. Create one more disposable confirmed account and confirm the new-participant notification reaches **pr@meaningfulventuresinc.com**.
 6. If these pass, set the production launch date / Day N and decide when demo content should be retired.
 
 ## Short remaining roadmap
