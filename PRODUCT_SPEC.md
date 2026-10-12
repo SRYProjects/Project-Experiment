@@ -133,14 +133,14 @@ Moderation states:
 
 V1 automated moderation is pre-publication only. Continuous retroactive automated rescanning is not required. Admin must be able to remove published content manually.
 
-Automatic publication uses a conservative two-stage moderation policy:
+Automatic publication uses a two-stage moderation policy:
 1. deterministic civility screening sends obvious profanity to `pending`;
-2. Cloudflare Llama Guard must classify the text as generically safe;
-3. a Project Meaningful-specific classifier must also return `PUBLISH`.
+2. Cloudflare Llama Guard supplies a generic safety signal;
+3. the Project Meaningful-specific classifier makes the final contextual publication decision.
 
-The Project Meaningful publication classifier sends content to `pending` for profanity/obscenity, hostile or degrading attacks, hate/dehumanization, threats or encouragement of violence, self-harm encouragement, explicit sexual content/exploitation, private identifying information/doxxing, spam/promotion/solicitation, substantially off-purpose content, or ambiguity about whether the entry meets the publication standard. Controversial, political, religious, or difficult subject matter is **not** by itself a reason to hold content; civil descriptions of beliefs, civic activity, disagreement, adversity, and personal experience may publish.
+The Project Meaningful classifier holds content for clear publication concerns such as abusive content, safety concerns, private identifying information, or spam/promotion. It must **not** hold an entry merely because it is brief, ordinary, personal, emotional, imperfectly worded, controversial, or because its significance is not obvious to the model. **Meaningfulness is defined by the participant.**
 
-Any moderation-model error, malformed response, or uncertainty fails closed to `pending`. V1 still does **not** automatically assign `rejected`; rejection remains an administrator decision.
+A moderation-model/service error or malformed final classifier response still fails closed to `pending`. V1 does **not** automatically assign `rejected`; rejection remains an administrator decision.
 
 ## Abuse controls
 V1 requires:
