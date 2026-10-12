@@ -371,6 +371,11 @@ Current repository inspection confirms the live implementation contains:
   - the client no longer ends the session solely because profile creation reports a username conflict;
   - added a top-navigation **Sign In** button shown only while signed out;
   - username-format and username-availability messages now render directly beneath the username field with a visible error treatment.
+- 2026-10-12 session persistence / notification transport verification:
+  - production logs show the disposable participant completed a fresh magic-link sign-in at 2026-10-12 15:29 UTC and no logout followed; repeated profile lookups after authentication remained successful, confirming the earlier profile-race logout defect is corrected in production;
+  - the disposable participant remains a confirmed non-admin profile, suitable for the destructive account-deletion test;
+  - a direct Resend delivery test from **Project Meaningful <notifications@projectmeaningful.app>** to **pr@meaningfulventuresinc.com** returned **delivered**, confirming the verified sender/recipient transport works;
+  - this direct email test does not by itself prove the Cloudflare Worker secret/automatic new-account trigger, so the automatic notification path still requires a fresh profile-creation event.
 - 2026-10-11 account/privacy implementation:
   - locked operator identity as **Meaningful Ventures, Inc.** with contact **pr@meaningfulventuresinc.com**;
   - added authenticated JSON export at `GET /api/account/export`, surfaced as **Download My Data** in Your Record;
@@ -396,20 +401,22 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Retest session persistence and inline username feedback.**
+**Complete the destructive account test, then reuse that identity to verify the automatic admin notification.**
 
-1. Wait for the latest Cloudflare deployment to show **Ready**, then hard-refresh `projectmeaningful.app`.
-2. Confirm a signed-out visitor sees **Sign In** in the top navigation.
-3. Request a sign-in link for the disposable account and open it in the same browser:
-   - the session must remain signed in;
-   - **Sign In** must disappear;
-   - **Your Record** and **Sign Out** must appear;
-   - no username-conflict message should appear.
-4. Try a deliberately already-used username in the new-participant form and confirm the error appears directly beneath the username field.
-5. Confirm the disposable participant appears in **Admin → Participants**.
-6. Continue the administrative notification test, then complete Action + Discovery + **Delete My Account** using a disposable non-admin participant.
-7. Do **not** delete the current sole admin account.
-8. If these pass, set the launch date / Day N and decide when demo content should be retired.
+1. While signed in as the current disposable non-admin participant:
+   - submit one clearly appropriate Meaningful Action;
+   - submit one clearly appropriate Discovery;
+   - confirm both appear in **Your Record**.
+2. Use **Your Record → Delete My Account**, type **DELETE**, and complete deletion.
+3. Verify after deletion:
+   - the browser is signed out;
+   - the disposable participant disappears from **Admin → Participants**;
+   - its Action and Discovery disappear from public/private views;
+   - the deleted account cannot sign in.
+4. Then register again with the same disposable email/username (or another disposable identity). Because the prior auth user/profile should be gone, this creates a fresh participant profile.
+5. Confirm the automatic new-participant notification reaches **pr@meaningfulventuresinc.com** from **notifications@projectmeaningful.app**.
+6. Confirm the recreated participant appears in **Admin → Participants**.
+7. If these pass, the account/admin/notification phase is complete; set the launch date / Day N and decide when demo content should be retired.
 
 ## Short remaining roadmap
 1. Production-test account export/deletion + Privacy/Terms.
