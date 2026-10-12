@@ -198,6 +198,21 @@ const existingForm =
 const authMessage =
   document.querySelector("#authMessage");
 
+const authEmailSentState =
+  document.querySelector("#authEmailSentState");
+
+const authEmailSentIntro =
+  document.querySelector("#authEmailSentIntro");
+
+const authEmailSentAddress =
+  document.querySelector("#authEmailSentAddress");
+
+const authUseDifferentEmailButton =
+  document.querySelector("#authUseDifferentEmailButton");
+
+const authEmailSentCloseButton =
+  document.querySelector("#authEmailSentCloseButton");
+
 const recordButton =
   document.querySelector("#recordButton");
 
@@ -265,6 +280,7 @@ let publicActions = [];
 let lastPublishedActionId = null;
 let publicDiscoveries = [];
 let lastPublishedDiscoveryId = null;
+let lastAuthEmailMode = "new";
 let actionTurnstileWidgetId = null;
 let discoveryTurnstileWidgetId = null;
 let registrationTurnstileWidgetId = null;
@@ -286,7 +302,49 @@ function showAuthMessage(
 
 function clearAuthMessage() {
   authMessage.textContent = "";
-  authMessage.classList.add("hidden");
+  authMessage.className =
+    "message hidden";
+}
+
+function showJoinAuthState() {
+  clearAuthMessage();
+  authEmailSentState.classList.add(
+    "hidden"
+  );
+  existingForm.classList.add("hidden");
+  authForm.classList.remove("hidden");
+}
+
+function showExistingAuthState() {
+  clearAuthMessage();
+  authEmailSentState.classList.add(
+    "hidden"
+  );
+  authForm.classList.add("hidden");
+  existingForm.classList.remove("hidden");
+}
+
+function showEmailSentState(
+  email,
+  mode = "new"
+) {
+  clearAuthMessage();
+
+  lastAuthEmailMode = mode;
+
+  authForm.classList.add("hidden");
+  existingForm.classList.add("hidden");
+  authEmailSentState.classList.remove(
+    "hidden"
+  );
+
+  authEmailSentAddress.textContent =
+    email;
+
+  authEmailSentIntro.textContent =
+    mode === "existing"
+      ? "If this email belongs to a Project Meaningful account, a secure sign-in link will arrive at:"
+      : "We sent your secure Project Meaningful sign-in link to:";
 }
 
 function showActionMessage(message) {
@@ -610,7 +668,7 @@ function openParticipation() {
     return;
   }
 
-  clearAuthMessage();
+  showJoinAuthState();
   authDialog.showModal();
   ensureRegistrationTurnstile();
 }
@@ -622,7 +680,7 @@ function openDiscovery() {
     return;
   }
 
-  clearAuthMessage();
+  showJoinAuthState();
   authDialog.showModal();
   ensureRegistrationTurnstile();
 }
@@ -727,21 +785,46 @@ closeRecordDialog.addEventListener(
 existingUserButton.addEventListener(
   "click",
   () => {
-    clearAuthMessage();
-
-    authForm.classList.add("hidden");
-    existingForm.classList.remove("hidden");
+    showExistingAuthState();
   }
 );
 
 newUserButton.addEventListener(
   "click",
   () => {
-    clearAuthMessage();
-
-    existingForm.classList.add("hidden");
-    authForm.classList.remove("hidden");
+    showJoinAuthState();
     ensureRegistrationTurnstile();
+  }
+);
+
+authUseDifferentEmailButton.addEventListener(
+  "click",
+  () => {
+    if (lastAuthEmailMode === "existing") {
+      showExistingAuthState();
+
+      window.setTimeout(() => {
+        document
+          .querySelector("#existingEmail")
+          .focus();
+      }, 0);
+
+      return;
+    }
+
+    showJoinAuthState();
+    ensureRegistrationTurnstile();
+
+    window.setTimeout(() => {
+      emailInput.focus();
+    }, 0);
+  }
+);
+
+authEmailSentCloseButton.addEventListener(
+  "click",
+  () => {
+    authDialog.close();
   }
 );
 
@@ -876,9 +959,9 @@ joinForm.addEventListener(
         return;
       }
 
-      showAuthMessage(
-        "Email sent. Check your inbox for your secure Project Meaningful sign-in link.",
-        true
+      showEmailSentState(
+        email,
+        "new"
       );
 
       resetRegistrationTurnstile();
@@ -966,8 +1049,9 @@ signInForm.addEventListener(
       the email belongs to an account.
     */
 
-    showAuthMessage(
-      "If that email belongs to an account, a secure sign-in link will be sent."
+    showEmailSentState(
+      email,
+      "existing"
     );
   }
 );
