@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex,nofollow">
   <title>Project Meaningful Admin</title>
-  <link rel="stylesheet" href="/styles.css?v=admin-mfa-fix-20261008-2">
+  <link rel="stylesheet" href="/styles.css?v=admin-participants-20261011-1">
 </head>
 
 <body class="admin-page">
@@ -18,8 +18,8 @@
   <main class="admin-shell">
     <section class="admin-intro">
       <p class="eyebrow">PRIVATE ADMIN</p>
-      <h1>Moderation</h1>
-      <p>Review pending submissions and remove published content when necessary.</p>
+      <h1>Administration</h1>
+      <p>Review content and monitor confirmed Project Meaningful participants.</p>
     </section>
 
     <section id="adminAuthPanel" class="admin-panel">
@@ -102,41 +102,90 @@
     </section>
 
     <section id="adminModerationPanel" class="admin-panel hidden">
-      <div class="admin-toolbar">
-        <div>
-          <p class="eyebrow">CONTENT</p>
-          <h2>Moderation queue</h2>
+      <div class="admin-dashboard-tabs" role="tablist" aria-label="Admin views">
+        <button
+          id="adminModerationTab"
+          class="admin-tab-button"
+          type="button"
+          role="tab"
+          aria-selected="true"
+        >
+          Moderation
+        </button>
+
+        <button
+          id="adminParticipantsTab"
+          class="admin-tab-button"
+          type="button"
+          role="tab"
+          aria-selected="false"
+        >
+          Participants
+        </button>
+      </div>
+
+      <div id="adminModerationView">
+        <div class="admin-toolbar">
+          <div>
+            <p class="eyebrow">CONTENT</p>
+            <h2>Moderation queue</h2>
+          </div>
+
+          <div class="admin-filters">
+            <label>
+              Type
+              <select id="adminContentType">
+                <option value="action">Meaningful Actions</option>
+                <option value="discovery">Discoveries</option>
+              </select>
+            </label>
+
+            <label>
+              Status
+              <select id="adminContentStatus">
+                <option value="pending">Pending</option>
+                <option value="published">Published</option>
+              </select>
+            </label>
+
+            <button id="adminRefreshButton" class="secondary-button" type="button">Refresh</button>
+          </div>
         </div>
 
-        <div class="admin-filters">
-          <label>
-            Type
-            <select id="adminContentType">
-              <option value="action">Meaningful Actions</option>
-              <option value="discovery">Discoveries</option>
-            </select>
-          </label>
-
-          <label>
-            Status
-            <select id="adminContentStatus">
-              <option value="pending">Pending</option>
-              <option value="published">Published</option>
-            </select>
-          </label>
-
-          <button id="adminRefreshButton" class="secondary-button" type="button">Refresh</button>
+        <div id="adminContentList" class="admin-content-list" aria-live="polite">
+          <p class="empty-state">Loading…</p>
         </div>
       </div>
 
-      <div id="adminContentList" class="admin-content-list" aria-live="polite">
-        <p class="empty-state">Loading…</p>
+      <div id="adminParticipantsView" class="hidden">
+        <div class="admin-toolbar">
+          <div>
+            <p class="eyebrow">PEOPLE</p>
+            <h2>Participants</h2>
+            <p class="admin-toolbar-copy">
+              Confirmed accounts only. Email addresses are private and visible only in this MFA-protected admin area.
+            </p>
+          </div>
+
+          <button id="adminParticipantsRefreshButton" class="secondary-button" type="button">
+            Refresh
+          </button>
+        </div>
+
+        <div class="admin-participant-summary">
+          <strong id="adminParticipantCount">—</strong>
+          <span>Registered participants</span>
+        </div>
+
+        <div id="adminParticipantsList" class="admin-participants-list" aria-live="polite">
+          <p class="empty-state">Loading…</p>
+        </div>
       </div>
     </section>
 
     <div id="adminMessage" class="message hidden" role="status"></div>
   </main>
 
-  <script type="module" src="/admin.js?v=admin-mfa-fix-20261008-2"></script>
+  <script type="module" src="/admin.js?v=admin-participants-20261011-1"></script>
 </body>
 </html>
