@@ -171,6 +171,15 @@ const clearDiscoveriesFilters =
 const joinForm =
   document.querySelector("#joinForm");
 
+const usernameInput =
+  document.querySelector("#username");
+
+const emailInput =
+  document.querySelector("#email");
+
+const joinSubmitButton =
+  document.querySelector("#joinSubmitButton");
+
 const signInForm =
   document.querySelector("#signInForm");
 
@@ -263,9 +272,15 @@ let registrationTurnstileWidgetId = null;
    MESSAGES
 ------------------------- */
 
-function showAuthMessage(message) {
+function showAuthMessage(
+  message,
+  success = false
+) {
   authMessage.textContent = message;
-  authMessage.classList.remove("hidden");
+  authMessage.className =
+    success
+      ? "message success"
+      : "message";
 }
 
 function clearAuthMessage() {
@@ -646,22 +661,40 @@ joinForm.addEventListener(
     clearAuthMessage();
 
     const username =
-      document
-        .querySelector("#username")
-        .value
-        .trim();
+      usernameInput.value.trim();
 
     const email =
-      document
-        .querySelector("#email")
-        .value
-        .trim();
+      emailInput.value
+        .trim()
+        .toLowerCase();
+
+    if (!username) {
+      showAuthMessage(
+        "Enter a username."
+      );
+      usernameInput.focus();
+      return;
+    }
 
     if (!/^[A-Za-z0-9_]{3,30}$/.test(username)) {
       showAuthMessage(
         "Username must be 3–30 characters using only letters, numbers, or underscores."
       );
+      usernameInput.focus();
+      return;
+    }
 
+    if (
+      !email ||
+      email.length > 254 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        email
+      )
+    ) {
+      showAuthMessage(
+        "Enter a valid email address."
+      );
+      emailInput.focus();
       return;
     }
 
@@ -675,15 +708,33 @@ joinForm.addEventListener(
 
     if (!turnstileToken) {
       showAuthMessage(
-        "Please complete the verification."
+        registrationTurnstileWidgetId === null
+          ? "Verification is still loading. Please wait a moment and try again."
+          : "Please complete the verification."
       );
 
+      ensureRegistrationTurnstile();
       return;
     }
 
     localStorage.setItem(
       "meaningful_pending_username",
       username
+    );
+
+    const originalLabel =
+      joinSubmitButton.textContent;
+
+    joinSubmitButton.disabled = true;
+    joinSubmitButton.setAttribute(
+      "aria-busy",
+      "true"
+    );
+    joinSubmitButton.textContent =
+      "Sending…";
+
+    showAuthMessage(
+      "Sending your secure sign-in link…"
     );
 
     try {
@@ -706,8 +757,14 @@ joinForm.addEventListener(
           }
         );
 
-      const result =
-        await response.json();
+      let result = {};
+
+      try {
+        result =
+          await response.json();
+      } catch {
+        result = {};
+      }
 
       if (!response.ok) {
         localStorage.removeItem(
@@ -724,7 +781,8 @@ joinForm.addEventListener(
       }
 
       showAuthMessage(
-        "Check your email for your secure Project Meaningful sign-in link."
+        "Email sent. Check your inbox for your secure Project Meaningful sign-in link.",
+        true
       );
 
       resetRegistrationTurnstile();
@@ -743,6 +801,13 @@ joinForm.addEventListener(
       );
 
       resetRegistrationTurnstile();
+    } finally {
+      joinSubmitButton.disabled = false;
+      joinSubmitButton.removeAttribute(
+        "aria-busy"
+      );
+      joinSubmitButton.textContent =
+        originalLabel;
     }
   }
 );
