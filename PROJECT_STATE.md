@@ -355,6 +355,12 @@ Current repository inspection confirms the live implementation contains:
   - standardized registration, Action, and Discovery on Cloudflare's documented explicit rendering mode using `api.js?render=explicit`;
   - all three forms now keep independent widget IDs, independent reset behavior, and explicit load/error feedback;
   - Action rendering now occurs after its dialog is opened, matching the other dynamic dialog flows.
+- 2026-10-11 email-sent confirmation UX:
+  - production registration succeeded after the Turnstile correction; the confirmation email was delivered and the clicked link created a second confirmed real profile in Supabase;
+  - the previous success treatment was judged too visually weak: a plain bordered message beneath the form could easily be missed;
+  - successful new-participant and returning-participant auth requests now replace the form with a dedicated high-contrast **Check your inbox** state showing the destination email, explicit next step, spam/junk guidance, and clear close/change-email actions;
+  - returning-participant copy still preserves anti-enumeration behavior by saying the link arrives only if the email belongs to an account;
+  - Resend activity currently shows the Supabase confirmation email but no separate Worker API request for the new-participant admin notification, so notification delivery remains unverified and should be retested after the latest deployment.
 - 2026-10-11 account/privacy implementation:
   - locked operator identity as **Meaningful Ventures, Inc.** with contact **pr@meaningfulventuresinc.com**;
   - added authenticated JSON export at `GET /api/account/export`, surfaced as **Download My Data** in Your Record;
@@ -380,17 +386,13 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Retest registration after the Turnstile rendering correction.**
+**Verify the prominent email-sent state, then finish notification/deletion testing.**
 
-1. Wait for the latest Cloudflare deployment to show **Ready**.
-2. Hard-refresh `projectmeaningful.app`.
-3. Open **Join the experiment** and confirm the Turnstile verification loads in the registration form.
-4. Create the disposable participant:
-   - success must show **Email sent**;
-   - the magic-link email must arrive;
-   - after authentication/profile creation, the account must appear in **Admin → Participants**;
-   - the new-participant notification must reach **pr@meaningfulventuresinc.com** from **notifications@projectmeaningful.app**.
-5. Use that disposable account to complete the Action + Discovery + Delete My Account production test.
+1. Wait for the latest Cloudflare deployment to show **Ready**, then hard-refresh `projectmeaningful.app`.
+2. Start a new or returning sign-in request and confirm the form is replaced by the high-contrast **Check your inbox** state.
+3. Confirm the newly created disposable participant appears in **Admin → Participants**.
+4. Create one additional disposable confirmed account and confirm the administrative notification reaches **pr@meaningfulventuresinc.com** from **notifications@projectmeaningful.app**. Resend currently shows the authentication confirmation email but no separate Worker API notification request from the just-completed test, so this remains unverified.
+5. Use a disposable non-admin participant to complete the Action + Discovery + **Delete My Account** production test.
 6. Do **not** delete the current sole admin account.
 7. If these pass, set the launch date / Day N and decide when demo content should be retired.
 
