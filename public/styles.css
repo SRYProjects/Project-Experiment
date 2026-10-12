@@ -4698,3 +4698,138 @@ footer a {
     gap: 8px;
   }
 }
+
+/* -------------------------
+   ADMIN PARTICIPANTS
+------------------------- */
+
+.admin-dashboard-tabs {
+  display: flex;
+  gap: 8px;
+  margin: -6px 0 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-tab-button {
+  width: auto;
+  min-height: 40px;
+  padding: 9px 15px;
+  border: 1px solid #c4d2de;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 800;
+}
+
+.admin-tab-button:hover,
+.admin-tab-button.is-active,
+.admin-tab-button[aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+  background: #eef6fd;
+}
+
+.admin-toolbar-copy {
+  max-width: 650px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+.admin-participant-summary {
+  width: min(260px, 100%);
+  margin: 0 0 22px;
+  padding: 18px 20px;
+  display: grid;
+  gap: 2px;
+  border: 1px solid #c4d2de;
+  border-radius: 10px;
+  background: #f4f8fb;
+}
+
+.admin-participant-summary strong {
+  color: var(--accent-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.admin-participant-summary span {
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.admin-participants-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-participant-item {
+  padding: 18px;
+  border: 1px solid #d3dce5;
+  border-radius: 10px;
+  background: #f9fbfd;
+}
+
+.admin-participant-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-participant-heading > strong {
+  color: var(--accent-dark);
+  font-size: 1rem;
+}
+
+.admin-participant-badges {
+  display: flex;
+  gap: 6px;
+}
+
+.admin-participant-badge {
+  padding: 3px 7px;
+  border: 1px solid #9fb7ca;
+  border-radius: 999px;
+  color: #315c7e;
+  background: #edf5fb;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.admin-participant-email {
+  margin-top: 8px;
+  color: var(--ink);
+  font-size: .92rem;
+}
+
+.admin-participant-meta {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 18px;
+  color: var(--muted);
+  font-size: .8rem;
+}
+
+@media (max-width: 760px) {
+  .admin-dashboard-tabs {
+    align-items: stretch;
+  }
+
+  .admin-participant-heading,
+  .admin-participant-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
