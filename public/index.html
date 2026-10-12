@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Project Meaningful — a public experiment in living according to what matters.">
   <title>Project Meaningful</title>
-  <link rel="stylesheet" href="/styles.css?v=auth-email-state-20261011-1">
+  <link rel="stylesheet" href="/styles.css?v=auth-race-signin-20261011-1">
 
   <script
     src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
@@ -20,6 +20,7 @@
     <nav aria-label="Primary navigation">
       <a href="#community">Community</a>
       <a href="#follow">Follow the Project</a>
+      <button id="signInButton" class="nav-button" type="button">Sign In</button>
       <button id="recordButton" class="nav-button hidden" type="button">Your Record</button>
       <button id="signOutButton" class="nav-button hidden" type="button">Sign Out</button>
     </nav>
@@ -563,8 +564,15 @@
             maxlength="30"
             pattern="[A-Za-z0-9_]+"
             autocomplete="username"
+            aria-describedby="usernameMessage"
             required
           >
+
+          <span
+            id="usernameMessage"
+            class="field-message hidden"
+            role="alert"
+          ></span>
         </label>
 
         <label>
@@ -821,6 +829,6 @@
     </span>
   </footer>
 
-  <script type="module" src="/app.js?v=auth-email-state-20261011-1"></script>
+  <script type="module" src="/app.js?v=auth-race-signin-20261011-1"></script>
 </body>
 </html>
