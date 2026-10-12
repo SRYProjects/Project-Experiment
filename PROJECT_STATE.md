@@ -361,6 +361,9 @@ Current repository inspection confirms the live implementation contains:
   - successful new-participant and returning-participant auth requests now replace the form with a dedicated high-contrast **Check your inbox** state showing the destination email, explicit next step, spam/junk guidance, and clear close/change-email actions;
   - returning-participant copy still preserves anti-enumeration behavior by saying the link arrives only if the email belongs to an account;
   - Resend activity currently shows the Supabase confirmation email but no separate Worker API request for the new-participant admin notification, so notification delivery remains unverified and should be retested after the latest deployment.
+- 2026-10-11 email confirmation contrast hotfix:
+  - production screenshot exposed a CSS regression in the new high-contrast email-sent state: it referenced undefined custom property `--navy`, so the browser discarded the background while retaining white/light text;
+  - replaced the invalid variable with the locked Project Meaningful deep navy `#0b2540` and bumped the stylesheet cache key so the corrected contrast deploys immediately.
 - 2026-10-11 profile race/sign-in correction:
   - production logs showed that the disposable account's magic link authenticated successfully, followed immediately by two overlapping `/api/profile` requests;
   - one profile insert succeeded and the duplicate request conflicted; the client then ended the session because it treated the duplicate as a genuine username conflict;
