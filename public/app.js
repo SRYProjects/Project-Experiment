@@ -180,6 +180,9 @@ const emailInput =
 const joinSubmitButton =
   document.querySelector("#joinSubmitButton");
 
+const usernameMessage =
+  document.querySelector("#usernameMessage");
+
 const signInForm =
   document.querySelector("#signInForm");
 
@@ -212,6 +215,9 @@ const authUseDifferentEmailButton =
 
 const authEmailSentCloseButton =
   document.querySelector("#authEmailSentCloseButton");
+
+const signInButton =
+  document.querySelector("#signInButton");
 
 const recordButton =
   document.querySelector("#recordButton");
@@ -306,7 +312,25 @@ function clearAuthMessage() {
     "message hidden";
 }
 
+function showUsernameMessage(message) {
+  usernameMessage.textContent = message;
+  usernameMessage.className =
+    message
+      ? "field-message"
+      : "field-message hidden";
+
+  usernameInput.classList.toggle(
+    "field-error",
+    Boolean(message)
+  );
+}
+
+function clearUsernameMessage() {
+  showUsernameMessage("");
+}
+
 function showJoinAuthState() {
+  clearUsernameMessage();
   clearAuthMessage();
   authEmailSentState.classList.add(
     "hidden"
@@ -650,6 +674,11 @@ function prepareNewDiscovery() {
 ------------------------- */
 
 function setAuthenticatedUI(authenticated) {
+  signInButton.classList.toggle(
+    "hidden",
+    authenticated
+  );
+
   recordButton.classList.toggle(
     "hidden",
     !authenticated
@@ -688,6 +717,20 @@ function openDiscovery() {
 /* -------------------------
    DIALOGS
 ------------------------- */
+
+signInButton.addEventListener(
+  "click",
+  () => {
+    showExistingAuthState();
+    authDialog.showModal();
+
+    window.setTimeout(() => {
+      document
+        .querySelector("#existingEmail")
+        .focus();
+    }, 0);
+  }
+);
 
 participateButton.addEventListener(
   "click",
@@ -847,8 +890,10 @@ joinForm.addEventListener(
         .trim()
         .toLowerCase();
 
+    clearUsernameMessage();
+
     if (!username) {
-      showAuthMessage(
+      showUsernameMessage(
         "Enter a username."
       );
       usernameInput.focus();
@@ -856,8 +901,8 @@ joinForm.addEventListener(
     }
 
     if (!/^[A-Za-z0-9_]{3,30}$/.test(username)) {
-      showAuthMessage(
-        "Username must be 3–30 characters using only letters, numbers, or underscores."
+      showUsernameMessage(
+        "Use 3–30 characters: letters, numbers, or underscores only."
       );
       usernameInput.focus();
       return;
@@ -950,10 +995,19 @@ joinForm.addEventListener(
           "meaningful_pending_username"
         );
 
-        showAuthMessage(
-          result.error ||
-            "We couldn't send the sign-in link. Please try again."
-        );
+        if (response.status === 409) {
+          showUsernameMessage(
+            result.error ||
+              "That username isn't available. Please choose another."
+          );
+
+          usernameInput.focus();
+        } else {
+          showAuthMessage(
+            result.error ||
+              "We couldn't send the sign-in link. Please try again."
+          );
+        }
 
         resetRegistrationTurnstile();
         return;
@@ -1116,11 +1170,9 @@ async function ensureProfile(user) {
           "meaningful_pending_username"
         );
 
-        alert(
-          "That username is no longer available. Please sign in again and choose another username."
+        console.warn(
+          "Authenticated user needs a different participant username."
         );
-
-        await supabase.auth.signOut();
       }
 
       return;
