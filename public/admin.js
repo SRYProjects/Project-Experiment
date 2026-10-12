@@ -46,6 +46,20 @@ const mfaCode =
   document.querySelector("#adminMfaCode");
 const moderationPanel =
   document.querySelector("#adminModerationPanel");
+const moderationTab =
+  document.querySelector("#adminModerationTab");
+const participantsTab =
+  document.querySelector("#adminParticipantsTab");
+const moderationView =
+  document.querySelector("#adminModerationView");
+const participantsView =
+  document.querySelector("#adminParticipantsView");
+const participantsRefreshButton =
+  document.querySelector("#adminParticipantsRefreshButton");
+const participantCount =
+  document.querySelector("#adminParticipantCount");
+const participantsList =
+  document.querySelector("#adminParticipantsList");
 const signInForm =
   document.querySelector("#adminSignInForm");
 const adminEmail =
@@ -288,6 +302,204 @@ function formatDate(value) {
       timeStyle: "short"
     }
   ).format(date);
+}
+
+function setAdminView(view) {
+  const showingParticipants =
+    view === "participants";
+
+  moderationView.classList.toggle(
+    "hidden",
+    showingParticipants
+  );
+
+  participantsView.classList.toggle(
+    "hidden",
+    !showingParticipants
+  );
+
+  moderationTab.setAttribute(
+    "aria-selected",
+    String(!showingParticipants)
+  );
+
+  participantsTab.setAttribute(
+    "aria-selected",
+    String(showingParticipants)
+  );
+
+  moderationTab.classList.toggle(
+    "is-active",
+    !showingParticipants
+  );
+
+  participantsTab.classList.toggle(
+    "is-active",
+    showingParticipants
+  );
+}
+
+function renderParticipant(participant) {
+  const article =
+    document.createElement("article");
+
+  article.className =
+    "admin-participant-item";
+
+  const heading =
+    document.createElement("div");
+
+  heading.className =
+    "admin-participant-heading";
+
+  const username =
+    document.createElement("strong");
+
+  username.textContent =
+    `@${participant.username || "unknown"}`;
+
+  const badges =
+    document.createElement("div");
+
+  badges.className =
+    "admin-participant-badges";
+
+  if (participant.isAdmin) {
+    const adminBadge =
+      document.createElement("span");
+
+    adminBadge.className =
+      "admin-participant-badge";
+
+    adminBadge.textContent =
+      "Admin";
+
+    badges.append(adminBadge);
+  }
+
+  heading.append(
+    username,
+    badges
+  );
+
+  const email =
+    document.createElement("div");
+
+  email.className =
+    "admin-participant-email";
+
+  email.textContent =
+    participant.email || "No email available";
+
+  const meta =
+    document.createElement("div");
+
+  meta.className =
+    "admin-participant-meta";
+
+  const joined =
+    document.createElement("span");
+
+  joined.textContent =
+    `Joined ${formatDate(participant.profileCreatedAt || participant.accountCreatedAt)}`;
+
+  const counts =
+    document.createElement("span");
+
+  counts.textContent =
+    `${participant.actionCount || 0} Actions · ${participant.discoveryCount || 0} Discoveries`;
+
+  meta.append(
+    joined,
+    counts
+  );
+
+  article.append(
+    heading,
+    email,
+    meta
+  );
+
+  return article;
+}
+
+async function loadParticipants() {
+  clearMessage();
+
+  participantsList.replaceChildren();
+
+  const loading =
+    document.createElement("p");
+
+  loading.className =
+    "empty-state";
+
+  loading.textContent =
+    "Loading participants…";
+
+  participantsList.append(loading);
+
+  const {
+    response,
+    result
+  } = await api(
+    "/api/admin/participants"
+  );
+
+  if (!response.ok) {
+    if (
+      result.code ===
+      "MFA_REQUIRED"
+    ) {
+      showOnly(mfaPanel);
+      await prepareMfa();
+      return;
+    }
+
+    participantsList.replaceChildren();
+
+    showMessage(
+      result.error ||
+        "Unable to load participants."
+    );
+
+    return;
+  }
+
+  participantCount.textContent =
+    result.summary?.registeredParticipants ?? 0;
+
+  participantsList.replaceChildren();
+
+  const participants =
+    Array.isArray(result.participants)
+      ? result.participants
+      : [];
+
+  if (participants.length === 0) {
+    const empty =
+      document.createElement("p");
+
+    empty.className =
+      "empty-state";
+
+    empty.textContent =
+      "No confirmed participants yet.";
+
+    participantsList.append(empty);
+    return;
+  }
+
+  const fragment =
+    document.createDocumentFragment();
+
+  for (const participant of participants) {
+    fragment.append(
+      renderParticipant(participant)
+    );
+  }
+
+  participantsList.append(fragment);
 }
 
 function renderAdminItem(item) {
@@ -574,6 +786,7 @@ async function loadAdmin() {
   }
 
   showOnly(moderationPanel);
+  setAdminView("moderation");
   await loadContent();
 }
 
@@ -721,6 +934,27 @@ mfaForm.addEventListener(
       );
     }
   }
+);
+
+moderationTab.addEventListener(
+  "click",
+  async () => {
+    setAdminView("moderation");
+    await loadContent();
+  }
+);
+
+participantsTab.addEventListener(
+  "click",
+  async () => {
+    setAdminView("participants");
+    await loadParticipants();
+  }
+);
+
+participantsRefreshButton.addEventListener(
+  "click",
+  loadParticipants
 );
 
 typeSelect.addEventListener(
