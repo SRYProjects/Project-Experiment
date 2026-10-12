@@ -4953,3 +4953,22 @@ footer a {
     width: 100%;
   }
 }
+
+/* -------------------------
+   INLINE AUTH VALIDATION
+------------------------- */
+
+.field-message {
+  margin-top: 7px;
+  display: block;
+  color: #a12e2e;
+  font-size: .82rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+input.field-error {
+  border-color: #b53a32;
+  outline: 2px solid rgba(181, 58, 50, .12);
+  outline-offset: 1px;
+}
