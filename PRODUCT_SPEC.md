@@ -220,15 +220,15 @@ RLS is part of the database security model. Public statistics are exposed throug
 ## Visual direction
 - Serious, editorial, distinctive; not “wellness,” but also not a sterile database interface.
 - The public site should feel like a living community project with intellectual substance behind it.
-- Dark/abstract/moody hero direction suggesting deliberate choice versus autopilot; geometric/structured visual language is preferred over generic gradients or stock imagery.
+- Dark/abstract/moody hero direction suggesting deliberate choice versus autopilot; geometric/structured visual language is preferred over generic gradients or stock imagery. The hero may borrow the compact integrated-stat composition from the approved partner concept while retaining the Project Meaningful palette.
 - Avoid mountains, meditation, stock wellness imagery, aspirational lifestyle clichés, featured-member/social-status hierarchy, and unnecessary animation.
 - Public streams should feel live through real timestamps/content, compact entry density, clear hierarchy, and inviting visual personality rather than gimmicks.
 - Meaningful Actions is the primary visual anchor of the Community area; Discoveries remains prominent but intentionally more compact inside the right rail. Use readable type, normal reading widths, and responsive stacking on smaller screens.
 - Do not place decorative icons beside the Actions/Discoveries section headings unless they communicate real information. Keep iconography inside individual logged entries, where it aids scanning.
 - Each community stream must contain an obvious in-window participation button: **Log an Action** and **Log a Discovery**.
 - The hero should use a full-width abstract/background treatment rather than a separate decorative object beside the question.
-- Project activity statistics should be presented as a clearly readable summary band, not as small secondary metadata. The strip is number-led: no decorative stat icons, centered figures, and larger values than labels.
-- The transition between stats and community should include a clear **Join Project Meaningful** invitation with concrete participation benefits. Do not label this as a subscription until the application actually stores explicit consent.
+- Project activity statistics should be clearly readable and number-led, with no decorative stat icons, centered figures, and larger values than labels. On the homepage they are integrated into the lower hero rather than presented as a separate full-width strip.
+- The Community section opens with an explicit invitation to join the experiment and discover what happens over time through repeated intentional action. Do not label this as a subscription until the application actually stores explicit consent.
 - The community area should feel open rather than boxed: individual entries provide the primary card/border structure; the Actions and Discoveries stream containers themselves should recede.
 - Use a warm ivory/stone community field with restrained teal/navy accents so the live content feels active and central without looking clinical or fragmented.
 - Primary participation buttons use the site's muted-teal anchor color with modest rounded corners rather than sharp rectangles.
