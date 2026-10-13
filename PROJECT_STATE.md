@@ -398,6 +398,12 @@ Current repository inspection confirms the live implementation contains:
 
 The repository's current files and the live Supabase schema exports were inspected directly before this state file was updated.
 
+- 2026-10-13 Cloudflare Worker-name correction:
+  - Cloudflare Production settings confirm the Resend credential exists as an encrypted secret;
+  - Cloudflare Builds exposed a configuration mismatch: the connected Worker is **project-experiment**, while repository `wrangler.jsonc` declared **project-meaningful**;
+  - corrected `wrangler.jsonc` to **project-experiment** so source configuration matches the Worker Cloudflare is actually building and serving;
+  - next required check is a successful production deployment from this corrected configuration, followed by one final automatic participant-notification test.
+
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The 2026-10-06 refinement commits are on `main`; rendered production verification after Cloudflare picks them up is the next required step.
 
@@ -408,19 +414,14 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Finish the disposable-account production test.**
+**Verify the corrected Cloudflare deployment, then test the automatic participant notification once more.**
 
-1. While signed in as the disposable participant, submit one ordinary **Discovery** and confirm it publishes immediately.
-2. Confirm the newly published Action and Discovery both appear in **Your Record**.
-3. Use **Your Record → Delete My Account**, type **DELETE**, and complete deletion.
-4. Verify after deletion:
-   - the browser is signed out;
-   - the disposable participant disappears from **Admin → Participants**;
-   - its published Action and Discovery disappear from public/private views;
-   - the deleted account can no longer sign in.
-5. Re-register the same disposable identity (or another disposable identity) to generate a fresh profile-creation event.
-6. Confirm the automatic new-participant notification reaches **pr@meaningfulventuresinc.com** from **notifications@projectmeaningful.app**.
-7. If these pass, the account/admin/notification phase is complete; move to launch date / Day N and demo-content retirement.
+1. Wait for the latest GitHub commit to appear in Cloudflare Deployments and reach **Ready**.
+2. Confirm the orange Worker-name warning is gone or no longer asks for `project-experiment`.
+3. Delete and recreate the disposable participant one final time to generate a fresh profile-creation event.
+4. Confirm the automatic notification arrives at the configured administrative mailbox from the Project Meaningful notifications sender.
+5. If it still does not fire, inspect Worker runtime logs before changing application code again.
+6. Once notification passes, move to launch date / Day N and demo-content retirement.
 
 ## Short remaining roadmap
 1. Production-test account export/deletion + Privacy/Terms.
