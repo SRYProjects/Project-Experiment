@@ -408,15 +408,19 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Retest the softened moderation wall.**
+**Finish the disposable-account production test.**
 
-1. Wait for the latest Cloudflare deployment to show **Ready**, then hard-refresh `projectmeaningful.app`.
-2. While signed in as the disposable participant, submit the benign Action **"I sacrificed a chocolate bar for ice cream"** or an equivalent ordinary Action.
-3. Confirm it publishes immediately rather than going to Pending.
-4. Submit one ordinary Discovery and confirm it publishes.
-5. Confirm both appear in **Your Record**.
-6. Then continue the disposable-account deletion test and the automatic new-participant notification test.
-7. If these pass, the account/admin/notification phase is complete; set the launch date / Day N and decide when demo content should be retired.
+1. While signed in as the disposable participant, submit one ordinary **Discovery** and confirm it publishes immediately.
+2. Confirm the newly published Action and Discovery both appear in **Your Record**.
+3. Use **Your Record → Delete My Account**, type **DELETE**, and complete deletion.
+4. Verify after deletion:
+   - the browser is signed out;
+   - the disposable participant disappears from **Admin → Participants**;
+   - its published Action and Discovery disappear from public/private views;
+   - the deleted account can no longer sign in.
+5. Re-register the same disposable identity (or another disposable identity) to generate a fresh profile-creation event.
+6. Confirm the automatic new-participant notification reaches **pr@meaningfulventuresinc.com** from **notifications@projectmeaningful.app**.
+7. If these pass, the account/admin/notification phase is complete; move to launch date / Day N and demo-content retirement.
 
 ## Short remaining roadmap
 1. Production-test account export/deletion + Privacy/Terms.
