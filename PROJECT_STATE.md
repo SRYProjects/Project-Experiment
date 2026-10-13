@@ -404,6 +404,18 @@ The repository's current files and the live Supabase schema exports were inspect
   - corrected `wrangler.jsonc` to **project-experiment** so source configuration matches the Worker Cloudflare is actually building and serving;
   - next required check is a successful production deployment from this corrected configuration, followed by one final automatic participant-notification test.
 
+- 2026-10-13 homepage hero/activity consolidation:
+  - reviewed the partner design concept and adopted its strongest structural idea without adopting its color scheme;
+  - removed the separate full-width Project Activity strip and integrated the four real activity statistics into the lower portion of the existing dark hero;
+  - retained the current Project Meaningful blue/navy/steel palette, but changed the hero participation CTA to the partner concept's darker button treatment for stronger emphasis;
+  - replaced the Community heading **"What people are doing—and finding."** with an invitation-led transition: **"Do more of what matters. See what happens over time."**
+  - the Community copy now directly invites visitors to take deliberate actions, record them, return, and observe what changes over time;
+  - existing statistic element IDs were preserved, so the live real-count data path is unchanged.
+- 2026-10-13 disposable-account deletion/recreation status:
+  - prior destructive deletion verification succeeded: the disposable profile and its associated real Action/Discovery disappeared and aggregate real counts returned to the admin-only baseline;
+  - the disposable identity was subsequently recreated and production currently contains 2 real profiles;
+  - the currently visible recreated profile timestamp predates the Worker-name correction deployment, and Resend shows no automatic Worker notification email after that correction; therefore the automatic new-participant notification still requires one genuinely fresh profile-creation event after the corrected deployment.
+
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The 2026-10-06 refinement commits are on `main`; rendered production verification after Cloudflare picks them up is the next required step.
 
@@ -414,13 +426,18 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Verify the corrected Cloudflare deployment, then test the automatic participant notification once more.**
+**Verify the homepage redesign in production, then finish the notification test.**
 
-1. Wait for the latest GitHub commit to appear in Cloudflare Deployments and reach **Ready**.
-2. Confirm the orange Worker-name warning is gone or no longer asks for `project-experiment`.
-3. Delete and recreate the disposable participant one final time to generate a fresh profile-creation event.
-4. Confirm the automatic notification arrives at the configured administrative mailbox from the Project Meaningful notifications sender.
-5. If it still does not fire, inspect Worker runtime logs before changing application code again.
+1. Wait for the homepage redesign commits to deploy and reach **Ready**.
+2. Hard-refresh `projectmeaningful.app` and verify:
+   - the separate Project Activity strip is gone;
+   - the four live stats sit cleanly inside the lower hero;
+   - the dark hero/current palette remain intact;
+   - the hero participation button uses the darker treatment;
+   - the Community section opens with the new join-the-experiment invitation.
+3. After the visual check, delete and recreate the disposable participant once more **after** the corrected Worker-name deployment to produce a genuinely fresh profile-creation event.
+4. Confirm the automatic participant notification reaches the configured administrative mailbox.
+5. If it still does not fire, inspect Cloudflare Worker runtime logs before changing application code.
 6. Once notification passes, move to launch date / Day N and demo-content retirement.
 
 ## Short remaining roadmap
