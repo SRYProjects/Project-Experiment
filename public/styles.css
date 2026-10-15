@@ -5383,3 +5383,51 @@ input.field-error {
     white-space: normal;
   }
 }
+
+/* Balance Follow The Meaningful Project as a complete six-card grid. */
+.standalone-follow-section .resource-grid,
+.standalone-follow-section.follow-section .resource-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.standalone-follow-section .resource-card-join {
+  border-color: #9fc0dc;
+  background:
+    radial-gradient(circle at 86% 14%, rgba(0,102,204,.12), transparent 30%),
+    linear-gradient(145deg, #eef6fc 0%, #dfeef9 100%);
+}
+
+.standalone-follow-section .resource-card-join .resource-icon-join {
+  background: #0066cc;
+}
+
+.resource-join-kicker {
+  margin: 22px 0 0 !important;
+  color: #0066cc !important;
+  font-size: .72rem !important;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.standalone-follow-section .resource-card-join h3 {
+  margin-top: 8px;
+}
+
+.resource-join-button {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+@media (max-width: 1200px) {
+  .standalone-follow-section .resource-grid,
+  .standalone-follow-section.follow-section .resource-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .standalone-follow-section .resource-grid,
+  .standalone-follow-section.follow-section .resource-grid {
+    grid-template-columns: 1fr;
+  }
+}
