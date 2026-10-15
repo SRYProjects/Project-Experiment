@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Project Meaningful — a public experiment in living according to what matters.">
   <title>Project Meaningful</title>
-  <link rel="stylesheet" href="/styles.css?v=creative-audit-20261015-1">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="theme-color" content="#0b2540">
+  <link rel="stylesheet" href="/styles.css?v=resources-contact-20261015-1">
 
   <script
     src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
@@ -20,6 +22,7 @@
     <nav aria-label="Primary navigation">
       <a href="#community">Community</a>
       <a href="#follow">Follow the Project</a>
+      <a href="/contact.html">Contact</a>
       <button id="signInButton" class="nav-button" type="button">Sign In</button>
       <button id="recordButton" class="nav-button hidden" type="button">Your Record</button>
       <button id="signOutButton" class="nav-button hidden" type="button">Sign Out</button>
@@ -275,6 +278,9 @@
             Continue beyond the public experiment through the ideas, resources,
             and application being developed around meaningful living.
           </p>
+          <button id="followJoinButton" class="primary-button follow-heading-join" type="button">
+            Join the Experiment →
+          </button>
         </div>
 
         <div class="resource-grid">
@@ -284,7 +290,9 @@
             </div>
             <h3>Articles</h3>
             <p>Ideas, essays, and practical reflections that extend the conversation.</p>
-            <span class="resource-status">Resource links to be connected</span>
+            <a class="resource-button" href="https://substack.com/@themeaningfulproject" target="_blank" rel="noopener noreferrer">
+              Read on Substack →
+            </a>
           </article>
 
           <article class="resource-card">
@@ -292,8 +300,8 @@
               <span class="resource-icon resource-icon-book" aria-hidden="true">▤</span>
             </div>
             <h3>The Book</h3>
-            <p>The foundational ideas that established the premise behind Project Meaningful.</p>
-            <span class="resource-status">Book link to be connected</span>
+            <p>The foundational ideas behind deliberate living and the gap between intention and action.</p>
+            <a class="resource-button" href="/book.html">Explore the book →</a>
           </article>
 
           <article class="resource-card">
@@ -302,7 +310,7 @@
             </div>
             <h3>Videos</h3>
             <p>Talks, explanations, and conversations for people who prefer to watch and listen.</p>
-            <span class="resource-status">Video links to be connected</span>
+            <span class="resource-status">Coming soon.</span>
           </article>
 
           <article class="resource-card">
@@ -325,18 +333,13 @@
             </button>
           </article>
 
-          <article class="resource-card resource-card-join">
+          <article class="resource-card resource-card-vision">
             <div class="resource-card-top">
-              <span class="resource-icon resource-icon-join" aria-hidden="true">→</span>
+              <span class="resource-icon resource-icon-vision" aria-hidden="true">◇</span>
             </div>
-            <p class="resource-join-kicker">JOIN THE EXPERIMENT</p>
-            <h3>Start with one deliberate action.</h3>
-            <p>
-              Choose something that matters, act on it, and record what happened.
-            </p>
-            <button id="followJoinButton" class="primary-button resource-join-button" type="button">
-              Share Your Action →
-            </button>
+            <h3>The Vision</h3>
+            <p>See how the experiment, daily practice, books, community, courses, and gatherings fit together.</p>
+            <a class="resource-button" href="/vision.html">See the vision →</a>
           </article>
         </div>
     </section>
@@ -834,6 +837,6 @@
     </span>
   </footer>
 
-  <script type="module" src="/app.js?v=creative-audit-20261015-1"></script>
+  <script type="module" src="/app.js?v=resources-contact-20261015-1"></script>
 </body>
 </html>
