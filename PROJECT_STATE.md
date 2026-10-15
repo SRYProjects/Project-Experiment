@@ -1,6 +1,6 @@
 # Project Experiment — Project State
 
-Last updated: 2026-10-11  
+Last updated: 2026-10-15
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -29,9 +29,9 @@ Never guess when history, documentation, and code conflict. Preserve tested beha
 - Cloudflare Worker/API: `src/index.js`.
 - Deployment configuration: `wrangler.jsonc`.
 - Supabase: Auth + PostgreSQL + RLS + project statistics function.
-- Resend: Supabase Custom SMTP for passwordless auth.
+- Resend: Supabase Custom SMTP for passwordless auth plus Worker contact/participant-notification delivery.
 - Cloudflare Turnstile: action-submission verification.
-- Cloudflare Workers AI: Llama Guard moderation.
+- Cloudflare Workers AI: advisory Llama Guard signal plus the Project Meaningful contextual publication classifier.
 - GitHub → Cloudflare deployment is active.
 
 Runtime configuration includes Supabase URL plus server-side Supabase and Turnstile secrets and Workers AI binding. Secrets must never be placed in client code or documentation.
@@ -45,7 +45,7 @@ Runtime configuration includes Supabase URL plus server-side Supabase and Turnst
 
 ## Built
 ### Site shell
-- Homepage hero, experiment introduction, project activity area, Meaningful Actions placeholder, Discoveries placeholder, Project Meaningful section, footer.
+- Homepage hero with integrated real activity, live Actions/Discoveries streams, Your Record access, participation invitation, six-card Follow section, editorial Book/Vision pages, Contact, archives and legal pages.
 - Responsive CSS.
 - Action and authentication dialogs.
 
@@ -111,21 +111,19 @@ Live production testing has confirmed:
 Recent live test examples included Work (“Finished proposal for new clients”) and Sacrifice (“Instead of wasting time, I went for a walk”).
 
 ## Currently unfinished
-- Homepage Meaningful Actions feed, styling, category filter, and exact case-insensitive username search are implemented. The Community area now uses a normal 1280px maximum reading width; the desktop Action feed is 760px high with shorter responsive heights, and links to the full archive. Production verification is required.
-- Dedicated Meaningful Actions archive is implemented with server-side category/username filtering and paginated Load More behavior; production verification is still required.
-- Discoveries submission, moderation, homepage public feed, exact case-insensitive username-filtered archive, and paginated Load More behavior are implemented in code. The 2026-10-06 dialog/Turnstile lifecycle fix requires production verification.
-- Homepage now uses a distinctive abstract hero, a larger dark blue/green/gold project-activity band, a normally proportioned Community section with a compact right rail, and one consolidated **Follow The Meaningful Project** section beneath the Community columns. Production visual verification is required.
-- Your Record is implemented in code as a private authenticated modal with published-action count, distinct published-action days, newest-first action history, and visible Pending/Rejected states. Production verification is required.
-- Abuse/security controls are implemented in code and production database; end-to-end production verification remains.
-- Admin moderation UI/API + TOTP MFA enforcement are implemented; **one admin account is now allowlisted**. Production MFA/moderation testing remains.
-- Demo content is now implemented: 15 fictional Example participant handles, 55 Example actions, and 15 Example discoveries. Production feed/search/archive verification is required.
-- Account deletion/export UX and Privacy/Terms.
-- Final project launch date / dynamic Day N; until launch is set, the interface now says **Not launched** rather than showing a false Day 1.
-- Future full-application update opt-in persistence/consent mechanism; the current UI explains the option but deliberately does not collect consent yet.
-- Accessibility/polish pass.
+This section is current; dated implementation notes below retain the historical sequence.
+
+- **Contact delivery:** production form and direct-email fallback render. Local service-boundary checks pass, but a real send remains unverified. Cloudflare Turnstile displays an interactive human-verification challenge in the audit browser; do not bypass it or weaken protection. CAPTCHA interaction requires action-time approval under browser policy.
+- **Automatic participant notification:** Resend's recent delivery list still has no successful automatic notification or Contact message. A fresh, legitimately authenticated profile-creation event is required. Existing direct Resend transport test is not proof of the Worker trigger.
+- **Binary-asset repair:** the inherited green favicon partially decoded, and the committed book JPEG could not be decoded by Pillow. Both have been regenerated from the original supplied assets, fully decoded, and cache-busted on the repair branch. They are not deployed yet; draft review/merge is the next gate, then confirm the complete green M and curved blue/green book artwork in production.
+- **Mobile/accessibility:** finish rendered mobile/tablet and keyboard/accessibility regression. Desktop homepage, Book, Vision, Contact, both archives, Privacy and Terms have now been inspected in the live browser; desktop stream geometry and homepage filtering pass.
+- **Authenticated regression:** confirm Your Record, JSON export, pending/private visibility, and post-publication targeting in the final signed-in pass. Earlier production admin/MFA/moderation and disposable-account deletion successes remain recorded below; do not repeat destructive tests on the administrator account.
+- **Demo retirement:** timing/threshold remains undecided. Do not silently remove demo rows or change the count definitions.
+- **Future update opt-in:** explicit consent persistence remains outside the implemented flow; joining the experiment does not subscribe participants to updates.
+- **Username changes:** policy remains unresolved.
 
 ## Known risks / technical debt
-- Moderation does not auto-reject. Automatic publication now requires both generic safety clearance and Project Meaningful publication suitability; obvious profanity, any policy uncertainty, and moderation errors become pending.
+- Moderation does not auto-reject. Deterministic civility screening and the Project Meaningful contextual classifier control publication; generic Llama Guard is advisory. Clear publication concerns and model/service errors become pending. Meaningfulness is defined by the participant.
 - Username-change policy is unresolved.
 - Example content uses dedicated `demo_username` fields on actions/discoveries rather than fake auth/profile rows; real rows remain auth-backed. Preserve the identity constraints in future schema work.
 - Browser roles now have **no direct table privileges** on application/admin/security tables; public and authenticated data paths run through the Worker, except the intentionally public aggregate `project_stats()` RPC.
@@ -453,8 +451,22 @@ The repository's current files and the live Supabase schema exports were inspect
   - aligned Actions/Discoveries archive labels with the homepage language (**Participant**, **Search username**);
   - final static integrity checks passed: Worker, homepage and Contact JavaScript syntax; no duplicate homepage IDs; no missing homepage JavaScript DOM references; CSS brace balance; archive search-language consistency; Book page source isolation; and Contact fallback configuration. Production rendering and a live Contact send remain the final external checks.
 
+- 2026-10-15 conversation recovery / production audit:
+  - resumed the correct repository at inherited checkpoint `075ba713e6ef8c763e5bdc2c7f2e1884831fe06a`, after reading PRODUCT_SPEC, PROJECT_STATE, AGENTS, recent commits and current code; unrelated corporate-site/native-app conversation results were excluded;
+  - corrected the stale state-file date and superseded unfinished/moderation summaries. PRODUCT_SPEC still has an obsolete unresolved launch-date bullet, but its September 27, 2026 anchor is already explicitly locked in the Project Activity section; this recovery does not alter product decisions;
+  - production homepage showed 6 real Actions, 0 today, 1 participant and 19 Days; both homepage feeds loaded, with 20 Actions and 15 Discoveries visible in their independent scroll regions;
+  - desktop geometry confirmed no horizontal overflow at the audited 1363px viewport, a roughly 64/36 column split, and exactly aligned Actions/right-rail outer bottoms. Actions guide is readable; Book mockup, Vision and Contact render;
+  - verified Work-category filtering, Reset, exact mixed-case lookup of `PrOdUtToRe`, and a nonexistent-username No results found state; restored default filters afterward;
+  - public Actions archive loaded 50 initial entries and exposed Load More; Discoveries archive loaded 15 entries. Both archives retain Example labels. Privacy and Terms render with the correct operator contact;
+  - **found a real binary defect missed by earlier syntax checks:** inherited favicon PNG failed full decode and appeared half gray in the browser; inherited book-cover JPG had no valid JPEG header and was unidentifiable to Pillow. The apparently visible Book cover was the HTML/CSS fallback, not the supplied cover;
+  - regenerated the 64×64 favicon from `Meaningful_Logo-1_GRN.jpg` and replaced the book asset with a valid 1365×2048 JPEG derived from `Meaningful_Cover(1).jpg`; fully verified/decoded both and bumped all favicon/Book asset cache keys. The original curved blue/green cover artwork is preserved;
+  - 9 isolated Worker boundary checks passed: Contact sender/recipient defaults, missing API key, provider rejection, invalid Turnstile, rate limiting, invalid topic, notification defaults, missing notification key and notification provider failure. Rate-limit requests used keyed hashes. All service calls were mocked; these tests sent no email and do not prove production delivery;
+  - Resend delivery-history inspection found no automatic participant notification or successful Contact send. The live Contact form presents an interactive Cloudflare human-verification challenge. No challenge was solved, no account was created, and no production test message was submitted;
+  - rendered mobile/accessibility regression, fresh-profile notification, real Contact delivery, and demo-retirement policy remain open. Do not close V1 on static checks alone;
+  - automatic approval review rejected the initial broader direct-to-main push. Production main remains at `075ba71`. The proposed change was narrowed to the supplied image repairs, their cache keys, and this checkpoint, on `fix/restore-supplied-assets`, for a draft pull request rather than a production mutation.
+
 ## Deployment status
-Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The final 2026-10-15 public-pass corrections are on `main`; rendered production verification after Cloudflare picks them up is required before V1 is closed.
+Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The inherited final-pass interface is live and has been inspected. The image repairs and cache keys are prepared on `fix/restore-supplied-assets` for a draft pull request. Direct-to-main publication was blocked by automatic approval review; production still serves the inherited assets. Review/merge the narrowed repair before verifying the new assets live. Email delivery and mobile/accessibility verification are still launch gates.
 
 ## Database handoff checkpoint
 - The original live Supabase public-schema baseline was captured on 2026-09-29.
@@ -463,26 +475,20 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-verify the final public pass.**
+**Review/merge the narrowed asset repair, verify its deployment, then finish live delivery tests.**
 
-1. Wait for the latest Cloudflare deployment to reach **Ready**, then hard-refresh `projectmeaningful.app` and `/book.html`.
-2. Verify the final visual/function pass:
-   - favicon is the supplied green **M**;
-   - Meaningful Actions guide is comfortably readable and self-explanatory;
-   - Discoveries is visibly wider on desktop without crowding Actions or breaking responsive stacking;
-   - Discoveries feed visibly contains entries and reaches the intended lower alignment;
-   - Book page shows the cover/mockup and contains only approved book-source copy, with no Vision/project-architecture material;
-   - all primary navigation, Articles, Vision, Book, archive, Privacy, Terms, and Contact destinations open correctly.
-3. Submit one real Contact-form message. Confirm visible success and verify receipt in Resend/the operator mailbox. If it still fails, inspect Cloudflare runtime logs for whether `RESEND_API_KEY` is present before changing application code again.
-4. Generate one fresh participant profile and verify the automatic new-participant notification.
-5. Decide demo-content retirement timing/threshold.
-6. Run the final mobile/accessibility regression. If clean, close V1 and launch.
+1. Review the draft change on `fix/restore-supplied-assets` and obtain approval before merging to `main`. After the approved image-repair commit deploys, open production and verify the complete green M favicon (`green-m-20261015-2`) and original curved blue/green Book cover (`book-cover-20261015-3`), rather than the fallback cover.
+2. Complete a real Contact-form test to the existing operator address, `pr@meaningfulventuresinc.com`, then verify visible success and a delivered Resend record. The current audit browser needs interactive Turnstile verification; obtain action-time CAPTCHA approval before interacting, or use a legitimate user-completed test. Do not bypass protection. If delivery fails, inspect Worker logs/configuration for `RESEND_API_KEY` before changing code again.
+3. Complete a genuinely fresh participant profile through the normal authentication flow and verify its automatic notification. Do not fabricate production auth identities or count a direct Resend send as verification.
+4. Run rendered mobile/tablet and keyboard/accessibility regression.
+5. Resolve demo-content retirement timing with the owner; preserve existing rows/count definitions until decided.
+6. Close V1 only when the applicable launch gates are verified.
 
 ## Short remaining roadmap
-1. Production-verify the final public pass and live-test Contact delivery.
-2. Verify the automatic new-participant notification.
-3. Decide demo-content retirement timing.
-4. Final mobile/accessibility regression, then launch.
+1. Review/merge the asset-repair draft, then verify repaired production assets.
+2. Verify Contact and automatic participant notification delivery.
+3. Complete mobile/accessibility regression and resolve demo retirement.
+4. Close V1 and launch when checks pass.
 
 ## End-of-session protocol
 After every substantial build session:
