@@ -16,6 +16,17 @@ const EXPECTED_HOSTNAME = "projectmeaningful.app";
 const ACTION_TURNSTILE_ACTION = "meaningful_action";
 const DISCOVERY_TURNSTILE_ACTION = "meaningful_discovery";
 const REGISTRATION_TURNSTILE_ACTION = "meaningful_registration";
+const CONTACT_TURNSTILE_ACTION = "meaningful_contact";
+
+const CONTACT_TOPICS = new Set([
+  "General question",
+  "The public experiment",
+  "The Book",
+  "The Vision",
+  "Speaking or media",
+  "Partnership or collaboration",
+  "Technical issue"
+]);
 
 function json(
   data,
@@ -704,6 +715,225 @@ async function sendNewParticipantNotification(
       error
     );
   }
+}
+
+
+async function sendContactMessage(
+  request,
+  env
+) {
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json(
+      { error: "Invalid request." },
+      400
+    );
+  }
+
+  const name =
+    typeof body.name === "string"
+      ? body.name.trim()
+      : "";
+
+  const email =
+    typeof body.email === "string"
+      ? body.email.trim()
+      : "";
+
+  const topic =
+    typeof body.topic === "string"
+      ? body.topic.trim()
+      : "";
+
+  const message =
+    typeof body.message === "string"
+      ? body.message.trim()
+      : "";
+
+  const turnstileToken =
+    body.turnstileToken;
+
+  if (
+    name.length < 2 ||
+    name.length > 80
+  ) {
+    return json(
+      { error: "Enter your name." },
+      400
+    );
+  }
+
+  if (!validEmail(email)) {
+    return json(
+      { error: "Enter a valid email address." },
+      400
+    );
+  }
+
+  if (!CONTACT_TOPICS.has(topic)) {
+    return json(
+      { error: "Choose what your message is about." },
+      400
+    );
+  }
+
+  if (
+    message.length < 10 ||
+    message.length > 2000
+  ) {
+    return json(
+      { error: "Enter a message between 10 and 2000 characters." },
+      400
+    );
+  }
+
+  if (/<[^>]*>/i.test(message)) {
+    return json(
+      { error: "Please send plain text only." },
+      400
+    );
+  }
+
+  const verified =
+    await verifyTurnstile(
+      turnstileToken,
+      request,
+      env,
+      CONTACT_TURNSTILE_ACTION
+    );
+
+  if (!verified) {
+    return json(
+      {
+        error:
+          "Verification failed. Please refresh and try again."
+      },
+      400
+    );
+  }
+
+  const ip =
+    clientIp(request);
+
+  if (ip) {
+    const ipLimit =
+      await consumeRateLimit(
+        env,
+        "contact:ip:1h",
+        ip,
+        5,
+        3600
+      );
+
+    if (!ipLimit.allowed) {
+      return rateLimitResponse(
+        "Too many contact messages were sent from this connection. Please wait before trying again.",
+        ipLimit.retryAfter
+      );
+    }
+  }
+
+  const emailLimit =
+    await consumeRateLimit(
+      env,
+      "contact:email:1d",
+      email.toLowerCase(),
+      5,
+      86400
+    );
+
+  if (!emailLimit.allowed) {
+    return rateLimitResponse(
+      "Too many contact messages were sent from this email today. Please try again later.",
+      emailLimit.retryAfter
+    );
+  }
+
+  const apiKey =
+    typeof env.RESEND_API_KEY === "string"
+      ? env.RESEND_API_KEY.trim()
+      : "";
+
+  const to =
+    typeof env.ACCOUNT_NOTIFICATION_TO === "string"
+      ? env.ACCOUNT_NOTIFICATION_TO.trim()
+      : "";
+
+  const from =
+    typeof env.ACCOUNT_NOTIFICATION_FROM === "string"
+      ? env.ACCOUNT_NOTIFICATION_FROM.trim()
+      : "";
+
+  if (!apiKey || !to || !from) {
+    console.error(
+      "Contact email is not configured."
+    );
+
+    return json(
+      {
+        error:
+          "Contact is temporarily unavailable. Please try again later."
+      },
+      503
+    );
+  }
+
+  const response =
+    await fetch(
+      "https://api.resend.com/emails",
+      {
+        method: "POST",
+        headers: {
+          Authorization:
+            `Bearer ${apiKey}`,
+          "content-type":
+            "application/json"
+        },
+        body:
+          JSON.stringify({
+            from,
+            to: [to],
+            reply_to: email,
+            subject:
+              `Project Meaningful contact: ${topic}`,
+            text:
+              [
+                "A message was submitted through projectmeaningful.app.",
+                "",
+                `Name: ${name}`,
+                `Email: ${email}`,
+                `Topic: ${topic}`,
+                "",
+                message
+              ].join("\n")
+          })
+      }
+    );
+
+  if (!response.ok) {
+    const detail =
+      await response.text();
+
+    console.error(
+      "Contact email failed:",
+      detail
+    );
+
+    return json(
+      {
+        error:
+          "We couldn't send your message. Please try again."
+      },
+      502
+    );
+  }
+
+  return json({
+    success: true
+  });
 }
 
 async function createProfileForUser(
@@ -3332,6 +3562,16 @@ export default {
         request.method === "POST"
       ) {
         return await moderateAdminContent(
+          request,
+          env
+        );
+      }
+
+      if (
+        url.pathname === "/api/contact" &&
+        request.method === "POST"
+      ) {
+        return await sendContactMessage(
           request,
           env
         );
