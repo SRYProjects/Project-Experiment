@@ -433,13 +433,14 @@ The repository's current files and the live Supabase schema exports were inspect
   - extended the desktop Discoveries rail so the right column reaches the same visual endpoint as Meaningful Actions and the Discoveries feed receives the remaining vertical space beneath Your Record;
   - kept **Join the Experiment** as participant signup, not a subscription popup: the Follow-section CTA now opens the existing join/auth flow because V1 does not yet store explicit update-subscription consent;
   - connected **Articles** to the verified The Meaningful Project Substack destination;
-  - added a dedicated **The Book** page grounded in the supplied book brief, with a custom CSS 3D book mockup using a vector web recreation of the supplied cover design; the page directs interest to Substack and Contact rather than implying a sales checkout;
+  - added a dedicated **The Book** page grounded in the supplied book brief, with a custom CSS 3D book mockup using the supplied book-cover artwork; the page directs interest to Substack and Contact rather than implying a sales checkout;
   - changed **Videos** to **Coming soon.** rather than exposing a placeholder destination;
   - added a dedicated **The Vision** page grounded in the supplied Project Meaningful vision document and surfaced it both in the Follow grid and primary navigation;
   - replaced the former sixth Join resource card with **The Vision**, preserving the balanced 3×2 Follow grid while moving the Join CTA to the section heading;
-  - added a Project Meaningful green favicon and applied it across the public, legal, archive, editorial, contact, and admin pages;
+  - added the supplied Project Meaningful green logo as the favicon and applied it across the public, legal, archive, editorial, contact, and admin pages;
   - added a public **Contact** page and a Turnstile-protected `POST /api/contact` Worker endpoint; contact email delivery reuses the configured Resend sender/recipient, validates plain-text input, rate-limits by hashed IP/email, and does not create an account;
   - Privacy now discloses contact-form data use; public archive/legal navigation now includes the Contact path;
+  - binary asset handoff was completed after the initial page build: the temporary vector recreations were replaced with resized copies of the user's supplied green logo and book-cover image, and the temporary SVG files were removed.
   - remaining production work is deployment/render verification plus a live Contact-form send test and the still-open automatic new-participant notification verification.
 
 ## Deployment status
