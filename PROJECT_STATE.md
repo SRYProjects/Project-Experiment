@@ -115,7 +115,6 @@ This section is current; dated implementation notes below retain the historical 
 
 - **Contact delivery:** production form and direct-email fallback render. Local service-boundary checks pass, but a real send remains unverified. Cloudflare Turnstile displays an interactive human-verification challenge in the audit browser; do not bypass it or weaken protection. CAPTCHA interaction requires action-time approval under browser policy.
 - **Automatic participant notification:** Resend's recent delivery list still has no successful automatic notification or Contact message. A fresh, legitimately authenticated profile-creation event is required. Existing direct Resend transport test is not proof of the Worker trigger.
-- **Binary-asset repair:** the inherited green favicon partially decoded, and the committed book JPEG could not be decoded by Pillow. Both have been regenerated from the original supplied assets, fully decoded, and cache-busted on the repair branch. They are not deployed yet; draft review/merge is the next gate, then confirm the complete green M and curved blue/green book artwork in production.
 - **Mobile/accessibility:** finish rendered mobile/tablet and keyboard/accessibility regression. Desktop homepage, Book, Vision, Contact, both archives, Privacy and Terms have now been inspected in the live browser; desktop stream geometry and homepage filtering pass.
 - **Authenticated regression:** confirm Your Record, JSON export, pending/private visibility, and post-publication targeting in the final signed-in pass. Earlier production admin/MFA/moderation and disposable-account deletion successes remain recorded below; do not repeat destructive tests on the administrator account.
 - **Demo retirement:** timing/threshold remains undecided. Do not silently remove demo rows or change the count definitions.
@@ -465,8 +464,15 @@ The repository's current files and the live Supabase schema exports were inspect
   - rendered mobile/accessibility regression, fresh-profile notification, real Contact delivery, and demo-retirement policy remain open. Do not close V1 on static checks alone;
   - automatic approval review rejected the initial broader direct-to-main push. Production main remains at `075ba71`. The proposed change was narrowed to the supplied image repairs, their cache keys, and this checkpoint, on `fix/restore-supplied-assets`, for a draft pull request rather than a production mutation.
 
+- 2026-10-15 approved asset repair verified in production:
+  - owner approved merging PR #1; the reviewed head `2d27b515a34a9f56a35dd2c3386f6a1dd824faaf` was merged without additional code changes as `69ad19768e39ee7081226bddaf93dd881d1a38da`;
+  - live `/book` now requests the repaired JPEG and renders the supplied curved blue/green artwork, rather than the synthetic fallback;
+  - live favicon image shows the complete white M on green with no gray/missing lower half; a homepage reload confirms the new cache key;
+  - Contact test fields were prepared with the public operator address and reference `PM-QA-20261015`, but the interactive Turnstile check remains unsolved and no message has been sent. The latest approval explicitly covered merging PR #1; CAPTCHA interaction still needs action-time confirmation;
+  - no Worker, database, product-specification, or agent-policy changes were made for this repair.
+
 ## Deployment status
-Production is served at **projectmeaningful.app** through the existing GitHub â†’ Cloudflare deployment. The inherited final-pass interface is live and has been inspected. The image repairs and cache keys are prepared on `fix/restore-supplied-assets` for a draft pull request. Direct-to-main publication was blocked by automatic approval review; production still serves the inherited assets. Review/merge the narrowed repair before verifying the new assets live. Email delivery and mobile/accessibility verification are still launch gates.
+Production is served at **projectmeaningful.app** through the existing GitHub â†’ Cloudflare deployment. The inherited final-pass interface is live and has been inspected. PR #1 was explicitly approved by the owner, merged as `69ad19768e39ee7081226bddaf93dd881d1a38da`, and deployed. Live browser inspection confirmed the complete green M at `green-m-20261015-2`, the homepage's updated favicon reference, and the original curved blue/green Book artwork at `book-cover-20261015-3`. The binary-image defect is closed. Email delivery and mobile/accessibility verification are still launch gates.
 
 ## Database handoff checkpoint
 - The original live Supabase public-schema baseline was captured on 2026-09-29.
@@ -475,9 +481,9 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Review/merge the narrowed asset repair, verify its deployment, then finish live delivery tests.**
+**Finish the live Contact delivery test, then verify the fresh-participant notification.**
 
-1. Review the draft change on `fix/restore-supplied-assets` and obtain approval before merging to `main`. After the approved image-repair commit deploys, open production and verify the complete green M favicon (`green-m-20261015-2`) and original curved blue/green Book cover (`book-cover-20261015-3`), rather than the fallback cover.
+1. Asset repair is merged/deployed and visually verified. No further favicon/cover changes are required.
 2. Complete a real Contact-form test to the existing operator address, `pr@meaningfulventuresinc.com`, then verify visible success and a delivered Resend record. The current audit browser needs interactive Turnstile verification; obtain action-time CAPTCHA approval before interacting, or use a legitimate user-completed test. Do not bypass protection. If delivery fails, inspect Worker logs/configuration for `RESEND_API_KEY` before changing code again.
 3. Complete a genuinely fresh participant profile through the normal authentication flow and verify its automatic notification. Do not fabricate production auth identities or count a direct Resend send as verification.
 4. Run rendered mobile/tablet and keyboard/accessibility regression.
@@ -485,10 +491,9 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 6. Close V1 only when the applicable launch gates are verified.
 
 ## Short remaining roadmap
-1. Review/merge the asset-repair draft, then verify repaired production assets.
-2. Verify Contact and automatic participant notification delivery.
-3. Complete mobile/accessibility regression and resolve demo retirement.
-4. Close V1 and launch when checks pass.
+1. Verify Contact and automatic participant notification delivery.
+2. Complete mobile/accessibility regression and resolve demo retirement.
+3. Close V1 and launch when checks pass.
 
 ## End-of-session protocol
 After every substantial build session:
