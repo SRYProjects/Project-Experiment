@@ -21,7 +21,7 @@ Conceptual flow: **Question → Participation → Evidence → Personal Record �
 Homepage order:
 1. Header
 2. Hero / primary participation invitation with integrated Project Activity
-3. Community activity: Meaningful Actions on the left and a personal-first right rail with **Your Record** access above a shorter Discoveries stream
+3. Community activity: Meaningful Actions on the left and a personal-first right rail with **Your Record** access above Discoveries; on desktop the rail stretches to the same visual endpoint as the Actions column
 4. Brief experiment premise + **Share Something Meaningful** participation invitation
 5. **Follow The Meaningful Project** as its own standalone section
 6. Footer
@@ -44,7 +44,7 @@ Primary action: **Share Your Meaningful Action**.
 - Categories: Family, Relationships, Health, Work, Learning, Creativity, Service, Faith, Responsibility, Sacrifice, Other.
 - Public feed: newest first; username, category, action, date/time.
 - Homepage feeds are fixed-height and independently scrollable with clearly visible scrollbars. After filtering, render at most **20 Actions** and **20 Discoveries** on the homepage; use the dedicated archives for deeper browsing.
-- On wider screens, Meaningful Actions is the primary left column. The narrower right rail is personal-first: an expanded **Your Record** card provides access to the participant's record plus direct Action/Discovery entry points, followed by the shorter Discoveries stream. Project Activity is not repeated there because it already lives in the hero. Stack the layout on smaller screens.
+- On wider screens, Meaningful Actions is the primary left column. The narrower right rail is personal-first: an expanded **Your Record** card provides access to the participant's record plus direct Action/Discovery entry points, followed by Discoveries. Project Activity is not repeated there because it already lives in the hero. The right rail and Actions column share the same bottom alignment; Discoveries expands to use the available rail height so real entries are visibly present rather than compressed. Stack the layout on smaller screens.
 - Category filtering.
 - Username search is exact and case-insensitive.
 - Clear “No results found” state.
@@ -93,6 +93,7 @@ Pending content is visible to its author, not public, and excluded from public c
 - Privacy and Terms are public pages operated under **Meaningful Ventures, Inc.**; contact email: **pr@meaningfulventuresinc.com**.
 - If an administrator deletes their account, moderation audit events are retained but the administrator account identifier is removed from those audit events.
 - Short-lived keyed-hash abuse-prevention records may persist for approximately two days and are disclosed in Privacy.
+- Contact form messages are sent to Meaningful Ventures, Inc. through Resend. The form collects name, reply email, topic, and message; it uses Turnstile and HMAC-hashed rate limiting and does not create a Project Meaningful account.
 
 ## Retention / return mechanism
 **Your Record is the return mechanism.** V1 does not use streaks or gamification.
@@ -154,6 +155,8 @@ V1 requires:
   - submissions: **40 per account / day**;
   - submissions: **30 per IP / hour**;
   - exact-username search: **30 per IP / minute**;
+  - contact form: **5 messages per IP / hour**;
+  - contact form: **5 messages per email / day**;
 - Supabase Auth's own provider limits remain an additional upstream boundary;
 - rate-limit records are retained for at most approximately two days and then removed opportunistically.
 
@@ -234,7 +237,13 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - The authoritative site palette is **Project Meaningful blue-led**, anchored on `#0066cc`. Use deep navy for depth, `#0066cc` as the primary action/brand anchor, a stronger **steel blue-gray** family for section differentiation, white for content surfaces, and restrained complementary gold only where emphasis helps. Current core values: deep navy `#0b2540`, ink `#102f4f`, primary blue `#0066cc`, dark blue `#004f9f`, steel blue-gray `#d6e0e8`, and restrained gold `#d89a2b`.
-- **Follow The Meaningful Project** is a separate standalone section after **The Idea Is Simple**. It includes Articles, one non-duplicated Book entry, Videos, the future Application, project updates, and a sixth **Join the Experiment** card so deep scrollers are never left without a participation path. On wider screens, the six cards form a balanced 3×2 grid; at smaller sizes they collapse responsively.
+- **Follow The Meaningful Project** is a separate standalone section after **The Idea Is Simple**. A prominent **Join the Experiment** button sits under the section introduction and opens the existing participant-signup flow; it is deliberately **not** a subscription control because explicit update-consent storage is not implemented. The six-card resource grid contains Articles, The Book, Videos, the future Application, Project Updates, and **The Vision**. On wider screens, the six cards form a balanced 3×2 grid; at smaller sizes they collapse responsively.
+- **Articles** links to the verified The Meaningful Project Substack profile.
+- **The Book** links to a dedicated editorial book page using the approved cover design in a CSS book mockup. The page explains the incidental/verasa distinction, daily practice, and ownership/return framing without implying that the book is currently for sale; interest is directed to Substack or Contact.
+- **Videos** displays **Coming soon.** until a verified destination exists.
+- **The Vision** links to a dedicated public-facing page explaining the larger ecosystem—IDEAL, Meaningful daily practice, application, community, books/content, courses, speaking/gatherings, and organizational application—without publishing internal go-to-market mechanics as site copy.
+- A persistent **Contact** destination is available from primary/public navigation. The contact form is Turnstile-protected, rate-limited, and delivers messages to the operator through Resend.
+- The Project Meaningful green mark is used as the site favicon.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
 
