@@ -93,14 +93,14 @@ const deleteAccountMessage =
 const communityRecordButton =
   document.querySelector("#communityRecordButton");
 
-const railTotalActions =
-  document.querySelector("#railTotalActions");
+const communityLogActionButton =
+  document.querySelector("#communityLogActionButton");
 
-const railParticipants =
-  document.querySelector("#railParticipants");
+const communityLogDiscoveryButton =
+  document.querySelector("#communityLogDiscoveryButton");
 
-const railTodayActions =
-  document.querySelector("#railTodayActions");
+const followJoinButton =
+  document.querySelector("#followJoinButton");
 
 const participateButton =
   document.querySelector("#participateButton");
@@ -1696,6 +1696,21 @@ communityRecordButton.addEventListener(
   openRecord
 );
 
+communityLogActionButton.addEventListener(
+  "click",
+  openParticipation
+);
+
+communityLogDiscoveryButton.addEventListener(
+  "click",
+  openDiscovery
+);
+
+followJoinButton.addEventListener(
+  "click",
+  openParticipation
+);
+
 recordLogActionButton.addEventListener(
   "click",
   () => {
@@ -2606,7 +2621,75 @@ discoveryForm.addEventListener(
    PROJECT STATISTICS
 ------------------------- */
 
+const EXPERIMENT_START_DATE =
+  {
+    year: 2026,
+    month: 9,
+    day: 27
+  };
+
+function experimentDaysActive() {
+  const parts =
+    new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone:
+          "America/New_York",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric"
+      }
+    ).formatToParts(new Date());
+
+  const values =
+    Object.fromEntries(
+      parts
+        .filter(
+          (part) =>
+            ["year", "month", "day"].includes(
+              part.type
+            )
+        )
+        .map(
+          (part) => [
+            part.type,
+            Number(part.value)
+          ]
+        )
+    );
+
+  const todayUtc =
+    Date.UTC(
+      values.year,
+      values.month - 1,
+      values.day
+    );
+
+  const startUtc =
+    Date.UTC(
+      EXPERIMENT_START_DATE.year,
+      EXPERIMENT_START_DATE.month - 1,
+      EXPERIMENT_START_DATE.day
+    );
+
+  return Math.max(
+    1,
+    Math.floor(
+      (todayUtc - startUtc) /
+        86400000
+    ) + 1
+  );
+}
+
 async function loadProjectStats() {
+  const dayCount =
+    experimentDaysActive();
+
+  document.querySelector(
+    "#experimentDay"
+  ).textContent =
+    `${dayCount} ${dayCount === 1 ? "Day" : "Days"}`;
+
   const { data, error } =
     await supabase.rpc(
       "project_stats"
@@ -2632,15 +2715,6 @@ async function loadProjectStats() {
     "#participants"
   ).textContent =
     stats.real_participants ?? 0;
-
-  railTotalActions.textContent =
-    stats.total_actions ?? 0;
-
-  railParticipants.textContent =
-    stats.real_participants ?? 0;
-
-  railTodayActions.textContent =
-    stats.actions_today ?? 0;
 }
 
 await Promise.all([
