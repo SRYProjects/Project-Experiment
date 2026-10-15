@@ -17,6 +17,8 @@ const ACTION_TURNSTILE_ACTION = "meaningful_action";
 const DISCOVERY_TURNSTILE_ACTION = "meaningful_discovery";
 const REGISTRATION_TURNSTILE_ACTION = "meaningful_registration";
 const CONTACT_TURNSTILE_ACTION = "meaningful_contact";
+const DEFAULT_NOTIFICATION_TO = "pr@meaningfulventuresinc.com";
+const DEFAULT_NOTIFICATION_FROM = "Project Meaningful <notifications@projectmeaningful.app>";
 
 const CONTACT_TOPICS = new Set([
   "General question",
@@ -638,14 +640,16 @@ async function sendNewParticipantNotification(
       : "";
 
   const to =
-    typeof env.ACCOUNT_NOTIFICATION_TO === "string"
+    typeof env.ACCOUNT_NOTIFICATION_TO === "string" &&
+    env.ACCOUNT_NOTIFICATION_TO.trim()
       ? env.ACCOUNT_NOTIFICATION_TO.trim()
-      : "";
+      : DEFAULT_NOTIFICATION_TO;
 
   const from =
-    typeof env.ACCOUNT_NOTIFICATION_FROM === "string"
+    typeof env.ACCOUNT_NOTIFICATION_FROM === "string" &&
+    env.ACCOUNT_NOTIFICATION_FROM.trim()
       ? env.ACCOUNT_NOTIFICATION_FROM.trim()
-      : "";
+      : DEFAULT_NOTIFICATION_FROM;
 
   if (!apiKey || !to || !from) {
     console.warn(
@@ -858,24 +862,26 @@ async function sendContactMessage(
       : "";
 
   const to =
-    typeof env.ACCOUNT_NOTIFICATION_TO === "string"
+    typeof env.ACCOUNT_NOTIFICATION_TO === "string" &&
+    env.ACCOUNT_NOTIFICATION_TO.trim()
       ? env.ACCOUNT_NOTIFICATION_TO.trim()
-      : "";
+      : DEFAULT_NOTIFICATION_TO;
 
   const from =
-    typeof env.ACCOUNT_NOTIFICATION_FROM === "string"
+    typeof env.ACCOUNT_NOTIFICATION_FROM === "string" &&
+    env.ACCOUNT_NOTIFICATION_FROM.trim()
       ? env.ACCOUNT_NOTIFICATION_FROM.trim()
-      : "";
+      : DEFAULT_NOTIFICATION_FROM;
 
-  if (!apiKey || !to || !from) {
+  if (!apiKey) {
     console.error(
-      "Contact email is not configured."
+      "Contact email API key is not configured."
     );
 
     return json(
       {
         error:
-          "Contact is temporarily unavailable. Please try again later."
+          "We couldn't send your message through the form. Please email pr@meaningfulventuresinc.com."
       },
       503
     );
