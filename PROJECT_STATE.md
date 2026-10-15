@@ -429,6 +429,19 @@ The repository's current files and the live Supabase schema exports were inspect
   - static validation passed: homepage JavaScript syntax, no duplicate IDs, no missing JavaScript-referenced IDs, CSS brace balance, dynamic Eastern-Time day counter, and all new participation controls.
   - remaining public-completion issues are not visual polish: verified destinations for Articles/Book/Videos are still placeholders; demo-content retirement timing remains a product decision; automatic new-participant notification remains unverified after the Worker-name correction.
 
+- 2026-10-15 resources / vision / contact completion pass:
+  - extended the desktop Discoveries rail so the right column reaches the same visual endpoint as Meaningful Actions and the Discoveries feed receives the remaining vertical space beneath Your Record;
+  - kept **Join the Experiment** as participant signup, not a subscription popup: the Follow-section CTA now opens the existing join/auth flow because V1 does not yet store explicit update-subscription consent;
+  - connected **Articles** to the verified The Meaningful Project Substack destination;
+  - added a dedicated **The Book** page grounded in the supplied book brief, with a custom CSS 3D book mockup using a vector web recreation of the supplied cover design; the page directs interest to Substack and Contact rather than implying a sales checkout;
+  - changed **Videos** to **Coming soon.** rather than exposing a placeholder destination;
+  - added a dedicated **The Vision** page grounded in the supplied Project Meaningful vision document and surfaced it both in the Follow grid and primary navigation;
+  - replaced the former sixth Join resource card with **The Vision**, preserving the balanced 3×2 Follow grid while moving the Join CTA to the section heading;
+  - added a Project Meaningful green favicon and applied it across the public, legal, archive, editorial, contact, and admin pages;
+  - added a public **Contact** page and a Turnstile-protected `POST /api/contact` Worker endpoint; contact email delivery reuses the configured Resend sender/recipient, validates plain-text input, rate-limits by hashed IP/email, and does not create an account;
+  - Privacy now discloses contact-form data use; public archive/legal navigation now includes the Contact path;
+  - remaining production work is deployment/render verification plus a live Contact-form send test and the still-open automatic new-participant notification verification.
+
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The 2026-10-15 creative-completion commits are on `main`; rendered production verification after Cloudflare picks them up is required before this design pass is closed.
 
@@ -439,25 +452,27 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-verify the 2026-10-15 creative pass, then close the remaining launch blockers.**
+**Production-verify the resource/contact completion pass.**
 
 1. Wait for the latest Cloudflare deployment to reach **Ready**, then hard-refresh `projectmeaningful.app`.
-2. Review desktop and mobile for:
-   - blue hero CTA;
-   - larger integrated statistics and the live **N Days** value;
-   - Actions **Browse / Find / Contribute** clarity;
-   - removal of the redundant Project Activity rail card;
-   - expanded personal **Your Record** card and higher Discoveries placement;
-   - balanced six-card Follow grid with its Join invitation.
-3. If the rendered pass is clean, do one fresh disposable profile creation after the Worker-name correction and verify the automatic administrative participant notification in Resend.
-4. Connect only verified destinations for **Articles**, **The Book**, and **Videos**; do not ship placeholder resource-status text as if it were finished navigation.
-5. Decide the demo-content retirement threshold/timing. The experiment-day counter is now locked to **September 27, 2026** and no longer awaits a launch-date decision.
-6. Run final accessibility/responsive regression testing, then treat V1 as launch-ready.
+2. Verify desktop/mobile rendering:
+   - Discoveries extends cleanly to the bottom of the Meaningful Actions composition;
+   - **Join the Experiment** appears beneath **Follow The Meaningful Project** and opens participant signup;
+   - Articles opens the verified Substack page;
+   - The Book opens `/book.html` and the cover mockup renders correctly;
+   - Videos reads **Coming soon.**;
+   - The Vision opens `/vision.html`;
+   - the green favicon appears;
+   - Contact is visible and `/contact.html` renders cleanly.
+3. Send one real Contact-form test and confirm delivery in Resend; verify Turnstile, reply-to behavior, and visible success/failure feedback.
+4. Generate one fresh participant profile after the Worker-name correction and verify the automatic administrative participant notification.
+5. Decide demo-content retirement timing/threshold.
+6. Run final accessibility/responsive regression testing. If clean, V1 is launch-ready.
 
 ## Short remaining roadmap
-1. Production-verify the 2026-10-15 creative pass.
+1. Production-verify the resource/book/vision/contact completion pass and live-test Contact delivery.
 2. Verify the automatic new-participant notification after the Worker-name correction.
-3. Connect verified resource destinations for Articles / Book / Videos and decide demo-content retirement timing.
+3. Decide demo-content retirement timing.
 4. Accessibility, responsive/polish, final launch regression testing.
 
 ## End-of-session protocol
