@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Project Meaningful and Meaningful Ventures, Inc.">
+  <title>Contact | Project Meaningful</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <meta name="theme-color" content="#0b2540">
+  <link rel="stylesheet" href="/styles.css?v=resources-contact-20261015-1">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
+</head>
+
+<body class="editorial-page">
+  <header class="site-header">
+    <a class="brand" href="/">PROJECT MEANINGFUL</a>
+    <nav aria-label="Primary navigation">
+      <a href="/">Experiment</a>
+      <a href="/vision.html">The Vision</a>
+      <a href="/book.html">The Book</a>
+      <a href="https://substack.com/@themeaningfulproject" target="_blank" rel="noopener noreferrer">Articles</a>
+    </nav>
+  </header>
+
+  <main class="contact-page">
+    <section class="contact-intro">
+      <p class="eyebrow">CONTACT</p>
+      <h1>Start a conversation.</h1>
+      <p>
+        Questions about the experiment, the book, the larger Project Meaningful vision,
+        speaking, media, or collaboration are welcome.
+      </p>
+    </section>
+
+    <section class="contact-layout">
+      <div class="contact-context">
+        <p class="eyebrow">PROJECT MEANINGFUL</p>
+        <h2>What is this about?</h2>
+        <p>
+          Project Meaningful is operated by Meaningful Ventures, Inc. Use this form for direct
+          project inquiries. For articles and ongoing writing, you can also follow The Meaningful
+          Project on Substack.
+        </p>
+
+        <div class="contact-links">
+          <a href="/vision.html">See the vision →</a>
+          <a href="/book.html">Explore the book →</a>
+          <a href="https://substack.com/@themeaningfulproject" target="_blank" rel="noopener noreferrer">Visit Substack →</a>
+        </div>
+      </div>
+
+      <div class="contact-form-card">
+        <form id="contactForm" novalidate>
+          <label>
+            Name
+            <input id="contactName" name="name" type="text" autocomplete="name" maxlength="80" required>
+            <span id="contactNameMessage" class="field-message hidden" role="alert"></span>
+          </label>
+
+          <label>
+            Email
+            <input id="contactEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+            <span id="contactEmailMessage" class="field-message hidden" role="alert"></span>
+          </label>
+
+          <label>
+            What is this about?
+            <select id="contactTopic" name="topic" required>
+              <option value="">Choose one</option>
+              <option>General question</option>
+              <option>The public experiment</option>
+              <option>The Book</option>
+              <option>The Vision</option>
+              <option>Speaking or media</option>
+              <option>Partnership or collaboration</option>
+              <option>Technical issue</option>
+            </select>
+            <span id="contactTopicMessage" class="field-message hidden" role="alert"></span>
+          </label>
+
+          <label>
+            Message
+            <textarea id="contactMessageText" name="message" rows="7" maxlength="2000" required></textarea>
+            <span class="character-count"><span id="contactCharacterCount">0</span>/2000</span>
+            <span id="contactBodyMessage" class="field-message hidden" role="alert"></span>
+          </label>
+
+          <div id="contactTurnstile"></div>
+
+          <button id="contactSubmitButton" class="primary-button" type="submit">
+            Send Message
+          </button>
+
+          <div id="contactStatus" class="message hidden" role="status"></div>
+        </form>
+
+        <div id="contactSuccess" class="contact-success hidden" role="status">
+          <p class="eyebrow">MESSAGE SENT</p>
+          <h2>Thank you.</h2>
+          <p>Your message was sent to Project Meaningful. We will respond if a reply is needed.</p>
+          <a class="secondary-button page-button" href="/">Return to the experiment</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Project Meaningful</span>
+    <span class="footer-links">
+      <a href="/">The Experiment</a>
+      <a href="/vision.html">The Vision</a>
+      <a href="/book.html">The Book</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </span>
+  </footer>
+
+  <script type="module" src="/contact.js?v=contact-20261015-1"></script>
+</body>
+</html>
