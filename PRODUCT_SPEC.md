@@ -20,12 +20,11 @@ Conceptual flow: **Question → Participation → Evidence → Personal Record �
 
 Homepage order:
 1. Header
-2. Hero / primary participation invitation
-3. Project activity
-4. Community activity: a normally proportioned two-column desktop layout with Meaningful Actions on the left and a compact right rail containing Project Activity, Your Record access, and a shorter Discoveries stream
-5. Brief experiment premise + **Share Something Meaningful** participation invitation
-6. **Follow The Meaningful Project** as its own standalone section
-7. Footer
+2. Hero / primary participation invitation with integrated Project Activity
+3. Community activity: Meaningful Actions on the left and a personal-first right rail with **Your Record** access above a shorter Discoveries stream
+4. Brief experiment premise + **Share Something Meaningful** participation invitation
+5. **Follow The Meaningful Project** as its own standalone section
+6. Footer
 
 Primary action: **Share Your Meaningful Action**.
 
@@ -45,7 +44,7 @@ Primary action: **Share Your Meaningful Action**.
 - Categories: Family, Relationships, Health, Work, Learning, Creativity, Service, Faith, Responsibility, Sacrifice, Other.
 - Public feed: newest first; username, category, action, date/time.
 - Homepage feeds are fixed-height and independently scrollable with clearly visible scrollbars. After filtering, render at most **20 Actions** and **20 Discoveries** on the homepage; use the dedicated archives for deeper browsing.
-- On wider screens, Meaningful Actions is the primary left column. The narrower right rail contains a compact Project Activity summary, Your Record access, and a shorter Discoveries stream. Stack the layout on smaller screens.
+- On wider screens, Meaningful Actions is the primary left column. The narrower right rail is personal-first: an expanded **Your Record** card provides access to the participant's record plus direct Action/Discovery entry points, followed by the shorter Discoveries stream. Project Activity is not repeated there because it already lives in the hero. Stack the layout on smaller screens.
 - Category filtering.
 - Username search is exact and case-insensitive.
 - Clear “No results found” state.
@@ -111,7 +110,7 @@ Definitions:
 - Unverified users do not count.
 - Demo content is excluded from real counts.
 - Project day/today uses **America/New_York (Eastern Time)**.
-- Day 1 is based on a fixed launch date. Before the public launch date is set, the interface must show **Not launched** rather than fabricate a day count.
+- The experiment day counter is anchored to **September 27, 2026**, the first day the live experiment accepted a real participant. Display elapsed time as **N Days** using Eastern Time and count the start date as Day 1.
 - Do not fabricate activity counts.
 
 ## Demo content
@@ -225,17 +224,17 @@ RLS is part of the database security model. Public statistics are exposed throug
 - Public streams should feel live through real timestamps/content, compact entry density, clear hierarchy, and inviting visual personality rather than gimmicks.
 - Meaningful Actions is the primary visual anchor of the Community area; Discoveries remains prominent but intentionally more compact inside the right rail. Use readable type, normal reading widths, and responsive stacking on smaller screens.
 - Do not place decorative icons beside the Actions/Discoveries section headings unless they communicate real information. Keep iconography inside individual logged entries, where it aids scanning.
-- Each community stream must contain an obvious in-window participation button: **Log an Action** and **Log a Discovery**.
+- Each community stream must contain an obvious in-window participation control. The Actions area explicitly communicates **Browse / Find / Contribute** and uses **Add Your Action**; Discoveries retains a clear **Log a Discovery** action.
 - The hero should use a full-width abstract/background treatment rather than a separate decorative object beside the question.
 - Project activity statistics should be clearly readable and number-led, with no decorative stat icons, centered figures, and larger values than labels. On the homepage they are integrated into the lower hero rather than presented as a separate full-width strip.
 - The Community section opens with an explicit invitation to join the experiment and discover what happens over time through repeated intentional action. Do not label this as a subscription until the application actually stores explicit consent.
 - The community area should feel open rather than boxed: individual entries provide the primary card/border structure; the Actions and Discoveries stream containers themselves should recede.
 - Use a warm ivory/stone community field with restrained teal/navy accents so the live content feels active and central without looking clinical or fragmented.
-- Primary participation buttons use the site's muted-teal anchor color with modest rounded corners rather than sharp rectangles.
+- Primary participation buttons use Project Meaningful blue `#0066cc` with modest rounded corners rather than sharp rectangles.
 - Meaningful Actions should use distinct category icon/color cues so category is legible at a glance without replacing the actual category filter.
 - Discoveries should have their own visual icon treatment and support exact case-insensitive username search on the homepage as Actions do.
 - The authoritative site palette is **Project Meaningful blue-led**, anchored on `#0066cc`. Use deep navy for depth, `#0066cc` as the primary action/brand anchor, a stronger **steel blue-gray** family for section differentiation, white for content surfaces, and restrained complementary gold only where emphasis helps. Current core values: deep navy `#0b2540`, ink `#102f4f`, primary blue `#0066cc`, dark blue `#004f9f`, steel blue-gray `#d6e0e8`, and restrained gold `#d89a2b`.
-- **Follow The Meaningful Project** is a separate standalone section after **The Idea Is Simple**. Because The Idea Is Simple uses the darker teal/green field, Follow uses a warm light stone background with dark editorial type for clear section contrast. It includes Articles, one non-duplicated Book entry, Videos, the future Application, and project updates. On wider screens, these appear as five visually separate cards with visible spacing rather than one divided rectangle. The Experiment and Community are not repeated there.
+- **Follow The Meaningful Project** is a separate standalone section after **The Idea Is Simple**. It includes Articles, one non-duplicated Book entry, Videos, the future Application, project updates, and a sixth **Join the Experiment** card so deep scrollers are never left without a participation path. On wider screens, the six cards form a balanced 3×2 grid; at smaller sizes they collapse responsively.
 - Do not invent external destinations; connect real links only when verified/provided.
 - Responsive and accessible implementation is required.
 
