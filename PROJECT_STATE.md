@@ -443,8 +443,18 @@ The repository's current files and the live Supabase schema exports were inspect
   - binary asset handoff was completed after the initial page build: the temporary vector recreations were replaced with resized copies of the user's supplied green logo and book-cover image, and the temporary SVG files were removed.
   - remaining production work is deployment/render verification plus a live Contact-form send test and the still-open automatic new-participant notification verification.
 
+- 2026-10-15 final public pass corrections:
+  - contact-form production failure was traced to the Worker's configuration guard: the form returned 503 whenever the non-secret sender/recipient variables were absent at runtime, even though those values are fixed project configuration. The Worker now uses code-level fallbacks for the public sender/recipient and requires only the existing `RESEND_API_KEY` secret; the Contact page also shows a direct email fallback rather than dead-ending the visitor;
+  - replaced the favicon binary with a fresh resize of the user's supplied green **M** logo and cache-busted favicon references across public/admin/legal pages;
+  - rebuilt `/book.html` so its substantive copy comes only from the previously supplied **About_Meaningful-the-Book.docx** source. The newly re-uploaded `Story-to-tell(1).docx` was inspected and is the Project Meaningful Vision document, not book copy, so it was deliberately not used to contaminate the Book page;
+  - the Book mockup now uses the supplied cover asset with an HTML/CSS fallback cover inside the 3D mockup so the visual never disappears if the image request fails;
+  - enlarged and rewrote the **Browse / Find / Contribute** guide so it actually explains what visitors can do rather than functioning as tiny labels;
+  - widened the desktop Discoveries rail from roughly 30% to roughly 36% of the Community width without changing the mobile/tablet stack, and increased its feed area so entries remain visible;
+  - aligned Actions/Discoveries archive labels with the homepage language (**Participant**, **Search username**);
+  - static integrity checks are required after the state update; production rendering and a live Contact send remain the final external checks.
+
 ## Deployment status
-Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The 2026-10-15 creative-completion commits are on `main`; rendered production verification after Cloudflare picks them up is required before this design pass is closed.
+Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The final 2026-10-15 public-pass corrections are on `main`; rendered production verification after Cloudflare picks them up is required before V1 is closed.
 
 ## Database handoff checkpoint
 - The original live Supabase public-schema baseline was captured on 2026-09-29.
@@ -453,28 +463,26 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Production-verify the resource/contact completion pass.**
+**Production-verify the final public pass.**
 
-1. Wait for the latest Cloudflare deployment to reach **Ready**, then hard-refresh `projectmeaningful.app`.
-2. Verify desktop/mobile rendering:
-   - Discoveries extends cleanly to the bottom of the Meaningful Actions composition;
-   - **Join the Experiment** appears beneath **Follow The Meaningful Project** and opens participant signup;
-   - Articles opens the verified Substack page;
-   - The Book opens `/book.html` and the cover mockup renders correctly;
-   - Videos reads **Coming soon.**;
-   - The Vision opens `/vision.html`;
-   - the green favicon appears;
-   - Contact is visible and `/contact.html` renders cleanly.
-3. Send one real Contact-form test and confirm delivery in Resend; verify Turnstile, reply-to behavior, and visible success/failure feedback.
-4. Generate one fresh participant profile after the Worker-name correction and verify the automatic administrative participant notification.
+1. Wait for the latest Cloudflare deployment to reach **Ready**, then hard-refresh `projectmeaningful.app` and `/book.html`.
+2. Verify the final visual/function pass:
+   - favicon is the supplied green **M**;
+   - Meaningful Actions guide is comfortably readable and self-explanatory;
+   - Discoveries is visibly wider on desktop without crowding Actions or breaking responsive stacking;
+   - Discoveries feed visibly contains entries and reaches the intended lower alignment;
+   - Book page shows the cover/mockup and contains only approved book-source copy, with no Vision/project-architecture material;
+   - all primary navigation, Articles, Vision, Book, archive, Privacy, Terms, and Contact destinations open correctly.
+3. Submit one real Contact-form message. Confirm visible success and verify receipt in Resend/the operator mailbox. If it still fails, inspect Cloudflare runtime logs for whether `RESEND_API_KEY` is present before changing application code again.
+4. Generate one fresh participant profile and verify the automatic new-participant notification.
 5. Decide demo-content retirement timing/threshold.
-6. Run final accessibility/responsive regression testing. If clean, V1 is launch-ready.
+6. Run the final mobile/accessibility regression. If clean, close V1 and launch.
 
 ## Short remaining roadmap
-1. Production-verify the resource/book/vision/contact completion pass and live-test Contact delivery.
-2. Verify the automatic new-participant notification after the Worker-name correction.
+1. Production-verify the final public pass and live-test Contact delivery.
+2. Verify the automatic new-participant notification.
 3. Decide demo-content retirement timing.
-4. Accessibility, responsive/polish, final launch regression testing.
+4. Final mobile/accessibility regression, then launch.
 
 ## End-of-session protocol
 After every substantial build session:
