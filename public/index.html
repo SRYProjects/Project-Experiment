@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Project Meaningful — a public experiment in living according to what matters.">
   <title>Project Meaningful</title>
-  <link rel="stylesheet" href="/styles.css?v=hero-integrated-stats-20261013-1">
+  <link rel="stylesheet" href="/styles.css?v=creative-audit-20261015-1">
 
   <script
     src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
@@ -72,8 +72,8 @@
           </div>
 
           <div class="hero-activity-stat hero-activity-day">
-            <strong id="experimentDay">Not launched</strong>
-            <span>Of the Experiment</span>
+            <strong id="experimentDay">— Days</strong>
+            <span>Experiment Active</span>
           </div>
         </div>
       </div>
@@ -96,15 +96,21 @@
         <section id="actions" class="stream-panel">
           <div class="stream-heading">
             <div>
-              <p class="stream-kicker">MEANINGFUL ACTIONS</p>
-              <h3>Actions</h3>
+              <p class="stream-kicker">THE PUBLIC RECORD</p>
+              <h3>Meaningful Actions</h3>
             </div>
-            <a class="stream-link" href="/actions.html">View all →</a>
+            <a class="stream-link" href="/actions.html">Browse all →</a>
           </div>
 
-          <p class="stream-description">
-            Things people deliberately chose to do because they considered them meaningful.
+          <p class="stream-description actions-intro-copy">
+            See what people have reported, find a participant or category, or add your own deliberate action.
           </p>
+
+          <div class="actions-guide" aria-label="How to use Meaningful Actions">
+            <span><strong>Browse</strong> recent actions below</span>
+            <span><strong>Find</strong> a category or participant</span>
+            <span><strong>Contribute</strong> your own action</span>
+          </div>
 
           <form id="actionsControls" class="feed-controls" role="search">
             <label>
@@ -126,21 +132,21 @@
             </label>
 
             <label>
-              Username
+              Participant
               <input
                 id="actionsUsernameSearch"
                 type="search"
                 autocomplete="off"
-                placeholder="Find a participant"
+                placeholder="Search username"
               >
             </label>
 
             <button id="clearActionsFilters" class="filter-reset" type="button">
-              Clear
+              Reset
             </button>
 
             <button id="logActionButton" class="primary-button stream-action-button" type="button">
-              Log an Action
+              Add Your Action
             </button>
           </form>
 
@@ -149,52 +155,38 @@
           </div>
         </section>
 
-        <aside class="community-right-rail" aria-label="Community summary and discoveries">
-          <section class="community-rail-card activity-summary-card" aria-label="Project activity summary">
-            <div class="rail-heading">
-              <span class="rail-symbol" aria-hidden="true">▥</span>
-              <div>
-                <p class="rail-kicker">PROJECT ACTIVITY</p>
-                <h3>Project Activity</h3>
-              </div>
-            </div>
-
-            <p class="rail-copy">
-              Real participation in this public experiment.
-            </p>
-
-            <div class="rail-stat-grid">
-              <div>
-                <strong id="railTotalActions">—</strong>
-                <span>Actions</span>
-              </div>
-              <div>
-                <strong id="railParticipants">—</strong>
-                <span>Participants</span>
-              </div>
-              <div>
-                <strong id="railTodayActions">—</strong>
-                <span>Today</span>
-              </div>
-            </div>
-          </section>
-
-          <section class="community-rail-card record-summary-card">
+        <aside class="community-right-rail" aria-label="Your participation and discoveries">
+          <section class="community-rail-card record-summary-card record-home-card">
             <div class="rail-heading">
               <span class="rail-symbol rail-symbol-record" aria-hidden="true">●</span>
               <div>
-                <p class="rail-kicker">YOUR RECORD</p>
+                <p class="rail-kicker">YOUR PLACE IN THE EXPERIMENT</p>
                 <h3>Your Record</h3>
               </div>
             </div>
 
             <p class="rail-copy">
-              See your own history of meaningful actions.
+              Return to your own history—what you did, how often you showed up,
+              and what you discovered along the way.
             </p>
 
-            <button id="communityRecordButton" class="primary-button rail-record-button" type="button">
-              View Your Record →
-            </button>
+            <div class="record-benefits" aria-label="Your Record includes">
+              <span>Your action history</span>
+              <span>Days you participated</span>
+              <span>Data and account tools</span>
+            </div>
+
+            <div class="record-home-actions">
+              <button id="communityRecordButton" class="primary-button rail-record-button" type="button">
+                View Your Record →
+              </button>
+              <button id="communityLogActionButton" class="secondary-button" type="button">
+                Add an Action
+              </button>
+              <button id="communityLogDiscoveryButton" class="text-button record-discovery-button" type="button">
+                Add a Discovery
+              </button>
+            </div>
           </section>
 
           <section id="discoveries" class="community-rail-card discoveries-panel">
@@ -207,7 +199,7 @@
             </div>
 
             <p class="stream-description">
-              What people discovered by deliberately doing meaningful things.
+              Browse what participants noticed after acting deliberately. Search by participant, or add a discovery of your own.
             </p>
 
             <form id="discoveriesControls" class="discovery-controls" role="search">
@@ -332,6 +324,21 @@
               About future updates →
             </button>
           </article>
+        </div>
+
+        <div class="follow-join-cta">
+          <div>
+            <p class="eyebrow">JOIN THE EXPERIMENT</p>
+            <h3>Start with one deliberate action.</h3>
+            <p>
+              You do not need a plan or a streak. Choose something that matters,
+              act on it, and record what happened.
+            </p>
+          </div>
+
+          <button id="followJoinButton" class="primary-button" type="button">
+            Share Your Meaningful Action →
+          </button>
         </div>
     </section>
   </main>
@@ -828,6 +835,6 @@
     </span>
   </footer>
 
-  <script type="module" src="/app.js?v=auth-race-signin-20261011-1"></script>
+  <script type="module" src="/app.js?v=creative-audit-20261015-1"></script>
 </body>
 </html>
