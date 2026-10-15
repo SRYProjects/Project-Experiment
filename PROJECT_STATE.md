@@ -451,7 +451,7 @@ The repository's current files and the live Supabase schema exports were inspect
   - enlarged and rewrote the **Browse / Find / Contribute** guide so it actually explains what visitors can do rather than functioning as tiny labels;
   - widened the desktop Discoveries rail from roughly 30% to roughly 36% of the Community width without changing the mobile/tablet stack, and increased its feed area so entries remain visible;
   - aligned Actions/Discoveries archive labels with the homepage language (**Participant**, **Search username**);
-  - static integrity checks are required after the state update; production rendering and a live Contact send remain the final external checks.
+  - final static integrity checks passed: Worker, homepage and Contact JavaScript syntax; no duplicate homepage IDs; no missing homepage JavaScript DOM references; CSS brace balance; archive search-language consistency; Book page source isolation; and Contact fallback configuration. Production rendering and a live Contact send remain the final external checks.
 
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The final 2026-10-15 public-pass corrections are on `main`; rendered production verification after Cloudflare picks them up is required before V1 is closed.
