@@ -416,8 +416,21 @@ The repository's current files and the live Supabase schema exports were inspect
   - the disposable identity was subsequently recreated and production currently contains 2 real profiles;
   - the currently visible recreated profile timestamp predates the Worker-name correction deployment, and Resend shows no automatic Worker notification email after that correction; therefore the automatic new-participant notification still requires one genuinely fresh profile-creation event after the corrected deployment.
 
+- 2026-10-15 senior creative completion pass:
+  - production account deletion was reconfirmed after the recreated disposable participant was signed in and deleted; live database returned to 1 real profile, 6 real published Actions, and 0 real Discoveries;
+  - restored the hero participation CTA to Project Meaningful blue `#0066cc`;
+  - increased integrated hero statistic values modestly so they better occupy their cards without becoming oversized;
+  - replaced the former **Not launched** state with a live **N Days** counter anchored to September 27, 2026, using America/New_York and counting the start date as Day 1;
+  - redesigned Meaningful Actions so a first-time visitor can immediately understand the three functions: **Browse**, **Find**, and **Contribute**; labels now say Participant/Search username and the contribution CTA is **Add Your Action**;
+  - removed the redundant Community **Project Activity** card because the same information already appears in the hero;
+  - expanded **Your Record** into a personal-first card explaining what it contains and adding direct entry points for **View Your Record**, **Add an Action**, and **Add a Discovery**;
+  - Discoveries now moves upward in the right rail and explicitly explains that visitors can browse, search, or contribute;
+  - changed **Follow The Meaningful Project** from an awkward five-card layout to a balanced six-card grid by adding a **Join the Experiment** participation card; desktop layout is 3×2, then 2-column and 1-column responsively;
+  - static validation passed: homepage JavaScript syntax, no duplicate IDs, no missing JavaScript-referenced IDs, CSS brace balance, dynamic Eastern-Time day counter, and all new participation controls.
+  - remaining public-completion issues are not visual polish: verified destinations for Articles/Book/Videos are still placeholders; demo-content retirement timing remains a product decision; automatic new-participant notification remains unverified after the Worker-name correction.
+
 ## Deployment status
-Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The 2026-10-06 refinement commits are on `main`; rendered production verification after Cloudflare picks them up is the next required step.
+Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The 2026-10-15 creative-completion commits are on `main`; rendered production verification after Cloudflare picks them up is required before this design pass is closed.
 
 ## Database handoff checkpoint
 - The original live Supabase public-schema baseline was captured on 2026-09-29.
@@ -426,24 +439,25 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Verify the homepage redesign in production, then finish the notification test.**
+**Production-verify the 2026-10-15 creative pass, then close the remaining launch blockers.**
 
-1. Wait for the homepage redesign commits to deploy and reach **Ready**.
-2. Hard-refresh `projectmeaningful.app` and verify:
-   - the separate Project Activity strip is gone;
-   - the four live stats sit cleanly inside the lower hero;
-   - the dark hero/current palette remain intact;
-   - the hero participation button uses the darker treatment;
-   - the Community section opens with the new join-the-experiment invitation.
-3. After the visual check, delete and recreate the disposable participant once more **after** the corrected Worker-name deployment to produce a genuinely fresh profile-creation event.
-4. Confirm the automatic participant notification reaches the configured administrative mailbox.
-5. If it still does not fire, inspect Cloudflare Worker runtime logs before changing application code.
-6. Once notification passes, move to launch date / Day N and demo-content retirement.
+1. Wait for the latest Cloudflare deployment to reach **Ready**, then hard-refresh `projectmeaningful.app`.
+2. Review desktop and mobile for:
+   - blue hero CTA;
+   - larger integrated statistics and the live **N Days** value;
+   - Actions **Browse / Find / Contribute** clarity;
+   - removal of the redundant Project Activity rail card;
+   - expanded personal **Your Record** card and higher Discoveries placement;
+   - balanced six-card Follow grid with its Join invitation.
+3. If the rendered pass is clean, do one fresh disposable profile creation after the Worker-name correction and verify the automatic administrative participant notification in Resend.
+4. Connect only verified destinations for **Articles**, **The Book**, and **Videos**; do not ship placeholder resource-status text as if it were finished navigation.
+5. Decide the demo-content retirement threshold/timing. The experiment-day counter is now locked to **September 27, 2026** and no longer awaits a launch-date decision.
+6. Run final accessibility/responsive regression testing, then treat V1 as launch-ready.
 
 ## Short remaining roadmap
-1. Production-test account export/deletion + Privacy/Terms.
-2. Set launch date / Day N and decide when to retire demo content.
-3. Connect verified resource destinations for Articles / Book / Videos / social when available.
+1. Production-verify the 2026-10-15 creative pass.
+2. Verify the automatic new-participant notification after the Worker-name correction.
+3. Connect verified resource destinations for Articles / Book / Videos and decide demo-content retirement timing.
 4. Accessibility, responsive/polish, final launch regression testing.
 
 ## End-of-session protocol
