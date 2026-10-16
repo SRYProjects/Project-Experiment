@@ -1,6 +1,6 @@
 # Project Experiment — Project State
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -113,7 +113,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 ## Currently unfinished
 This section is current; dated implementation notes below retain the historical sequence.
 
-- **Contact delivery:** production form and direct-email fallback render. Local service-boundary checks pass, but a real send remains unverified. Cloudflare Turnstile displays an interactive human-verification challenge in the audit browser; do not bypass it or weaken protection. CAPTCHA interaction requires action-time approval under browser policy.
+- **Contact delivery:** owner authorized completing the Turnstile checkbox and sending the test on 2026-10-16. The checkbox was completed and visibly displayed **Success!**. Automatic approval review rejected the Send Message action because the accessible page data did not independently expose that result; one retry after fresh visual confirmation was also rejected. No request was submitted and no matching Contact email appears in Resend. Preserve the prepared form for the owner to submit; do not bypass the rejection or weaken Turnstile.
 - **Automatic participant notification:** Resend's recent delivery list still has no successful automatic notification or Contact message. A fresh, legitimately authenticated profile-creation event is required. Existing direct Resend transport test is not proof of the Worker trigger.
 - **Mobile/accessibility:** finish rendered mobile/tablet and keyboard/accessibility regression. Desktop homepage, Book, Vision, Contact, both archives, Privacy and Terms have now been inspected in the live browser; desktop stream geometry and homepage filtering pass.
 - **Authenticated regression:** confirm Your Record, JSON export, pending/private visibility, and post-publication targeting in the final signed-in pass. Earlier production admin/MFA/moderation and disposable-account deletion successes remain recorded below; do not repeat destructive tests on the administrator account.
@@ -471,6 +471,14 @@ The repository's current files and the live Supabase schema exports were inspect
   - Contact test fields were prepared with the public operator address and reference `PM-QA-20261015`, but the interactive Turnstile check remains unsolved and no message has been sent. The latest approval explicitly covered merging PR #1; CAPTCHA interaction still needs action-time confirmation;
   - no Worker, database, product-specification, or agent-policy changes were made for this repair.
 
+- 2026-10-16 Contact test / approval-review handoff:
+  - owner said **Proceed** after the explicit request to complete Cloudflare verification and send the prepared test;
+  - production form was filled with the public operator address and test reference `PM-QA-20261016`;
+  - the authorized checkbox interaction succeeded: a fresh screenshot showed Cloudflare's green check and **Success!**;
+  - automatic approval review rejected the first Send Message attempt based on the earlier pending state, then rejected a second attempt after a fresh Success screenshot because the accessible page data could not prove the CAPTCHA prerequisite. The Turnstile UI is not exposed in the ordinary page accessibility snapshot; a DOM iframe enumeration returned none. No submission was performed;
+  - Resend recent-email inspection still showed no Contact-test email. The form and green Success state are to be handed to the owner for the final Send Message click, then delivery must be checked in Resend;
+  - no code, secrets, security controls, or database settings changed. The favicon/Book production fix remains verified.
+
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The inherited final-pass interface is live and has been inspected. PR #1 was explicitly approved by the owner, merged as `69ad19768e39ee7081226bddaf93dd881d1a38da`, and deployed. Live browser inspection confirmed the complete green M at `green-m-20261015-2`, the homepage's updated favicon reference, and the original curved blue/green Book artwork at `book-cover-20261015-3`. The binary-image defect is closed. Email delivery and mobile/accessibility verification are still launch gates.
 
@@ -481,10 +489,10 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Finish the live Contact delivery test, then verify the fresh-participant notification.**
+**Owner submits the prepared Contact test; verify delivery, then test fresh-participant notification.**
 
 1. Asset repair is merged/deployed and visually verified. No further favicon/cover changes are required.
-2. Complete a real Contact-form test to the existing operator address, `pr@meaningfulventuresinc.com`, then verify visible success and a delivered Resend record. The current audit browser needs interactive Turnstile verification; obtain action-time CAPTCHA approval before interacting, or use a legitimate user-completed test. Do not bypass protection. If delivery fails, inspect Worker logs/configuration for `RESEND_API_KEY` before changing code again.
+2. Hand the prepared Contact form to the owner for the final **Send Message** click. The owner has already approved the test and Cloudflare visibly passed, but automatic approval review blocked agent submission. If the verification expires before handoff, the owner should complete it again in that same handed-off tab. After submission, check the form's success/error state and the matching Resend email for reference `PM-QA-20261016`. Do not treat a direct API/email send as proof of this form path. If delivery fails, inspect Worker logs/configuration for `RESEND_API_KEY` before changing code again.
 3. Complete a genuinely fresh participant profile through the normal authentication flow and verify its automatic notification. Do not fabricate production auth identities or count a direct Resend send as verification.
 4. Run rendered mobile/tablet and keyboard/accessibility regression.
 5. Resolve demo-content retirement timing with the owner; preserve existing rows/count definitions until decided.
