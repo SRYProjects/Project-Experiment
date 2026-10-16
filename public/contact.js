@@ -7,6 +7,10 @@ const characterCount = document.querySelector("#contactCharacterCount");
 const submitButton = document.querySelector("#contactSubmitButton");
 const status = document.querySelector("#contactStatus");
 const success = document.querySelector("#contactSuccess");
+const feedback = document.querySelector("#contactFeedback");
+const feedbackText = document.querySelector("#contactFeedbackText");
+const emailFallback = document.querySelector("#contactEmailFallback");
+const verificationStatus = document.querySelector("#contactVerificationStatus");
 
 const fieldMessages = {
   name: document.querySelector("#contactNameMessage"),
@@ -31,13 +35,23 @@ function clearFieldMessages() {
   );
 }
 
-function showStatus(message, successState = false) {
-  status.textContent = message;
-  status.className = message
-    ? successState
-      ? "message success"
-      : "message"
-    : "message hidden";
+function showStatus(message, { sending = false, focus = false, offerEmail = false } = {}) {
+  status.textContent = sending ? message : "";
+  status.classList.toggle("hidden", !sending || !message);
+  feedback.classList.toggle("hidden", sending || !message);
+  feedbackText.textContent = sending ? "" : message;
+  emailFallback.classList.toggle("hidden", !offerEmail || sending || !message);
+
+  if (offerEmail) {
+    const subject = `Project Meaningful: ${topicInput.value || "General question"}`;
+    const body = `Name: ${nameInput.value.trim()}\nReply email: ${emailInput.value.trim()}\n\n${messageInput.value.trim()}`;
+    emailFallback.href = `mailto:pr@meaningfulventuresinc.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  if (message && !sending && focus) {
+    feedback.focus({ preventScroll: true });
+    feedback.scrollIntoView({ block: "center", behavior: "auto" });
+  }
 }
 
 function validEmail(value) {
@@ -45,6 +59,7 @@ function validEmail(value) {
 }
 
 function resetTurnstile() {
+  verificationStatus.textContent = "Complete the human verification, then select Send Message.";
   if (window.turnstile && turnstileWidgetId !== null) {
     window.turnstile.reset(turnstileWidgetId);
   }
@@ -72,6 +87,12 @@ function initTurnstile(attempt = 0) {
         {
           sitekey: "0x4AAAAAAFFXWD-I0BinHjw3",
           action: "meaningful_contact",
+          callback: () => {
+            verificationStatus.textContent = "Verification complete. Select Send Message to send your message.";
+          },
+          "expired-callback": () => {
+            verificationStatus.textContent = "Verification expired. Complete the human verification again before sending.";
+          },
           "error-callback": () => {
             showStatus(
               "Verification could not be completed. Please try again."
@@ -130,6 +151,14 @@ form.addEventListener("submit", async (event) => {
   }
 
   if (!valid) {
+    const firstInvalid = name.length < 2
+      ? nameInput
+      : !validEmail(email)
+        ? emailInput
+        : !topic
+          ? topicInput
+          : messageInput;
+    firstInvalid.focus();
     return;
   }
 
@@ -140,14 +169,15 @@ form.addEventListener("submit", async (event) => {
 
   if (!turnstileToken) {
     showStatus(
-      "Complete the verification before sending your message."
+      "Complete the verification before sending your message.",
+      { focus: true }
     );
     return;
   }
 
   submitButton.disabled = true;
   submitButton.textContent = "Sending…";
-  showStatus("Sending your message…");
+  showStatus("Sending your message…", { sending: true });
 
   try {
     const response = await fetch(
@@ -169,10 +199,11 @@ form.addEventListener("submit", async (event) => {
 
     const result = await response.json();
 
-    if (!response.ok) {
+    if (!response.ok || result.success !== true) {
       showStatus(
         result.error ||
-          "We couldn't send your message. Please try again."
+          "We couldn't send your message. Please try again or email us instead.",
+        { focus: true, offerEmail: true }
       );
       resetTurnstile();
       return;
@@ -180,10 +211,13 @@ form.addEventListener("submit", async (event) => {
 
     form.classList.add("hidden");
     success.classList.remove("hidden");
+    success.focus({ preventScroll: true });
+    success.scrollIntoView({ block: "center", behavior: "auto" });
   } catch (error) {
     console.error("Contact submission failed:", error);
     showStatus(
-      "We couldn't send your message. Please try again."
+      "We couldn't confirm that your message was sent. Your text is still here. You can email us instead.",
+      { focus: true, offerEmail: true }
     );
     resetTurnstile();
   } finally {

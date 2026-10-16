@@ -7,7 +7,7 @@
   <title>Contact | Project Meaningful</title>
   <link rel="icon" type="image/png" href="/favicon.png?v=green-m-20261015-2">
   <meta name="theme-color" content="#0b2540">
-  <link rel="stylesheet" href="/styles.css?v=final-pass-20261015-1">
+  <link rel="stylesheet" href="/styles.css?v=contact-feedback-20261016-1">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
 </head>
 
@@ -86,6 +86,15 @@
           </label>
 
           <div id="contactTurnstile"></div>
+          <p id="contactVerificationStatus" class="contact-verification-note" role="status">Complete the human verification, then select Send Message.</p>
+
+          <div id="contactFeedback" class="contact-feedback hidden" role="alert" aria-atomic="true" tabindex="-1">
+            <h2>Message not sent</h2>
+            <p id="contactFeedbackText"></p>
+            <a id="contactEmailFallback" class="hidden" href="mailto:pr@meaningfulventuresinc.com">Email your message instead →</a>
+          </div>
+
+          <p id="contactStatus" class="contact-progress hidden" role="status" aria-live="polite"></p>
 
           <button id="contactSubmitButton" class="primary-button" type="submit">
             Send Message
@@ -96,12 +105,11 @@
             <a href="mailto:pr@meaningfulventuresinc.com">pr@meaningfulventuresinc.com</a>.
           </p>
 
-          <div id="contactStatus" class="message hidden" role="status"></div>
         </form>
 
-        <div id="contactSuccess" class="contact-success hidden" role="status">
+        <div id="contactSuccess" class="contact-success hidden" role="status" tabindex="-1">
           <p class="eyebrow">MESSAGE SENT</p>
-          <h2>Thank you.</h2>
+          <h2>Your message has been sent.</h2>
           <p>Your message was sent to Project Meaningful. We will respond if a reply is needed.</p>
           <a class="secondary-button page-button" href="/">Return to the experiment</a>
         </div>
@@ -120,6 +128,6 @@
     </span>
   </footer>
 
-  <script type="module" src="/contact.js?v=final-pass-20261015-1"></script>
+  <script type="module" src="/contact.js?v=contact-feedback-20261016-1"></script>
 </body>
 </html>

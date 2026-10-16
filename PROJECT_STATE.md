@@ -113,8 +113,8 @@ Recent live test examples included Work (“Finished proposal for new clients”
 ## Currently unfinished
 This section is current; dated implementation notes below retain the historical sequence.
 
-- **Contact delivery:** owner authorized completing the Turnstile checkbox and sending the test on 2026-10-16. The checkbox was completed and visibly displayed **Success!**. Automatic approval review rejected the Send Message action because the accessible page data did not independently expose that result; one retry after fresh visual confirmation was also rejected. No request was submitted and no matching Contact email appears in Resend. Preserve the prepared form for the owner to submit; do not bypass the rejection or weaken Turnstile.
-- **Automatic participant notification:** Resend's recent delivery list still has no successful automatic notification or Contact message. A fresh, legitimately authenticated profile-creation event is required. Existing direct Resend transport test is not proof of the Worker trigger.
+- **Contact delivery:** the owner's real production submission reached the Worker and returned the exact missing-key message. This proves `env.RESEND_API_KEY` was absent, empty, or not a string in the active runtime. The sender/recipient fallbacks and CAPTCHA are not the cause of this 503. Cloudflare dashboard inspection is blocked by sign-in. Configure the key as a runtime Secret on **project-experiment**, not only under Build variables, then deploy and repeat the real form test. The UI feedback repair is implemented and tested; production rendering must be checked after its deployment.
+- **Automatic participant notification:** uses the same unavailable runtime `RESEND_API_KEY`, so fix that binding before a fresh authenticated profile test. Existing direct Resend transport tests do not prove the Worker trigger.
 - **Mobile/accessibility:** finish rendered mobile/tablet and keyboard/accessibility regression. Desktop homepage, Book, Vision, Contact, both archives, Privacy and Terms have now been inspected in the live browser; desktop stream geometry and homepage filtering pass.
 - **Authenticated regression:** confirm Your Record, JSON export, pending/private visibility, and post-publication targeting in the final signed-in pass. Earlier production admin/MFA/moderation and disposable-account deletion successes remain recorded below; do not repeat destructive tests on the administrator account.
 - **Demo retirement:** timing/threshold remains undecided. Do not silently remove demo rows or change the count definitions.
@@ -479,6 +479,17 @@ The repository's current files and the live Supabase schema exports were inspect
   - Resend recent-email inspection still showed no Contact-test email. The form and green Success state are to be handed to the owner for the final Send Message click, then delivery must be checked in Resend;
   - no code, secrets, security controls, or database settings changed. The favicon/Book production fix remains verified.
 
+
+- 2026-10-16 real Contact failure / feedback repair:
+  - owner completed the public form in their normal browser: Cloudflare showed Success, but the page returned **We couldn't send your message through the form. Please email pr@meaningfulventuresinc.com.**;
+  - inspected the exact code path: that message is emitted only by the `!apiKey` guard in `sendContactMessage`, after successful Turnstile and rate-limit checks, before any Resend request. Runtime `RESEND_API_KEY` is unavailable; prior configuration records did not establish that the active Worker could read it;
+  - Cloudflare dashboard opened at its sign-in wall. Plugin discovery found no Cloudflare connector; secure sign-in or owner-side runtime configuration is needed before the binding can be inspected/fixed. Never request the API key in chat;
+  - replaced the overlooked status box beneath the email fallback with an assertive, red, titled **Message not sent** callout immediately above Send Message; failed submission focuses and scrolls to it, preserving all inputs;
+  - added a prefilled **Email your message instead** link to delivery/network failures. Verification now explicitly says to select Send Message; CAPTCHA Success never marks the message sent;
+  - successful submission replaces the form with a high-contrast **Your message has been sent** panel and focuses it. Success now requires both an OK response and explicit `success: true`;
+  - 8 mocked Contact UI checks pass: missing email key/503, provider error, network failure, malformed 200, verification versus delivery, true delivery success, missing verification and invalid-field focus. HTML IDs/order, JavaScript syntax, and diff integrity pass. No production email was sent by these checks;
+  - no Worker/security/database changes and no secret values were added to code. Contact HTML refreshes CSS/JavaScript cache keys. Verify the deployed UI after the code commit.
+
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The inherited final-pass interface is live and has been inspected. PR #1 was explicitly approved by the owner, merged as `69ad19768e39ee7081226bddaf93dd881d1a38da`, and deployed. Live browser inspection confirmed the complete green M at `green-m-20261015-2`, the homepage's updated favicon reference, and the original curved blue/green Book artwork at `book-cover-20261015-3`. The binary-image defect is closed. Email delivery and mobile/accessibility verification are still launch gates.
 
@@ -489,19 +500,20 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Owner submits the prepared Contact test; verify delivery, then test fresh-participant notification.**
+**Correct the live Worker email-secret binding, then retest delivery.**
 
-1. Asset repair is merged/deployed and visually verified. No further favicon/cover changes are required.
-2. Hand the prepared Contact form to the owner for the final **Send Message** click. The owner has already approved the test and Cloudflare visibly passed, but automatic approval review blocked agent submission. If the verification expires before handoff, the owner should complete it again in that same handed-off tab. After submission, check the form's success/error state and the matching Resend email for reference `PM-QA-20261016`. Do not treat a direct API/email send as proof of this form path. If delivery fails, inspect Worker logs/configuration for `RESEND_API_KEY` before changing code again.
-3. Complete a genuinely fresh participant profile through the normal authentication flow and verify its automatic notification. Do not fabricate production auth identities or count a direct Resend send as verification.
-4. Run rendered mobile/tablet and keyboard/accessibility regression.
-5. Resolve demo-content retirement timing with the owner; preserve existing rows/count definitions until decided.
-6. Close V1 only when the applicable launch gates are verified.
+1. Verify the deployed Contact feedback uses `contact-feedback-20261016-1`: prominent failure callout above Send Message, automatic focus/scroll, text retained, clickable prefilled email fallback, and distinct verification versus delivery status.
+2. Inspect Cloudflare **Workers & Pages → project-experiment → Settings → Variables and Secrets**. `RESEND_API_KEY` must be a **Secret available to the Worker runtime**, not merely a build variable. The exact production error confirms the active code cannot read that value. Add/correct it securely and select **Deploy**. Do not paste it into chat or commit it. Cloudflare's dashboard is currently signed out in the agent browser.
+3. Submit one legitimate Contact test, verify the explicit Message sent confirmation, and check the corresponding Resend delivery record. No amount of visual CAPTCHA success alone closes this step.
+4. After the secret is fixed, complete one fresh participant profile through normal auth and verify its automatic notification.
+5. Finish rendered mobile/tablet, keyboard/accessibility and signed-in Record/export/targeting regression; resolve demo-retirement timing with the owner.
+6. Close V1 only when these gates are verified.
 
 ## Short remaining roadmap
-1. Verify Contact and automatic participant notification delivery.
-2. Complete mobile/accessibility regression and resolve demo retirement.
-3. Close V1 and launch when checks pass.
+1. Verify feedback deployment; fix the runtime email secret.
+2. Verify Contact and fresh-participant notification delivery.
+3. Finish final regression and resolve demo retirement.
+4. Close V1 and launch when checks pass.
 
 ## End-of-session protocol
 After every substantial build session:

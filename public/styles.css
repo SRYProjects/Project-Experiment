@@ -5977,20 +5977,81 @@ input.field-error {
 }
 
 .contact-success {
-  padding: 28px 10px;
+  padding: 32px;
+  border-radius: 12px;
+  background: #0b2540;
+  color: #fff;
 }
 
 .contact-success h2 {
   margin: 0 0 12px;
-  color: #0b3158;
+  color: #fff;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 3rem;
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 400;
 }
 
 .contact-success p {
-  color: #526b82;
+  color: #e1ebf3;
   line-height: 1.7;
+}
+
+.contact-success .page-button {
+  border-radius: 9px;
+  border-color: #fff;
+  background: #fff;
+  color: #0b2540;
+}
+
+.contact-verification-note,
+.contact-progress {
+  margin: 0;
+  color: #465f73;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.contact-progress {
+  font-weight: 700;
+}
+
+.contact-feedback {
+  padding: 22px;
+  border: 2px solid #ad2735;
+  border-left-width: 6px;
+  border-radius: 10px;
+  background: #fff0f1;
+  color: #721b27;
+  scroll-margin: 24px;
+}
+
+.contact-feedback h2 {
+  margin: 0 0 10px;
+  color: #721b27;
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  line-height: 1.2;
+}
+
+.contact-feedback p {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.contact-feedback a {
+  display: inline-block;
+  margin-top: 16px;
+  color: #721b27;
+  font-size: 1rem;
+  font-weight: 800;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.contact-feedback:focus,
+.contact-success:focus {
+  outline: 3px solid #0066cc;
+  outline-offset: 4px;
 }
 
 @media (max-width: 1000px) {
