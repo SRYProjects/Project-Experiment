@@ -1,6 +1,6 @@
 # Project Experiment — Project State
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 Repository: `SRYProjects/Project-Experiment`  
 Default branch: `main`  
 Production: `https://projectmeaningful.app`
@@ -113,7 +113,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 ## Currently unfinished
 This section is current; dated implementation notes below retain the historical sequence.
 
-- **Contact delivery:** the owner's real production submission reached the Worker and returned the exact missing-key message. This proves `env.RESEND_API_KEY` was absent, empty, or not a string in the active runtime. The sender/recipient fallbacks and CAPTCHA are not the cause of this 503. Cloudflare dashboard inspection is blocked by sign-in. Configure the key as a runtime Secret on **project-experiment**, not only under Build variables, then deploy and repeat the real form test. The UI feedback repair is implemented and tested; production rendering must be checked after its deployment.
+- **Contact delivery:** the owner's real production submission reached the Worker and returned the exact missing-key message. This proves `env.RESEND_API_KEY` was absent, empty, or not a string in the active runtime. The sender/recipient fallbacks and CAPTCHA are not the cause of this 503. Cloudflare dashboard inspection is blocked by sign-in. Configure the key as a runtime Secret on **project-experiment**, not only under Build variables, then deploy and repeat the real form test. The feedback repair is deployed at `2fa3046`; production markup, loaded script cache key, red styling, alert semantics and placement above Send Message were confirmed. Error/success focus and data retention pass mocked checks; real delivery remains blocked.
 - **Automatic participant notification:** uses the same unavailable runtime `RESEND_API_KEY`, so fix that binding before a fresh authenticated profile test. Existing direct Resend transport tests do not prove the Worker trigger.
 - **Mobile/accessibility:** finish rendered mobile/tablet and keyboard/accessibility regression. Desktop homepage, Book, Vision, Contact, both archives, Privacy and Terms have now been inspected in the live browser; desktop stream geometry and homepage filtering pass.
 - **Authenticated regression:** confirm Your Record, JSON export, pending/private visibility, and post-publication targeting in the final signed-in pass. Earlier production admin/MFA/moderation and disposable-account deletion successes remain recorded below; do not repeat destructive tests on the administrator account.
@@ -490,6 +490,12 @@ The repository's current files and the live Supabase schema exports were inspect
   - 8 mocked Contact UI checks pass: missing email key/503, provider error, network failure, malformed 200, verification versus delivery, true delivery success, missing verification and invalid-field focus. HTML IDs/order, JavaScript syntax, and diff integrity pass. No production email was sent by these checks;
   - no Worker/security/database changes and no secret values were added to code. Contact HTML refreshes CSS/JavaScript cache keys. Verify the deployed UI after the code commit.
 
+- 2026-10-17 feedback deployment verification / Cloudflare access:
+  - commit `2fa3046a9d334f5b6db0e40aa159bd20fa06744a` is on main and deployed; live Contact loads the new script and exposes the red Message not sent alert before Send Message plus the explicit sent heading;
+  - the secure Cloudflare sign-in request timed out. A fresh verification tab still reaches `/login`; no Worker configuration or secret value was changed;
+  - delivery remains blocked by the known unavailable runtime `RESEND_API_KEY`. Next owner-side diagnostic: show the **project-experiment → Settings → Variables and Secrets** list with values hidden, so runtime binding name/type can be confirmed. Do not confuse this list with Build variables;
+  - no additional code changes or live email submissions were made during this verification.
+
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The inherited final-pass interface is live and has been inspected. PR #1 was explicitly approved by the owner, merged as `69ad19768e39ee7081226bddaf93dd881d1a38da`, and deployed. Live browser inspection confirmed the complete green M at `green-m-20261015-2`, the homepage's updated favicon reference, and the original curved blue/green Book artwork at `book-cover-20261015-3`. The binary-image defect is closed. Email delivery and mobile/accessibility verification are still launch gates.
 
@@ -502,7 +508,7 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 ## Exact next step
 **Correct the live Worker email-secret binding, then retest delivery.**
 
-1. Verify the deployed Contact feedback uses `contact-feedback-20261016-1`: prominent failure callout above Send Message, automatic focus/scroll, text retained, clickable prefilled email fallback, and distinct verification versus delivery status.
+1. Feedback fix is deployed and its live markup/styles verified (`contact-feedback-20261016-1`). Preserve the prominent callout above Send Message and the distinct verification/delivery states.
 2. Inspect Cloudflare **Workers & Pages → project-experiment → Settings → Variables and Secrets**. `RESEND_API_KEY` must be a **Secret available to the Worker runtime**, not merely a build variable. The exact production error confirms the active code cannot read that value. Add/correct it securely and select **Deploy**. Do not paste it into chat or commit it. Cloudflare's dashboard is currently signed out in the agent browser.
 3. Submit one legitimate Contact test, verify the explicit Message sent confirmation, and check the corresponding Resend delivery record. No amount of visual CAPTCHA success alone closes this step.
 4. After the secret is fixed, complete one fresh participant profile through normal auth and verify its automatic notification.
