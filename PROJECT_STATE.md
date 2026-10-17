@@ -517,7 +517,7 @@ The repository's current files and the live Supabase schema exports were inspect
   - four isolated Worker checks passed for anonymous rejection without database calls, Record ownership/pending-versus-count behavior, export ownership/headers/JSON structure, and invalid-session rejection. All database/auth calls were mocked; no live private records were accessed;
   - responsive CSS breakpoints were reviewed. Rendered mobile/tablet checks remain open because supported browser APIs lack viewport sizing. A data-URL harness was rejected by browser URL policy; no workaround was attempted. Direct API-page navigation was blocked by the browser client, so it was not counted as a production authorization test;
   - secure existing-account sign-in successfully reached Check your inbox, but did not create a signed-in session in the cloud browser. The remaining live private checks require an authenticated browser; user-side sign-in does not authenticate this cloud browser;
-  - accessibility labels are verified live. Publication-targeting code and its script cache refresh are committed; verify the `publication-targeting-20261017-1` production script key before closing deployment validation.
+  - accessibility labels are verified live. Publication-targeting code and its script cache refresh are committed and deployed. A fresh production reload verified `/app.js?v=publication-targeting-20261017-1`; all six dialog labels remain present and desktop has no horizontal overflow.
   - remaining decisions/checks: rendered phone/tablet review, live signed-in Record/export/private-content/publication targeting, and demo-retirement timing. V1 is not marked complete.
 
 ## Deployment status
@@ -532,7 +532,7 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 ## Exact next step
 **Complete the final responsive, accessibility and authenticated regression.**
 
-1. Verify the homepage loads `/app.js?v=publication-targeting-20261017-1`; the named-dialog accessibility change is already live.
+1. Both regression fixes are deployed; preserve `/app.js?v=publication-targeting-20261017-1` and named-dialog accessibility.
 2. Finish rendered phone/tablet checks in an environment that supports device-width rendering. Current cloud-browser APIs do not expose viewport sizing; do not bypass the rejected local-harness URL.
 3. In an authenticated production browser, verify Your Record, Download Your Data, pending-content privacy and View My Action/Discovery with a preexisting different participant/category filter. Preserve the administrator account.
 4. Resolve demo-retirement timing with the owner.
