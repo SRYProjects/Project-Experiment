@@ -114,7 +114,7 @@ Recent live test examples included Work (“Finished proposal for new clients”
 This section is current; dated implementation notes below retain the historical sequence.
 
 - **Contact delivery is closed:** the owner added `RESEND_API_KEY` as a Production runtime Secret and deployed it. The 2026-10-16 20:29 ET screenshot confirmed it had previously existed only under Builds. The owner then submitted the real Contact form and confirmed receiving the email. Resend independently reports **delivered** for "Project Meaningful contact: General question" at 2026-10-16 20:37:19 ET (2026-10-17 00:37:19 UTC). The feedback repair remains deployed at `2fa3046`; live markup/styles and mocked focus/data-retention checks already pass.
-- **Automatic participant notification:** the shared runtime secret now works for Contact. Complete one genuinely fresh participant profile through normal authentication and verify the automatic notification; Contact delivery and earlier direct transport tests do not prove this trigger.
+- **Automatic participant notification is closed:** the owner created the fresh participant `@David` through normal signup. Resend confirms the separate **New Project Meaningful participant: @David** notification to the operator was **delivered** at 2026-10-16 20:43:57 ET, after the confirmation email at 20:43:46 ET. Contact and automatic participant notification now both pass production delivery checks.
 - **Mobile/accessibility:** finish rendered mobile/tablet and keyboard/accessibility regression. Desktop homepage, Book, Vision, Contact, both archives, Privacy and Terms have now been inspected in the live browser; desktop stream geometry and homepage filtering pass.
 - **Authenticated regression:** confirm Your Record, JSON export, pending/private visibility, and post-publication targeting in the final signed-in pass. Earlier production admin/MFA/moderation and disposable-account deletion successes remain recorded below; do not repeat destructive tests on the administrator account.
 - **Demo retirement:** timing/threshold remains undecided. Do not silently remove demo rows or change the count definitions.
@@ -503,8 +503,14 @@ The repository's current files and the live Supabase schema exports were inspect
   - Resend independently confirms **delivered** at 20:37:19 ET for **Project Meaningful contact: General question**, closing the missing-runtime-secret Contact blocker;
   - automatic new-participant notification remains unverified because no new profile has been created since this correction. It is the exact next step.
 
+- 2026-10-16 fresh-participant notification verification:
+  - owner created a fresh account through normal signup; the confirmation email was delivered at 20:43:46 ET;
+  - Resend independently confirms **New Project Meaningful participant: @David** was **delivered** to the operator at 20:43:57 ET (2026-10-17 00:43:57 UTC);
+  - this is the automatic Worker profile-creation notification, distinct from the participant's authentication email, and closes the remaining notification trigger/delivery gate;
+  - no additional account creation or repeat email test is needed. Continue final regression and the demo-retirement decision.
+
 ## Deployment status
-Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The inherited final-pass interface is live and has been inspected. PR #1 was explicitly approved by the owner, merged as `69ad19768e39ee7081226bddaf93dd881d1a38da`, and deployed. Live browser inspection confirmed the complete green M at `green-m-20261015-2`, the homepage's updated favicon reference, and the original curved blue/green Book artwork at `book-cover-20261015-3`. The binary-image defect is closed. Contact email delivery is now verified end-to-end. Automatic new-participant notification and final mobile/accessibility/authenticated regression remain launch gates.
+Production is served at **projectmeaningful.app** through the existing GitHub → Cloudflare deployment. The inherited final-pass interface is live and has been inspected. PR #1 was explicitly approved by the owner, merged as `69ad19768e39ee7081226bddaf93dd881d1a38da`, and deployed. Live browser inspection confirmed the complete green M at `green-m-20261015-2`, the homepage's updated favicon reference, and the original curved blue/green Book artwork at `book-cover-20261015-3`. The binary-image defect is closed. Contact email delivery is now verified end-to-end. Automatic new-participant notification is also verified delivered. Final mobile/accessibility/authenticated regression and the demo-retirement decision remain.
 
 ## Database handoff checkpoint
 - The original live Supabase public-schema baseline was captured on 2026-09-29.
@@ -513,16 +519,16 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Verify the automatic new-participant notification.**
+**Complete the final responsive, accessibility and authenticated regression.**
 
-1. Complete one genuinely fresh participant profile through normal signup/authentication on production; do not delete or repurpose the administrator account.
-2. Confirm that account creation succeeds and its automatic notification reaches the operator, then check the corresponding Resend delivery record.
-3. Finish rendered mobile/tablet, keyboard/accessibility and signed-in Record/export/pending-privacy/post-publication-targeting regression.
-4. Resolve demo-retirement timing with the owner. Close V1 only when the remaining gates are verified.
+1. Inspect rendered mobile/tablet layouts and keyboard/focus/accessibility behavior.
+2. Verify signed-in Your Record, JSON export, pending-content privacy and post-publication Action/Discovery targeting using the normal participant flow; preserve the administrator account.
+3. Resolve demo-retirement timing with the owner.
+4. Close V1 only when the remaining gates are verified. Both Contact delivery and automatic new-participant notification are now verified in production.
 
 ## Short remaining roadmap
-1. Verify fresh-participant notification delivery.
-2. Finish final regression and resolve demo retirement.
+1. Finish final responsive/accessibility/authenticated regression.
+2. Resolve demo retirement.
 3. Close V1 and launch when checks pass.
 
 ## End-of-session protocol
