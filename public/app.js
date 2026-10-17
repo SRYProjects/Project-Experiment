@@ -2268,6 +2268,9 @@ viewPublishedActionButton.addEventListener(
   async () => {
     actionDialog.close();
 
+    actionsCategoryFilter.value = "";
+    actionsUsernameSearch.value = "";
+
     await loadPublicActions();
 
     document
@@ -2469,6 +2472,8 @@ viewPublishedDiscoveryButton.addEventListener(
   "click",
   async () => {
     discoveryDialog.close();
+
+    discoveriesUsernameSearch.value = "";
 
     await loadPublicDiscoveries();
 
