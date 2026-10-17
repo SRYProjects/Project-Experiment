@@ -115,8 +115,8 @@ This section is current; dated implementation notes below retain the historical 
 
 - **Contact delivery is closed:** the owner added `RESEND_API_KEY` as a Production runtime Secret and deployed it. The 2026-10-16 20:29 ET screenshot confirmed it had previously existed only under Builds. The owner then submitted the real Contact form and confirmed receiving the email. Resend independently reports **delivered** for "Project Meaningful contact: General question" at 2026-10-16 20:37:19 ET (2026-10-17 00:37:19 UTC). The feedback repair remains deployed at `2fa3046`; live markup/styles and mocked focus/data-retention checks already pass.
 - **Automatic participant notification is closed:** the owner created the fresh participant `@David` through normal signup. Resend confirms the separate **New Project Meaningful participant: @David** notification to the operator was **delivered** at 2026-10-16 20:43:57 ET, after the confirmation email at 20:43:46 ET. Contact and automatic participant notification now both pass production delivery checks.
-- **Mobile/accessibility:** finish rendered mobile/tablet and keyboard/accessibility regression. Desktop homepage, Book, Vision, Contact, both archives, Privacy and Terms have now been inspected in the live browser; desktop stream geometry and homepage filtering pass.
-- **Authenticated regression:** confirm Your Record, JSON export, pending/private visibility, and post-publication targeting in the final signed-in pass. Earlier production admin/MFA/moderation and disposable-account deletion successes remain recorded below; do not repeat destructive tests on the administrator account.
+- **Mobile/accessibility:** keyboard entry, Escape dismissal, focus return and Contact required-field focus pass in production. All six homepage dialogs now have accessible names, committed at `919b01a` and verified in the live DOM/accessibility tree. Desktop has no horizontal overflow at 1363px. Mobile/tablet CSS breakpoints were reviewed, but rendered device-width testing remains open: the available cloud browser exposes no supported viewport resize and rejected the proposed local responsive harness URL. Do not bypass browser URL restrictions.
+- **Authenticated regression:** four mocked Worker checks pass for unauthenticated rejection before database access, account-scoped private Record including own pending content but counting only published entries, account-scoped JSON export/no-store/download headers, and invalid-session rejection. Four mocked UI checks pass for View My Action/Discovery with and without active filters after the targeting correction (`ee71ecc`, cache refresh `701d9c1`). These do not replace a live signed-in Record/export/pending-privacy/publication check. Secure email sign-in was submitted successfully, but the cloud browser remains signed out because completion uses an emailed link. Never retrieve or copy magic-link credentials from provider logs. Earlier admin/MFA/deletion successes remain valid; preserve the administrator account.
 - **Demo retirement:** timing/threshold remains undecided. Do not silently remove demo rows or change the count definitions.
 - **Future update opt-in:** explicit consent persistence remains outside the implemented flow; joining the experiment does not subscribe participants to updates.
 - **Username changes:** policy remains unresolved.
@@ -509,6 +509,17 @@ The repository's current files and the live Supabase schema exports were inspect
   - this is the automatic Worker profile-creation notification, distinct from the participant's authentication email, and closes the remaining notification trigger/delivery gate;
   - no additional account creation or repeat email test is needed. Continue final regression and the demo-retirement decision.
 
+- 2026-10-17 final regression / accessibility and publication targeting:
+  - named all six public dialogs with stable accessible labels; static HTML validation passed with six named dialogs and no duplicate IDs, and production DOM/accessibility inspection verified those names;
+  - keyboard opening, Escape dismissal and focus return passed for the updates dialog; existing-account sign-in focuses the email field; empty Contact submission focuses Name without sending;
+  - identified a publication-navigation defect: active category/username filters could hide the newly published Action or Discovery after selecting View My Action/Discovery. The handlers now clear their respective filters before refreshing and targeting the returned entry ID;
+  - reproduced the filtered Action failure before the fix, then passed four real-handler mocked scenarios covering Action/Discovery, filtered and unfiltered. JavaScript syntax and diff integrity passed;
+  - four isolated Worker checks passed for anonymous rejection without database calls, Record ownership/pending-versus-count behavior, export ownership/headers/JSON structure, and invalid-session rejection. All database/auth calls were mocked; no live private records were accessed;
+  - responsive CSS breakpoints were reviewed. Rendered mobile/tablet checks remain open because supported browser APIs lack viewport sizing. A data-URL harness was rejected by browser URL policy; no workaround was attempted. Direct API-page navigation was blocked by the browser client, so it was not counted as a production authorization test;
+  - secure existing-account sign-in successfully reached Check your inbox, but did not create a signed-in session in the cloud browser. The remaining live private checks require an authenticated browser; user-side sign-in does not authenticate this cloud browser;
+  - accessibility labels are verified live. Publication-targeting code and its script cache refresh are committed; verify the `publication-targeting-20261017-1` production script key before closing deployment validation.
+  - remaining decisions/checks: rendered phone/tablet review, live signed-in Record/export/private-content/publication targeting, and demo-retirement timing. V1 is not marked complete.
+
 ## Deployment status
 Production is served at **projectmeaningful.app** through the existing GitHub â†’ Cloudflare deployment. The inherited final-pass interface is live and has been inspected. PR #1 was explicitly approved by the owner, merged as `69ad19768e39ee7081226bddaf93dd881d1a38da`, and deployed. Live browser inspection confirmed the complete green M at `green-m-20261015-2`, the homepage's updated favicon reference, and the original curved blue/green Book artwork at `book-cover-20261015-3`. The binary-image defect is closed. Contact email delivery is now verified end-to-end. Automatic new-participant notification is also verified delivered. Final mobile/accessibility/authenticated regression and the demo-retirement decision remain.
 
@@ -521,10 +532,11 @@ Production is served at **projectmeaningful.app** through the existing GitHub â†
 ## Exact next step
 **Complete the final responsive, accessibility and authenticated regression.**
 
-1. Inspect rendered mobile/tablet layouts and keyboard/focus/accessibility behavior.
-2. Verify signed-in Your Record, JSON export, pending-content privacy and post-publication Action/Discovery targeting using the normal participant flow; preserve the administrator account.
-3. Resolve demo-retirement timing with the owner.
-4. Close V1 only when the remaining gates are verified. Both Contact delivery and automatic new-participant notification are now verified in production.
+1. Verify the homepage loads `/app.js?v=publication-targeting-20261017-1`; the named-dialog accessibility change is already live.
+2. Finish rendered phone/tablet checks in an environment that supports device-width rendering. Current cloud-browser APIs do not expose viewport sizing; do not bypass the rejected local-harness URL.
+3. In an authenticated production browser, verify Your Record, Download Your Data, pending-content privacy and View My Action/Discovery with a preexisting different participant/category filter. Preserve the administrator account.
+4. Resolve demo-retirement timing with the owner.
+5. Close V1 only when the remaining gates are verified. Both Contact delivery and automatic new-participant notification are now verified in production.
 
 ## Short remaining roadmap
 1. Finish final responsive/accessibility/authenticated regression.
