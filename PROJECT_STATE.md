@@ -110,6 +110,13 @@ Live production testing has confirmed:
 
 Recent live test examples included Work (“Finished proposal for new clients”) and Sacrifice (“Instead of wasting time, I went for a walk”).
 
+## Launch assessment — 2026-10-17
+- **Recommendation: begin inviting real participants to the public experiment.** Registration/authentication, public participation, moderation, disposable-account deletion, Contact delivery and automatic new-participant notification have production evidence. No confirmed launch-blocking defect is currently known.
+- This is a launch recommendation with disclosed verification limits, not a claim of exhaustive testing. Phone/tablet rendering and a fresh live signed-in export remain unverified in the agent environment. Keep those facts visible without repeatedly asking the owner to redo completed flows.
+- Additional code checks completed: export UI success, signed-out access, expired session, server error and network error all pass; controls recover and failure paths do not announce a download. CSS cascade checks at 320, 390, 768 and 1024px confirm the streams stack and narrower-page/card rules activate. These are mocked/static checks, not actual device screenshots or a live private export.
+- The cloud browser still shows Sign In after the earlier secure email request. Available browser controls do not expose viewport sizing. Do not repeat failed browser handoffs, retrieve magic-link credentials, or bypass the blocked test harness.
+- No additional production code changes were warranted by this pass. Preserve the deployed fixes. Existing launch examples remain unchanged; retirement timing can be settled from real participation.
+
 ## Currently unfinished
 This section is current; dated implementation notes below retain the historical sequence.
 
@@ -530,18 +537,17 @@ Production is served at **projectmeaningful.app** through the existing GitHub �
 - Example content is data, not a real-participation statistic: 55 demo actions and 15 demo discoveries are `is_demo = true` and excluded by `project_stats()`.
 
 ## Exact next step
-**Complete the final responsive, accessibility and authenticated regression.**
+**Begin real participation; address concrete defects if reported.**
 
-1. Both regression fixes are deployed; preserve `/app.js?v=publication-targeting-20261017-1` and named-dialog accessibility.
-2. Finish rendered phone/tablet checks in an environment that supports device-width rendering. Current cloud-browser APIs do not expose viewport sizing; do not bypass the rejected local-harness URL.
-3. In an authenticated production browser, verify Your Record, Download Your Data, pending-content privacy and View My Action/Discovery with a preexisting different participant/category filter. Preserve the administrator account.
-4. Resolve demo-retirement timing with the owner.
-5. Close V1 only when the remaining gates are verified. Both Contact delivery and automatic new-participant notification are now verified in production.
+1. Prepare or use the owner's launch invitation and direct participants to the live public experiment. Send/publish outreach only with explicit authorization.
+2. Preserve the working signup, posting, moderation and email flows. Do not request repeat owner testing of completed flows without a new failure or relevant code change.
+3. Keep the mobile-rendering/live-export verification limits documented. Finish them when an appropriate device viewport and authenticated browser are available; do not represent mocked/static results as live proof.
+4. Decide example-content retirement from real participation without silently deleting rows or changing statistics.
 
 ## Short remaining roadmap
-1. Finish final responsive/accessibility/authenticated regression.
-2. Resolve demo retirement.
-3. Close V1 and launch when checks pass.
+1. Invite real participants.
+2. Monitor actual feedback and fix confirmed issues.
+3. Resolve example-content retirement as real activity grows.
 
 ## End-of-session protocol
 After every substantial build session:
